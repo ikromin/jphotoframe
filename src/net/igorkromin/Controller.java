@@ -81,6 +81,10 @@ public class Controller implements KeyListener {
             device.setFullScreenWindow(view);
             view.setReady(true);
 
+            // stupid workaround for OS X losing focus
+            view.setVisible(false);
+            view.setVisible(true);
+
             imageDirectory.startWatching();
             imageDirectory.sync();
 
@@ -93,12 +97,16 @@ public class Controller implements KeyListener {
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
+        if (stopping) {
+            return;
+        }
+
         System.out.println("Stopping photo frame");
+        stopping = true;
 
         view.setReady(false);
 
-        stopping = true;
         photoChangeThread.interrupt();
         timeChangeThread.interrupt();
 
@@ -155,15 +163,14 @@ public class Controller implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // not implemented
+        // Exit if any key is pressed
+        stop();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // Exit if the escape key is pressed
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            stop();
-        }
+        // Exit if any key is pressed
+        stop();
     }
 
     @Override

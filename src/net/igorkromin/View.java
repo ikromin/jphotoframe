@@ -38,7 +38,6 @@ import java.util.Date;
  */
 public class View extends JFrame {
 
-    JPanel panel;
     BufferedImage defaultImage;
     BufferedImage currentImage;
     Font dateFont;
@@ -55,19 +54,11 @@ public class View extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
-        getContentPane().setCursor(null);
+        setBackground(Color.black);
 
-        panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                drawImage((Graphics2D) g);
-            }
-        };
-        panel.setBackground(Color.black);
-        panel.setOpaque(true);
-        panel.setLayout(null);
-        add(panel);
+        JPanel contentPane = (JPanel) getContentPane();
+        contentPane.setCursor(null);
+        contentPane.setOpaque(false);
 
         defaultImage = ImageIO.read(ClassLoader.getSystemResource("net/igorkromin/archetype.png"));
 
@@ -76,6 +67,16 @@ public class View extends JFrame {
 
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        Rectangle rect = getBounds();
+
+        g.setColor(Color.black);
+        g.fillRect(0, 0, rect.width, rect.height);
+
+        drawImage((Graphics2D) g);
     }
 
     private void drawImage(Graphics2D g) {
