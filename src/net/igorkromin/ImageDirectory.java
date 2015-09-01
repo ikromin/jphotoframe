@@ -91,7 +91,7 @@ public class ImageDirectory {
     }
 
     public void sync() {
-        System.out.print("Synchronising directory contents");
+        System.out.println("Synchronising directory contents");
 
         imageFiles.clear();
         imageIndex = 0;
