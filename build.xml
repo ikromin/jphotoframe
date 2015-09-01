@@ -214,7 +214,7 @@
   <target name="artifact.jphotoframe" depends="init.artifacts, compile.module.jphotoframe" description="Build &#39;jphotoframe&#39; artifact">
     <property name="artifact.temp.output.jphotoframe" value="${artifacts.temp.dir}/jphotoframe"/>
     <mkdir dir="${artifact.temp.output.jphotoframe}"/>
-    <jar destfile="${temp.jar.path.jphotoframe.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+    <jar destfile="${temp.jar.path.jphotoframe.jar}" duplicate="preserve" filesetmanifest="merge">
       <zipfileset dir="${jphotoframe.output.dir}"/>
       <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
     </jar>
