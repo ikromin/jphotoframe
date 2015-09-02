@@ -59,6 +59,17 @@ public class View extends JFrame {
         contentPane.setCursor(null);
         contentPane.setOpaque(false);
 
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                drawImage((Graphics2D) g);
+            }
+        };
+        panel.setBackground(Color.black);
+        panel.setOpaque(true);
+        contentPane.add(panel);
+
         defaultImage = ImageIO.read(ClassLoader.getSystemResource("net/igorkromin/archetype.png"));
 
         dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
@@ -71,16 +82,6 @@ public class View extends JFrame {
         int[] rgb2 = config.getTextOutlineColor();
         textColor = new Color(rgb1[0], rgb1[1], rgb1[2]);
         textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        Rectangle rect = getBounds();
-
-        g.setColor(Color.black);
-        g.fillRect(0, 0, rect.width, rect.height);
-
-        drawImage((Graphics2D) g);
     }
 
     private void drawImage(Graphics2D g) {
