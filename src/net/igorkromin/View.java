@@ -120,10 +120,13 @@ public class View extends JFrame {
         g.drawString(dispString, sx, sy + 2);
         g.drawString(dispString, sx, sy - 2);
 
-        //g.drawString(dispString, sx + 2, sy + 2);
-        //g.drawString(dispString, sx - 2, sy - 2);
-        //g.drawString(dispString, sx + 2, sy - 2);
-        //g.drawString(dispString, sx - 2, sy + 2);
+        // if smooth text outline is set, draw the diagonally offset text too
+        if (config.isTextSmoothOutline()) {
+            g.drawString(dispString, sx + 2, sy + 2);
+            g.drawString(dispString, sx - 2, sy - 2);
+            g.drawString(dispString, sx + 2, sy - 2);
+            g.drawString(dispString, sx - 2, sy + 2);
+        }
 
         g.setColor(textColor);
         g.drawString(dispString, sx, sy);

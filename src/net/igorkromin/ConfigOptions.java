@@ -45,6 +45,7 @@ public class ConfigOptions {
     private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
     private static final String PROP_TEXT_COLOR = "textColor";
     private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
+    private static final String PROP_TEXT_SMOOTH_OUTLINE = "textSmoothOutline";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -56,6 +57,7 @@ public class ConfigOptions {
     private int timeOffsetY;
     private int[] textColor;
     private int[] textOutlineColor;
+    private boolean textSmoothOutline;
     private String imageDirectory;
     private String cacheDirectory;
     private String fontName;
@@ -78,6 +80,7 @@ public class ConfigOptions {
             dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y));
             timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X));
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
+            textSmoothOutline = Boolean.parseBoolean(getValue(props, PROP_TEXT_SMOOTH_OUTLINE));
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY);
             fontName = getValue(props, PROP_FONT_NAME);
@@ -89,13 +92,16 @@ public class ConfigOptions {
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
         }
+        catch (Exception e) {
+            throw new RuntimeException("Invalid configuration detected: " + e.getMessage());
+        }
     }
 
     private int[] getRgb(String value) {
         String[] strArr = value.split(",");
 
         if (strArr.length != 3) {
-            throw new RuntimeException("Expected 3 comma separated numbers, got: " + value);
+            throw new RuntimeException("Expected 3 comma separated numbers, for input: " + value);
         }
 
         int[] rgb = new int[3];
@@ -116,6 +122,10 @@ public class ConfigOptions {
         else {
             throw new RuntimeException("Required property not found: " + key);
         }
+    }
+
+    public boolean isTextSmoothOutline() {
+        return textSmoothOutline;
     }
 
     public int getGfxDeviceNum() {
