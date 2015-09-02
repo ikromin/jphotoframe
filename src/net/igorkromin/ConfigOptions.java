@@ -43,6 +43,8 @@ public class ConfigOptions {
     private static final String PROP_DATE_OFFSET_Y = "dateOffsetY";
     private static final String PROP_TIME_OFFSET_X = "timeOffsetX";
     private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
+    private static final String PROP_TEXT_COLOR = "textColor";
+    private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -52,6 +54,8 @@ public class ConfigOptions {
     private int dateOffsetY;
     private int timeOffsetX;
     private int timeOffsetY;
+    private int[] textColor;
+    private int[] textOutlineColor;
     private String imageDirectory;
     private String cacheDirectory;
     private String fontName;
@@ -79,10 +83,27 @@ public class ConfigOptions {
             fontName = getValue(props, PROP_FONT_NAME);
             dateFormat = getValue(props, PROP_FORMAT_DATE);
             timeFormat = getValue(props, PROP_FORMAT_TIME);
+            textColor = getRgb(getValue(props, PROP_TEXT_COLOR));
+            textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR));
         }
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
         }
+    }
+
+    private int[] getRgb(String value) {
+        String[] strArr = value.split(",");
+
+        if (strArr.length != 3) {
+            throw new RuntimeException("Expected 3 comma separated numbers, got: " + value);
+        }
+
+        int[] rgb = new int[3];
+        rgb[0] = Integer.parseInt(strArr[0]);
+        rgb[1] = Integer.parseInt(strArr[1]);
+        rgb[2] = Integer.parseInt(strArr[2]);
+
+        return rgb;
     }
 
     private String getValue(Properties props, String key) {
@@ -147,5 +168,13 @@ public class ConfigOptions {
 
     public int getTimeOffsetY() {
         return timeOffsetY;
+    }
+
+    public int[] getTextColor() {
+        return textColor;
+    }
+
+    public int[] getTextOutlineColor() {
+        return textOutlineColor;
     }
 }

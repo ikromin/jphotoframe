@@ -25,9 +25,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -46,6 +43,8 @@ public class View extends JFrame {
     SimpleDateFormat dateFormat;
     SimpleDateFormat timeFormat;
     ConfigOptions config;
+    Color textColor;
+    Color textOutlineColor;
 
     public View(ConfigOptions config)
             throws IOException
@@ -67,6 +66,11 @@ public class View extends JFrame {
 
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
+
+        int[] rgb1 = config.getTextColor();
+        int[] rgb2 = config.getTextOutlineColor();
+        textColor = new Color(rgb1[0], rgb1[1], rgb1[2]);
+        textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
     }
 
     @Override
@@ -109,7 +113,7 @@ public class View extends JFrame {
         int sy = (int) strBounds.getHeight() + offsetY;
         int sx = rect.width - (int) strBounds.getWidth() - offsetX;
 
-        g.setColor(Color.black);
+        g.setColor(textOutlineColor);
         g.drawString(dispString, sx + 2, sy);
         g.drawString(dispString, sx - 2, sy);
         g.drawString(dispString, sx, sy + 2);
@@ -120,7 +124,7 @@ public class View extends JFrame {
         //g.drawString(dispString, sx + 2, sy - 2);
         //g.drawString(dispString, sx - 2, sy + 2);
 
-        g.setColor(Color.white);
+        g.setColor(textColor);
         g.drawString(dispString, sx, sy);
     }
 
