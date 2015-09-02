@@ -46,6 +46,7 @@ public class ConfigOptions {
     private static final String PROP_TEXT_COLOR = "textColor";
     private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
     private static final String PROP_TEXT_SMOOTH_OUTLINE = "textSmoothOutline";
+    private static final String PROP_TEXT_OUTLINE_OFFSET = "textOutlineOffset";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -54,6 +55,7 @@ public class ConfigOptions {
     private int dateOffsetX;
     private int dateOffsetY;
     private int timeOffsetX;
+    private int textOutlineOffset;
     private int timeOffsetY;
     private int[] textColor;
     private int[] textOutlineColor;
@@ -80,6 +82,8 @@ public class ConfigOptions {
             dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y));
             timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X));
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
+            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
+            textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET));
             textSmoothOutline = Boolean.parseBoolean(getValue(props, PROP_TEXT_SMOOTH_OUTLINE));
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY);
@@ -122,6 +126,10 @@ public class ConfigOptions {
         else {
             throw new RuntimeException("Required property not found: " + key);
         }
+    }
+
+    public int getTextOutlineOffset() {
+        return textOutlineOffset;
     }
 
     public boolean isTextSmoothOutline() {
