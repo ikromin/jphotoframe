@@ -34,7 +34,6 @@ timeOffsetX=10
 timeOffsetY=30
 textColor=0,0,0
 textOutlineColor=255,0,0
-textSmoothOutline=false
 textOutlineOffset=2
 ```
 

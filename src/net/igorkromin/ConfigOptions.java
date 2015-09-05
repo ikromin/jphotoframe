@@ -45,7 +45,6 @@ public class ConfigOptions {
     private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
     private static final String PROP_TEXT_COLOR = "textColor";
     private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
-    private static final String PROP_TEXT_SMOOTH_OUTLINE = "textSmoothOutline";
     private static final String PROP_TEXT_OUTLINE_OFFSET = "textOutlineOffset";
 
     private int gfxDeviceNum;
@@ -59,7 +58,6 @@ public class ConfigOptions {
     private int timeOffsetY;
     private int[] textColor;
     private int[] textOutlineColor;
-    private boolean textSmoothOutline;
     private String imageDirectory;
     private String cacheDirectory;
     private String fontName;
@@ -84,7 +82,6 @@ public class ConfigOptions {
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
             textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET));
-            textSmoothOutline = Boolean.parseBoolean(getValue(props, PROP_TEXT_SMOOTH_OUTLINE));
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY);
             fontName = getValue(props, PROP_FONT_NAME);
@@ -130,10 +127,6 @@ public class ConfigOptions {
 
     public int getTextOutlineOffset() {
         return textOutlineOffset;
-    }
-
-    public boolean isTextSmoothOutline() {
-        return textSmoothOutline;
     }
 
     public int getGfxDeviceNum() {

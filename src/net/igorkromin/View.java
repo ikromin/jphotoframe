@@ -23,7 +23,9 @@ package net.igorkromin;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +47,7 @@ public class View extends JFrame {
     ConfigOptions config;
     Color textColor;
     Color textOutlineColor;
+    BasicStroke outlineStroke;
 
     public View(ConfigOptions config)
             throws IOException
@@ -82,6 +85,8 @@ public class View extends JFrame {
         int[] rgb2 = config.getTextOutlineColor();
         textColor = new Color(rgb1[0], rgb1[1], rgb1[2]);
         textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
+
+        outlineStroke = new BasicStroke(config.getTextOutlineOffset());
     }
 
     private void drawImage(Graphics2D g) {
@@ -109,30 +114,23 @@ public class View extends JFrame {
 
     private void drawText(Graphics2D g, Rectangle rect, Font font, String dispString, int offsetX, int offsetY) {
         g.setFont(font);
-        Rectangle2D strBounds = g.getFontMetrics().getStringBounds(dispString, g);
+        g.setStroke(outlineStroke);
 
-        int sy = (int) strBounds.getHeight() + offsetY;
-        int sx = rect.width - (int) strBounds.getWidth() - offsetX;
+        FontRenderContext fontRenderContext = g.getFontRenderContext();
+        TextLayout text = new TextLayout(dispString, font, fontRenderContext);
 
-        int w = config.getTextOutlineOffset();
+        Shape shape = text.getOutline(null);
+        Rectangle textBounds = shape.getBounds();
 
-        // draw outline
+        AffineTransform tx = new AffineTransform();
+        tx.translate(rect.width - textBounds.width - offsetX, offsetY + textBounds.height);
+        g.setTransform(tx);
+
         g.setColor(textOutlineColor);
-        g.drawString(dispString, sx + w, sy);
-        g.drawString(dispString, sx - w, sy);
-        g.drawString(dispString, sx, sy + w);
-        g.drawString(dispString, sx, sy - w);
-
-        // if smooth text outline is set, draw the diagonally offset text too
-        if (config.isTextSmoothOutline()) {
-            g.drawString(dispString, sx + w, sy + w);
-            g.drawString(dispString, sx - w, sy - w);
-            g.drawString(dispString, sx + w, sy - w);
-            g.drawString(dispString, sx - w, sy + w);
-        }
+        g.draw(shape);
 
         g.setColor(textColor);
-        g.drawString(dispString, sx, sy);
+        text.draw(g, 0, 0);
     }
 
     public void setReady(boolean ready) {
