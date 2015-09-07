@@ -39,6 +39,7 @@ public class View extends JFrame {
 
     BufferedImage defaultImage;
     BufferedImage currentImage;
+    Image backgroundImage;
     Font dateFont;
     Font timeFont;
     boolean ready = false;
@@ -48,6 +49,9 @@ public class View extends JFrame {
     Color textColor;
     Color textOutlineColor;
     BasicStroke outlineStroke;
+    AlphaComposite bgComposite;
+    float bgPercent;
+    float bgOpacity;
 
     public View(ConfigOptions config)
             throws IOException
@@ -87,6 +91,10 @@ public class View extends JFrame {
         textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
 
         outlineStroke = new BasicStroke(config.getTextOutlineOffset());
+
+        bgPercent = 0.01f;
+        bgOpacity = 0.2f;
+        bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgOpacity);
     }
 
     private void drawImage(Graphics2D g) {
@@ -105,6 +113,14 @@ public class View extends JFrame {
         int width = currentImage.getWidth();
         int height = currentImage.getHeight();
 
+        Composite c = g.getComposite();
+
+        if (backgroundImage != null) {
+            g.setComposite(bgComposite);
+            g.drawImage(backgroundImage, 0, 0, rect.width, rect.height, null);
+        }
+
+        g.setComposite(c);
         g.drawImage(currentImage, (int) (rect.getWidth() - width) / 2, (int) (rect.getHeight() - height) / 2, null);
 
         Date dateTime = new Date();
@@ -178,6 +194,11 @@ public class View extends JFrame {
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.drawImage(img, 0, 0, newWidth, newHeight, null);
         g.dispose();
+
+        // create background image
+        int bgWidth = (int) (newWidth * bgPercent);
+        int bgHeight = (int) (newHeight * bgPercent);
+        backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
 
         repaint();
         return currentImage;
