@@ -46,6 +46,8 @@ public class ConfigOptions {
     private static final String PROP_TEXT_COLOR = "textColor";
     private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
     private static final String PROP_TEXT_OUTLINE_OFFSET = "textOutlineOffset";
+    private static final String PROP_BG_PERCENT = "backgroundSourcePercent";
+    private static final String PROP_BG_OPACITY = "backgroundOpacity";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -63,6 +65,8 @@ public class ConfigOptions {
     private String fontName;
     private String dateFormat;
     private String timeFormat;
+    private float bgPercent;
+    private float bgOpacity;
 
     public ConfigOptions(File configFile)
     {
@@ -89,6 +93,8 @@ public class ConfigOptions {
             timeFormat = getValue(props, PROP_FORMAT_TIME);
             textColor = getRgb(getValue(props, PROP_TEXT_COLOR));
             textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR));
+            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT));
+            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY));
         }
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
@@ -187,5 +193,13 @@ public class ConfigOptions {
 
     public int[] getTextOutlineColor() {
         return textOutlineColor;
+    }
+
+    public float getBackgroundPercent() {
+        return bgPercent;
+    }
+
+    public float getBackgroundOpacity() {
+        return bgOpacity;
     }
 }

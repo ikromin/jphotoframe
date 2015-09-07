@@ -35,6 +35,8 @@ timeOffsetY=30
 textColor=0,0,0
 textOutlineColor=255,0,0
 textOutlineOffset=2
+backgroundSourcePercent=0.01
+backgroundOpacity=0.2
 ```
 
 ## Running

@@ -50,8 +50,6 @@ public class View extends JFrame {
     Color textOutlineColor;
     BasicStroke outlineStroke;
     AlphaComposite bgComposite;
-    float bgPercent;
-    float bgOpacity;
 
     public View(ConfigOptions config)
             throws IOException
@@ -92,9 +90,7 @@ public class View extends JFrame {
 
         outlineStroke = new BasicStroke(config.getTextOutlineOffset());
 
-        bgPercent = 0.01f;
-        bgOpacity = 0.2f;
-        bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgOpacity);
+        bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, config.getBackgroundOpacity());
     }
 
     private void drawImage(Graphics2D g) {
@@ -196,8 +192,8 @@ public class View extends JFrame {
         g.dispose();
 
         // create background image
-        int bgWidth = (int) (newWidth * bgPercent);
-        int bgHeight = (int) (newHeight * bgPercent);
+        int bgWidth = (int) (newWidth * config.getBackgroundPercent());
+        int bgHeight = (int) (newHeight * config.getBackgroundPercent());
         backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
 
         repaint();
