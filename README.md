@@ -1,4 +1,4 @@
-# JPhotoFrame v0.1
+# JPhotoFrame v0.2
 JPhotoFrame is a simple Java application for displaying a collection of photos in a full-screen slideshow. It is meant to be used when creating a DIY photo frame.
 
 ## Features
