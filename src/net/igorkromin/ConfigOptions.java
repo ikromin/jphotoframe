@@ -76,25 +76,24 @@ public class ConfigOptions {
             Properties props = new Properties();
             props.load(new FileInputStream(configFile));
 
-            gfxDeviceNum = Integer.parseInt(getValue(props, PROP_DEVICE_NUM));
-            imageTimeout = Integer.parseInt(getValue(props, PROP_IMG_TIME));
-            fontSizeDate = Integer.parseInt(getValue(props, PROP_FONT_SIZE_DATE));
-            fontSizeTime = Integer.parseInt(getValue(props, PROP_FONT_SIZE_TIME));
-            dateOffsetX = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_X));
-            dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y));
-            timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X));
-            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
-            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y));
-            textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET));
-            imageDirectory = getValue(props, PROP_IMG_DIRECTORY);
-            cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY);
-            fontName = getValue(props, PROP_FONT_NAME);
-            dateFormat = getValue(props, PROP_FORMAT_DATE);
-            timeFormat = getValue(props, PROP_FORMAT_TIME);
-            textColor = getRgb(getValue(props, PROP_TEXT_COLOR));
-            textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR));
-            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT));
-            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY));
+            gfxDeviceNum = Integer.parseInt(getValue(props, PROP_DEVICE_NUM, ConfigDefaults.DEFAULT_DEVICE_NUM));
+            imageTimeout = Integer.parseInt(getValue(props, PROP_IMG_TIME, ConfigDefaults.DEFAULT_IMG_TIME));
+            fontSizeDate = Integer.parseInt(getValue(props, PROP_FONT_SIZE_DATE, ConfigDefaults.DEFAULT_FONT_SIZE_DATE));
+            fontSizeTime = Integer.parseInt(getValue(props, PROP_FONT_SIZE_TIME, ConfigDefaults.DEFAULT_FONT_SIZE_TIME));
+            dateOffsetX = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_X, ConfigDefaults.DEFAULT_DATE_OFFSET_X));
+            dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y, ConfigDefaults.DEFAULT_DATE_OFFSET_Y));
+            timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, ConfigDefaults.DEFAULT_TIME_OFFSET_X));
+            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, ConfigDefaults.DEFAULT_TIME_OFFSET_Y));
+            textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET, ConfigDefaults.DEFAULT_TEXT_OUTLINE_OFFSET));
+            imageDirectory = getValue(props, PROP_IMG_DIRECTORY, null);
+            cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, null);
+            fontName = getValue(props, PROP_FONT_NAME, ConfigDefaults.DEFAULT_FONT_NAME);
+            dateFormat = getValue(props, PROP_FORMAT_DATE, ConfigDefaults.DEFAULT_FORMAT_DATE);
+            timeFormat = getValue(props, PROP_FORMAT_TIME, ConfigDefaults.DEFAULT_FORMAT_TIME);
+            textColor = getRgb(getValue(props, PROP_TEXT_COLOR, ConfigDefaults.DEFAULT_TEXT_COLOR));
+            textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR, ConfigDefaults.DEFAULT_TEXT_OUTLINE_COLOR));
+            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, ConfigDefaults.DEFAULT_BG_PERCENT));
+            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, ConfigDefaults.DEFAULT_BG_OPACITY));
         }
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
@@ -119,15 +118,21 @@ public class ConfigOptions {
         return rgb;
     }
 
-    private String getValue(Properties props, String key) {
+    private String getValue(Properties props, String key, String defaultValue) {
         if (props.containsKey(key)) {
             String value = (String) props.get(key);
-            System.out.println(key + " = " + value);
+            System.out.println("[CONFIG]  " + key + " = " + value);
 
             return value;
         }
         else {
-            throw new RuntimeException("Required property not found: " + key);
+            if (defaultValue != null) {
+                System.out.println("[DEFAULT] " + key + " = " + defaultValue);
+                return defaultValue;
+            }
+            else {
+                throw new RuntimeException("Required property not found: " + key);
+            }
         }
     }
 
