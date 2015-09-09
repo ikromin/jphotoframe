@@ -10,6 +10,10 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Fills in the background on vertical photos using the photo as the source
 * Weather forecast using Yahoo! Weather
 
+## Screenshots
+
+![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.2_with_weather.png)
+
 ## Building
 
 Use Ant to build. Edit the *jphotoframe.properties* to point to your JDK location prior to building.
