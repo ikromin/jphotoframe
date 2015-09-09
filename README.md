@@ -119,6 +119,19 @@ inside it. The directory structure should look like this:
 The jar files from the lib directory are included in the jphotoframe.jar file manifest and should be picked up
 automatically.
 
+## Weather Forecasts
+
+Weather is retrieved from Yahoo! Weather using this library: https://github.com/fedy2/yahoo-weather-java-api.
+
+A WOEID must be configured for your location to retrieve forecasts. These can be looked up here:
+http://woeid.rosselliot.co.nz.
+
+All weather conditions are displayed using Weather Icons (http://erikflowers.github.io/weather-icons/).
+
+Below are the icons, conditions and condition codes used:
+
+![](https://github.com/ikromin/jphotoframe/blob/master/conditions.png)
+
 ## License
 
 JPhotoFrame - a simple Java application for displaying a collection of photos in a full-screen slideshow.
