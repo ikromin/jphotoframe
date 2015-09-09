@@ -143,8 +143,10 @@ public class View extends JFrame {
         int position = 0;
         if (forecast != null) {
             for (Forecast f : forecast) {
-                drawForecast(g, rect, f, position);
-                position++;
+                if (position < 3) {
+                    drawForecast(g, rect, f, position);
+                    position++;
+                }
             }
         }
     }
@@ -152,7 +154,7 @@ public class View extends JFrame {
     private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
         // todo: remove these and use configuration options instead
         int offsetX = 20;
-        int offsetY1 = 70;
+        int offsetY1 = 30;
         int offsetY2 = -135;
         int positionWidth = 140;
 
@@ -165,8 +167,7 @@ public class View extends JFrame {
 
         // condition 'icon'
         text = new TextLayout(condition, conditionFont, fontRenderContext);
-        textBounds = text.getBounds().getBounds();
-        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height + offsetY1);
+        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - offsetY1);
         drawText(g, conditionFont, text);
 
         // forecast text
