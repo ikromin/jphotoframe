@@ -39,46 +39,62 @@ textOutlineColor=255,0,0
 textOutlineOffset=2
 backgroundSourcePercent=0.01
 backgroundOpacity=0.2
+showWeather=true
+weatherWoeid=1100661
 ```
 ### Configuration Options
 
 These are the available configuration options. All apart frmo the directory settings are optional and have default values that will be used if nothing is provided for them.
 
-**screenNumber** - *integer* - The monitor/screen to use for full screen display. The default value of 0 should work in most cases
+#### Boolean Values
 
-**imageDirectory** - *string* - Path to the directory where photos will be fetched from. Child directories will be ignored.
+**showWeather** - *boolean* - Whether the weather forecast should be fetched and displayed.
 
-**cacheDirectory** - *string* - Path to store the cached files, should not be the same location as the imageDirectory.
+#### Decimal/Floating Point Values
 
-**imageTimeout** - *integer* - How long each photo is displayed, in milliseconds.
+**backgroundOpacity** - *float* - Background opacity.
 
-**fontName** - *string* - Name of the font to use when displaying all text.
+**backgroundSourcePercent** - *float* - Percentage of the photo to use to generate the background.
 
-**fontSizeDate** - *integer* - Size of the font used to display the date.
-
-**fontSizeTime** - *integer* - Size of the font used to display the time.
-
-**dateFormat** - *string* - Date format string as per the SimpleDateFormat Java class.
-
-**timeFormat** - *string* - Time format string as per teh SimpleDateFormat Java class.
+#### Integer Values
 
 **dateOffsetX** - *integer* - Horizontal offset from the right side of the screen when displaying the date.
 
 **dateOffsetY** - *integer* - Vertical offset from the top of the screen when displaying the date.
 
+**fontSizeDate** - *integer* - Size of the font used to display the date.
+
+**fontSizeTime** - *integer* - Size of the font used to display the time.
+
+**imageTimeout** - *integer* - How long each photo is displayed, in milliseconds.
+
+**screenNumber** - *integer* - The monitor/screen to use for full screen display. The default value of 0 should work in most cases
+
+**textOutlineOffset** - *integer* - Width of the text outline.
+
 **timeOffsetX** - *integer* - Horizontal offset from the right side of the screen when displaying the time.
 
 **timeOffsetY** - *integer* - Vertical offset from the top of the screen when displaying the time.
 
+**weatherWoeid*** - *integer* - The WOEID of the location to get the weather forecast for. These can be looked up here: http://woeid.rosselliot.co.nz
+
+#### String/Text Values
+
+**cacheDirectory** - *string* - Path to store the cached files, should not be the same location as the imageDirectory.
+
+**dateFormat** - *string* - Date format string as per the SimpleDateFormat Java class.
+
+**fontName** - *string* - Name of the font to use when displaying all text.
+
+**imageDirectory** - *string* - Path to the directory where photos will be fetched from. Child directories will be ignored.
+
+**timeFormat** - *string* - Time format string as per teh SimpleDateFormat Java class.
+
+### Color/RGB Values
+
 **textColor** - *rgb* - Color to use for all text as RGB (red,green,blue) value.
 
 **textOutlineColor** - *rgb* - Color to use for the text outline. Should typically be set to 0,0,0 for best results
-
-**textOutlineOffset** - *integer* - Width of the text outline.
-
-**backgroundSourcePercent** - *float* - Percentage of the photo to use to generate the background.
-
-**backgroundOpacity** - *float* - Background opacity.
 
 ## Running
 

@@ -21,5 +21,6 @@ public class ConfigDefaults {
     public static final String DEFAULT_TEXT_OUTLINE_OFFSET = "8";
     public static final String DEFAULT_BG_PERCENT = "0.01";
     public static final String DEFAULT_BG_OPACITY = "0.2";
-
+    public static final String DEFAULT_SHOW_WEATHER = "false";
+    public static final String DEFAULT_WEATHER_WOEID = "0";
 }

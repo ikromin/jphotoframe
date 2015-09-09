@@ -46,18 +46,18 @@ public class Controller implements KeyListener {
     Thread photoChangeThread;
     Thread timeChangeThread;
     boolean stopping = false;
-    int timerInterval;
     boolean firstTick = true;
     boolean fastTick = false;
+    ConfigOptions config;
 
     public Controller(ConfigOptions config, View view) throws IOException {
+        this.config = config;
         device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[config.getGfxDeviceNum()];
         imageDirectory = new ImageDirectory(config);
 
         this.view = view;
         view.addKeyListener(this);
 
-        timerInterval = config.getImageTimeout();
         photoChangeThread = new Thread() {
             @Override
             public void run() {
@@ -122,7 +122,7 @@ public class Controller implements KeyListener {
 
     private void updatePhoto() {
         try {
-            int sleepTime = timerInterval;
+            int sleepTime = config.getImageTimeout();
             if (firstTick) {
                 sleepTime = FIRST_TICK_TIMEOUT;
                 firstTick = false;
@@ -133,14 +133,16 @@ public class Controller implements KeyListener {
             }
             Thread.sleep(sleepTime);
 
-            try {
-                //http://woeid.rosselliot.co.nz
-                YahooWeatherService service = new YahooWeatherService();
-                Channel channel = service.getForecast("1100661", DegreeUnit.CELSIUS);
-                view.setForecast(channel.getItem().getForecasts());
-            }
-            catch (Exception e) {
-                e.printStackTrace();
+            // get the forecast if configured
+            if (config.isShowWeather()) {
+                try {
+                    // http://woeid.rosselliot.co.nz
+                    YahooWeatherService service = new YahooWeatherService();
+                    Channel channel = service.getForecast("" + config.getWeatherWoeid(), DegreeUnit.CELSIUS);
+                    view.setForecast(channel.getItem().getForecasts());
+                } catch (Exception e) {
+                    System.out.println("Could not fetch weather forecast, error: " + e.getMessage());
+                }
             }
 
             File f = imageDirectory.nextFile();

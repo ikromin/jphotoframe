@@ -48,6 +48,8 @@ public class ConfigOptions {
     private static final String PROP_TEXT_OUTLINE_OFFSET = "textOutlineOffset";
     private static final String PROP_BG_PERCENT = "backgroundSourcePercent";
     private static final String PROP_BG_OPACITY = "backgroundOpacity";
+    private static final String PROP_SHOW_WEATHER = "showWeather";
+    private static final String PROP_WEATHER_WOEID = "weatherWoeid";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -58,6 +60,7 @@ public class ConfigOptions {
     private int timeOffsetX;
     private int textOutlineOffset;
     private int timeOffsetY;
+    private int weatherWoeid;
     private int[] textColor;
     private int[] textOutlineColor;
     private String imageDirectory;
@@ -67,6 +70,7 @@ public class ConfigOptions {
     private String timeFormat;
     private float bgPercent;
     private float bgOpacity;
+    private boolean showWeather;
 
     public ConfigOptions(File configFile)
     {
@@ -85,6 +89,7 @@ public class ConfigOptions {
             timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, ConfigDefaults.DEFAULT_TIME_OFFSET_X));
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, ConfigDefaults.DEFAULT_TIME_OFFSET_Y));
             textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET, ConfigDefaults.DEFAULT_TEXT_OUTLINE_OFFSET));
+            weatherWoeid = Integer.parseInt(getValue(props, PROP_WEATHER_WOEID, ConfigDefaults.DEFAULT_WEATHER_WOEID));
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY, null);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, null);
             fontName = getValue(props, PROP_FONT_NAME, ConfigDefaults.DEFAULT_FONT_NAME);
@@ -94,6 +99,12 @@ public class ConfigOptions {
             textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR, ConfigDefaults.DEFAULT_TEXT_OUTLINE_COLOR));
             bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, ConfigDefaults.DEFAULT_BG_PERCENT));
             bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, ConfigDefaults.DEFAULT_BG_OPACITY));
+            showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, ConfigDefaults.DEFAULT_SHOW_WEATHER));
+
+            if (showWeather && weatherWoeid == 0) {
+                throw new RuntimeException("Please provide a valid the weatherWoeid parameter to show weather.\n" +
+                        "WOEIDs can be looked up here: http://woeid.rosselliot.co.nz");
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
@@ -134,6 +145,14 @@ public class ConfigOptions {
                 throw new RuntimeException("Required property not found: " + key);
             }
         }
+    }
+
+    public int getWeatherWoeid() {
+        return weatherWoeid;
+    }
+
+    public boolean isShowWeather() {
+        return showWeather;
     }
 
     public int getTextOutlineOffset() {
