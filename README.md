@@ -8,6 +8,7 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Current date/time display with custom date/time formats
 * Adjustable text font sizes
 * Fills in the background on vertical photos using the photo as the source
+* Weather forecast using Yahoo! Weather
 
 ## Building
 
@@ -84,6 +85,19 @@ These are the available configuration options. All apart frmo the directory sett
 To run, launch the jar file like so:
 
 `java -Xms32m -Xmx32m -jar jphotoframe.jar&`
+
+Make sure that there is a *lib* directory with the *slf4j-api-1.7.2.jar* and *yahoo-weather-java-api-1.2.0.jar* files
+inside it. The directory structure should look like this:
+
+```
++-- lib/
+|   +-- slf4j-api-1.7.2.jar
+|   +-- yahoo-weather-java-api-1.2.0.jar
++-- jphotoframe.jar
+```
+
+The jar files from the lib directory are included in the jphotoframe.jar file manifest and should be picked up
+automatically.
 
 ## License
 

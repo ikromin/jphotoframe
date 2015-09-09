@@ -20,6 +20,11 @@
 
 package net.igorkromin;
 
+import com.github.fedy2.weather.YahooWeatherService;
+import com.github.fedy2.weather.data.Channel;
+import com.github.fedy2.weather.data.Forecast;
+import com.github.fedy2.weather.data.unit.DegreeUnit;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -127,6 +132,16 @@ public class Controller implements KeyListener {
                 fastTick = false;
             }
             Thread.sleep(sleepTime);
+
+            try {
+                //http://woeid.rosselliot.co.nz
+                YahooWeatherService service = new YahooWeatherService();
+                Channel channel = service.getForecast("1100661", DegreeUnit.CELSIUS);
+                view.setForecast(channel.getItem().getForecasts());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 
             File f = imageDirectory.nextFile();
             File c = imageDirectory.getCachedFile(f);

@@ -20,6 +20,8 @@
 
 package net.igorkromin;
 
+import com.github.fedy2.weather.data.Forecast;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -29,19 +31,26 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by ikromin on 29/08/2015.
  */
 public class View extends JFrame {
 
+    private static final String WEATHER_ICONS_FONT_FILE = "/net/igorkromin/weathericons-regular-webfont.ttf";
+    private static final String DEFAULT_IMAGE_FILE = "net/igorkromin/archetype.png";
+
     BufferedImage defaultImage;
     BufferedImage currentImage;
     Image backgroundImage;
     Font dateFont;
     Font timeFont;
+    Font conditionFont;
+    Font forecastFont;
     boolean ready = false;
     SimpleDateFormat dateFormat;
     SimpleDateFormat timeFormat;
@@ -50,9 +59,11 @@ public class View extends JFrame {
     Color textOutlineColor;
     BasicStroke outlineStroke;
     AlphaComposite bgComposite;
+    List<Forecast> forecast;
+    AffineTransform tx;
 
     public View(ConfigOptions config)
-            throws IOException
+            throws IOException, FontFormatException
     {
         this.config = config;
 
@@ -75,10 +86,16 @@ public class View extends JFrame {
         panel.setOpaque(true);
         contentPane.add(panel);
 
-        defaultImage = ImageIO.read(ClassLoader.getSystemResource("net/igorkromin/archetype.png"));
+        tx = new AffineTransform();
+
+        defaultImage = ImageIO.read(ClassLoader.getSystemResource(DEFAULT_IMAGE_FILE));
 
         dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
         timeFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeTime());
+
+        // todo: allow configuration of font size here
+        conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE)).deriveFont(90f);
+        forecastFont = new Font(config.getFontName(), Font.BOLD, 16);
 
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
@@ -120,28 +137,63 @@ public class View extends JFrame {
         g.drawImage(currentImage, (int) (rect.getWidth() - width) / 2, (int) (rect.getHeight() - height) / 2, null);
 
         Date dateTime = new Date();
-        drawText(g, rect, dateFont, dateFormat.format(dateTime), config.getDateOffsetX(), config.getDateOffsetY());
-        drawText(g, rect, timeFont, timeFormat.format(dateTime), config.getTimeOffsetX(), config.getTimeOffsetY());
+        drawDateTime(g, rect, dateFont, dateFormat.format(dateTime), config.getDateOffsetX(), config.getDateOffsetY());
+        drawDateTime(g, rect, timeFont, timeFormat.format(dateTime), config.getTimeOffsetX(), config.getTimeOffsetY());
+
+        int position = 0;
+        if (forecast != null) {
+            for (Forecast f : forecast) {
+                drawForecast(g, rect, f, position);
+                position++;
+            }
+        }
     }
 
-    private void drawText(Graphics2D g, Rectangle rect, Font font, String dispString, int offsetX, int offsetY) {
-        g.setFont(font);
-        g.setStroke(outlineStroke);
+    private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
+        // todo: remove these and use configuration options instead
+        int offsetX = 20;
+        int offsetY1 = 70;
+        int offsetY2 = -135;
+        int positionWidth = 140;
 
+        String forecastText = forecast.getDay().toString() + "  " + forecast.getLow() + "/" + forecast.getHigh();
+        String condition = WeatherConditionCodes.fromInt(forecast.getCode()).toString();
+
+        TextLayout text;
+        Rectangle textBounds;
+        FontRenderContext fontRenderContext = g.getFontRenderContext();
+
+        // condition 'icon'
+        text = new TextLayout(condition, conditionFont, fontRenderContext);
+        textBounds = text.getBounds().getBounds();
+        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height + offsetY1);
+        drawText(g, conditionFont, text);
+
+        // forecast text
+        text = new TextLayout(forecastText, forecastFont, fontRenderContext);
+        textBounds = text.getBounds().getBounds();
+        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height + offsetY2);
+        drawText(g, forecastFont, text);
+    }
+
+    private void drawDateTime(Graphics2D g, Rectangle rect, Font font, String dispString, int offsetX, int offsetY) {
         FontRenderContext fontRenderContext = g.getFontRenderContext();
         TextLayout text = new TextLayout(dispString, font, fontRenderContext);
+        Rectangle textBounds = text.getBounds().getBounds();
+        tx.setToTranslation(rect.width - textBounds.width - offsetX, offsetY + textBounds.height);
+        drawText(g, font, text);
+    }
 
+    private void drawText(Graphics2D g, Font font, TextLayout text) {
         Shape shape = text.getOutline(null);
-        Rectangle textBounds = shape.getBounds();
 
-        AffineTransform tx = new AffineTransform();
-        tx.translate(rect.width - textBounds.width - offsetX, offsetY + textBounds.height);
+        g.setFont(font);
+        g.setStroke(outlineStroke);
         g.setTransform(tx);
-
         g.setColor(textOutlineColor);
         g.draw(shape);
-
         g.setColor(textColor);
+
         text.draw(g, 0, 0);
     }
 
@@ -200,4 +252,7 @@ public class View extends JFrame {
         return currentImage;
     }
 
+    public void setForecast(List<Forecast> forecast) {
+        this.forecast = forecast;
+    }
 }

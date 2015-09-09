@@ -33,7 +33,7 @@ public class PhotoFrame {
     private static final int RET_STATUS_HEADLESS_ERR = 1;
     private static final int RET_STATUS_CONFIG_ERR = 2;
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException, FontFormatException {
 
         File configFile;
         ConfigOptions config = null;
