@@ -7,6 +7,7 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Generates cached (resampled) images automatically
 * Current date/time display with custom date/time formats
 * Adjustable text font sizes
+* Fills in the background on vertical photos using the photo as the source
 
 ## Building
 
@@ -38,6 +39,42 @@ textOutlineOffset=2
 backgroundSourcePercent=0.01
 backgroundOpacity=0.2
 ```
+
+``screenNumber - The monitor/screen to use for full screen display. The default value of 0 should work in most cases.``
+
+``imageDirectory - Path to the directory where photos will be fetched from. Child directories will be ignored.``
+
+``cacheDirectory - Path to store the cached files, should not be the same location as the imageDirectory.``
+
+``imageTimeout - How long each photo is displayed, in milliseconds.``
+
+``fontName - Name of the font to use when displaying all text.``
+
+``fontSizeDate - Size of the font used to display the date.``
+
+``fontSizeTime - Size of the font used to display the time.``
+
+``dateFormat - Date format string as per the SimpleDateFormat Java class.``
+
+``timeFormat - Time format string as per teh SimpleDateFormat Java class.``
+
+``dateOffsetX - Horizontal offset from the right side of the screen when displaying the date.``
+
+``dateOffsetY - Vertical offset from the top of the screen when displaying the date.``
+
+``timeOffsetX - Horizontal offset from the right side of the screen when displaying the time.``
+
+``timeOffsetY - Vertical offset from the top of the screen when displaying the time.``
+
+``textColor - Color to use for all text as RGB (red,green,blue) value.``
+
+``textOutlineColor - Color to use for the text outline. Should typically be set to 0,0,0 for best results``
+
+``textOutlineOffset - Width of the text outline.``
+
+``backgroundSourcePercent - Percentage of the photo to use to generate the background.``
+
+``backgroundOpacity - Background opacity.``
 
 ## Running
 
