@@ -39,42 +39,45 @@ textOutlineOffset=2
 backgroundSourcePercent=0.01
 backgroundOpacity=0.2
 ```
+### Configuration Options
 
-``screenNumber - The monitor/screen to use for full screen display. The default value of 0 should work in most cases.``
+These are the available configuration options. All apart frmo the directory settings are optional and have default values that will be used if nothing is provided for them.
 
-``imageDirectory - Path to the directory where photos will be fetched from. Child directories will be ignored.``
+**screenNumber** - *integer* - The monitor/screen to use for full screen display. The default value of 0 should work in most cases
 
-``cacheDirectory - Path to store the cached files, should not be the same location as the imageDirectory.``
+**imageDirectory** - *string* - Path to the directory where photos will be fetched from. Child directories will be ignored.
 
-``imageTimeout - How long each photo is displayed, in milliseconds.``
+**cacheDirectory** - *string* - Path to store the cached files, should not be the same location as the imageDirectory.
 
-``fontName - Name of the font to use when displaying all text.``
+**imageTimeout** - *integer* - How long each photo is displayed, in milliseconds.
 
-``fontSizeDate - Size of the font used to display the date.``
+**fontName** - *string* - Name of the font to use when displaying all text.
 
-``fontSizeTime - Size of the font used to display the time.``
+**fontSizeDate** - *integer* - Size of the font used to display the date.
 
-``dateFormat - Date format string as per the SimpleDateFormat Java class.``
+**fontSizeTime** - *integer* - Size of the font used to display the time.
 
-``timeFormat - Time format string as per teh SimpleDateFormat Java class.``
+**dateFormat** - *string* - Date format string as per the SimpleDateFormat Java class.
 
-``dateOffsetX - Horizontal offset from the right side of the screen when displaying the date.``
+**timeFormat** - *string* - Time format string as per teh SimpleDateFormat Java class.
 
-``dateOffsetY - Vertical offset from the top of the screen when displaying the date.``
+**dateOffsetX** - *integer* - Horizontal offset from the right side of the screen when displaying the date.
 
-``timeOffsetX - Horizontal offset from the right side of the screen when displaying the time.``
+**dateOffsetY** - *integer* - Vertical offset from the top of the screen when displaying the date.
 
-``timeOffsetY - Vertical offset from the top of the screen when displaying the time.``
+**timeOffsetX** - *integer* - Horizontal offset from the right side of the screen when displaying the time.
 
-``textColor - Color to use for all text as RGB (red,green,blue) value.``
+**timeOffsetY** - *integer* - Vertical offset from the top of the screen when displaying the time.
 
-``textOutlineColor - Color to use for the text outline. Should typically be set to 0,0,0 for best results``
+**textColor** - *rgb* - Color to use for all text as RGB (red,green,blue) value.
 
-``textOutlineOffset - Width of the text outline.``
+**textOutlineColor** - *rgb* - Color to use for the text outline. Should typically be set to 0,0,0 for best results
 
-``backgroundSourcePercent - Percentage of the photo to use to generate the background.``
+**textOutlineOffset** - *integer* - Width of the text outline.
 
-``backgroundOpacity - Background opacity.``
+**backgroundSourcePercent** - *float* - Percentage of the photo to use to generate the background.
+
+**backgroundOpacity** - *float* - Background opacity.
 
 ## Running
 
