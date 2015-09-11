@@ -1,4 +1,5 @@
 # JPhotoFrame v0.2
+
 JPhotoFrame is a simple Java application for displaying a collection of photos in a full-screen slideshow. It is meant to be used when creating a DIY photo frame.
 
 ## Features
@@ -52,53 +53,55 @@ These are the available configuration options. All apart frmo the directory sett
 
 #### Boolean Values
 
-**showWeather** - *boolean* - Whether the weather forecast should be fetched and displayed.
+|Configuration Option    |Description
+|------------------------|------------------------------------------------------------------------------------------
+|showWeather             |Whether the weather forecast should be fetched and displayed.
 
 #### Decimal/Floating Point Values
 
-**backgroundOpacity** - *float* - Background opacity.
-
-**backgroundSourcePercent** - *float* - Percentage of the photo to use to generate the background.
+|Configuration Option    |Description
+|------------------------|------------------------------------------------------------------------------------------
+|backgroundOpacity       |Background opacity.
+|backgroundSourcePercent |Percentage of the photo to use to generate the background.
+|fontSizeWeatherCondition|Size of the font used to display the weather condition icon.
 
 #### Integer Values
 
-**dateOffsetX** - *integer* - Horizontal offset from the right side of the screen when displaying the date.
-
-**dateOffsetY** - *integer* - Vertical offset from the top of the screen when displaying the date.
-
-**fontSizeDate** - *integer* - Size of the font used to display the date.
-
-**fontSizeTime** - *integer* - Size of the font used to display the time.
-
-**imageTimeout** - *integer* - How long each photo is displayed, in milliseconds.
-
-**screenNumber** - *integer* - The monitor/screen to use for full screen display. The default value of 0 should work in most cases
-
-**textOutlineOffset** - *integer* - Width of the text outline.
-
-**timeOffsetX** - *integer* - Horizontal offset from the right side of the screen when displaying the time.
-
-**timeOffsetY** - *integer* - Vertical offset from the top of the screen when displaying the time.
-
-**weatherWoeid*** - *integer* - The WOEID of the location to get the weather forecast for. These can be looked up here: http://woeid.rosselliot.co.nz
+|Configuration Option    |Description
+|------------------------|------------------------------------------------------------------------------------------
+|dateOffsetX             |Horizontal offset from the right side of the screen when displaying the date.
+|dateOffsetY             |Vertical offset from the top of the screen when displaying the date.
+|fontSizeDate            |Size of the font used to display the date.
+|fontSizeWeatherForecast |Size of the font used to display the weather forecast (day low/high)
+|fontSizeTime            |Size of the font used to display the time.
+|imageTimeout            |How long each photo is displayed, in milliseconds.
+|screenNumber            |The monitor/screen to use for full screen display. The default value of 0 should work in most cases.
+|textOutlineOffset       |Width of the text outline.
+|timeOffsetX             |Horizontal offset from the right side of the screen when displaying the time.
+|timeOffsetY             |Vertical offset from the top of the screen when displaying the time.
+|weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the weather condition icon.
+|weatherDayWidth         |Amout of pixels that each forecast day should take on screen, includes condition icon and forecast text.
+|weatherForecastDays     |Maximum number of days to display the the forecast. Values larger than 5 will have no effect.
+|weatherForecastOffsetY  |Vertical offset from the bottom of the screen when displaying the forecast (day min/max).
+|weatherOffsetX          |Horizontal offset from the left side of the screen when displaying the weather icons.
+|weatherWoeid            |The WOEID of the location to get the weather forecast for. These can be looked up here: http://woeid.rosselliot.co.nz
 
 #### String/Text Values
 
-**cacheDirectory** - *string* - Path to store the cached files, should not be the same location as the imageDirectory.
-
-**dateFormat** - *string* - Date format string as per the SimpleDateFormat Java class.
-
-**fontName** - *string* - Name of the font to use when displaying all text.
-
-**imageDirectory** - *string* - Path to the directory where photos will be fetched from. Child directories will be ignored.
-
-**timeFormat** - *string* - Time format string as per teh SimpleDateFormat Java class.
+|Configuration Option    |Description
+|------------------------|------------------------------------------------------------------------------------------
+|cacheDirectory          |Path to store the cached files, should not be the same location as the imageDirectory.
+|dateFormat              |Date format string as per the SimpleDateFormat Java class.
+|fontName                |Name of the font to use when displaying all text.
+|imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored.
+|timeFormat              |Time format string as per teh SimpleDateFormat Java class.
 
 ### Color/RGB Values
 
-**textColor** - *rgb* - Color to use for all text as RGB (red,green,blue) value.
-
-**textOutlineColor** - *rgb* - Color to use for the text outline. Should typically be set to 0,0,0 for best results
+|Configuration Option    |Description
+|------------------------|------------------------------------------------------------------------------------------
+|textColor               |Color to use for all text as RGB (red,green,blue) value.
+|textOutlineColor        |Color to use for the text outline. Should typically be set to 0,0,0 for best results
 
 ## Running
 

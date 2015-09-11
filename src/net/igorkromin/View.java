@@ -91,10 +91,9 @@ public class View extends JFrame {
 
         dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
         timeFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeTime());
-
-        // todo: allow configuration of font size here
-        conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE)).deriveFont(90f);
-        forecastFont = new Font(config.getFontName(), Font.BOLD, 16);
+        conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE))
+                .deriveFont(config.getFontSizeWeatherCondition());
+        forecastFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeWeatherForecast());
 
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
@@ -142,20 +141,22 @@ public class View extends JFrame {
         int position = 0;
         if (forecast != null) {
             for (Forecast f : forecast) {
-                if (position < 3) {
+                if (position < config.getWeatherForecastDays()) {
                     drawForecast(g, rect, f, position);
-                    position++;
                 }
+                else {
+                    break;
+                }
+                position++;
             }
         }
     }
 
     private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
-        // todo: remove these and use configuration options instead
-        int offsetX = 20;
-        int offsetY1 = 30;
-        int offsetY2 = -135;
-        int positionWidth = 140;
+        int offsetX = config.getWeatherOffsetX();
+        int offsetY1 = config.getWeatherConditionOffsetY();
+        int offsetY2 = config.getWeatherForecastOffsetY();
+        int positionWidth = config.getWeatherDayWidth();
 
         String forecastText = forecast.getDay().toString() + "  " + forecast.getLow() + "/" + forecast.getHigh();
         String condition = WeatherConditionCodes.fromInt(forecast.getCode()).toString();
@@ -172,7 +173,7 @@ public class View extends JFrame {
         // forecast text
         text = new TextLayout(forecastText, forecastFont, fontRenderContext);
         textBounds = text.getBounds().getBounds();
-        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height + offsetY2);
+        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2);
         drawText(g, forecastFont, text);
     }
 

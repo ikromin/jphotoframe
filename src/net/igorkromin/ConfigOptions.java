@@ -37,12 +37,19 @@ public class ConfigOptions {
     private static final String PROP_FONT_NAME = "fontName";
     private static final String PROP_FONT_SIZE_DATE = "fontSizeDate";
     private static final String PROP_FONT_SIZE_TIME = "fontSizeTime";
+    private static final String PROP_FONT_SIZE_WEATHER_CONDITION = "fontSizeWeatherCondition";
+    private static final String PROP_FONT_SIZE_WEATHER_FORECAST = "fontSizeWeatherForecast";
     private static final String PROP_FORMAT_TIME = "timeFormat";
     private static final String PROP_FORMAT_DATE = "dateFormat";
     private static final String PROP_DATE_OFFSET_X = "dateOffsetX";
     private static final String PROP_DATE_OFFSET_Y = "dateOffsetY";
     private static final String PROP_TIME_OFFSET_X = "timeOffsetX";
     private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
+    private static final String PROP_WEATHER_OFFSET_X = "weatherOffsetX";
+    private static final String PROP_WEATHER_CONDITION_OFFSET_Y = "weatherConditionOffsetY";
+    private static final String PROP_WEATHER_FORECAST_OFFSET_Y = "weatherForecastOffsetY";
+    private static final String PROP_WEATHER_DAY_WIDTH = "weatherDayWidth";
+    private static final String PROP_WEATHER_FORECAST_DAYS = "weatherForecastDays";
     private static final String PROP_TEXT_COLOR = "textColor";
     private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
     private static final String PROP_TEXT_OUTLINE_OFFSET = "textOutlineOffset";
@@ -71,6 +78,14 @@ public class ConfigOptions {
     private float bgPercent;
     private float bgOpacity;
     private boolean showWeather;
+    private float fontSizeWeatherCondition;
+    private int fontSizeWeatherForecast;
+    private int weatherOffsetX;
+    private int weatherConditionOffsetY;
+    private int weatherForecastOffsetY;
+    private int weatherDayWidth;
+    private int weatherForecastDays;
+
 
     public ConfigOptions(File configFile)
     {
@@ -100,6 +115,13 @@ public class ConfigOptions {
             bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, ConfigDefaults.DEFAULT_BG_PERCENT));
             bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, ConfigDefaults.DEFAULT_BG_OPACITY));
             showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, ConfigDefaults.DEFAULT_SHOW_WEATHER));
+            fontSizeWeatherCondition = Float.parseFloat(getValue(props, PROP_FONT_SIZE_WEATHER_CONDITION, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_CONDITION));
+            fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_FORECAST));
+            weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, ConfigDefaults.DEFAULT_WEATHER_OFFSET_X));
+            weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CONDITION_OFFSET_Y));
+            weatherForecastOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_OFFSET_Y));
+            weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, ConfigDefaults.DEFAULT_WEATHER_DAY_WIDTH));
+            weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS));
 
             if (showWeather && weatherWoeid == 0) {
                 throw new RuntimeException("Please provide a valid the weatherWoeid parameter to show weather.\n" +
@@ -112,6 +134,34 @@ public class ConfigOptions {
         catch (Exception e) {
             throw new RuntimeException("Invalid configuration detected: " + e.getMessage());
         }
+    }
+
+    public float getFontSizeWeatherCondition() {
+        return fontSizeWeatherCondition;
+    }
+
+    public int getFontSizeWeatherForecast() {
+        return fontSizeWeatherForecast;
+    }
+
+    public int getWeatherOffsetX() {
+        return weatherOffsetX;
+    }
+
+    public int getWeatherConditionOffsetY() {
+        return weatherConditionOffsetY;
+    }
+
+    public int getWeatherForecastOffsetY() {
+        return weatherForecastOffsetY;
+    }
+
+    public int getWeatherDayWidth() {
+        return weatherDayWidth;
+    }
+
+    public int getWeatherForecastDays() {
+        return weatherForecastDays;
     }
 
     private int[] getRgb(String value) {

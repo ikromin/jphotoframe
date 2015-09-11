@@ -22,7 +22,6 @@ package net.igorkromin;
 
 import com.github.fedy2.weather.YahooWeatherService;
 import com.github.fedy2.weather.data.Channel;
-import com.github.fedy2.weather.data.Forecast;
 import com.github.fedy2.weather.data.unit.DegreeUnit;
 
 import java.awt.*;
