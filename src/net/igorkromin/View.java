@@ -229,7 +229,7 @@ public class View extends JFrame {
         try {
             img = ImageIO.read(file);
         }
-        catch (IOException e) {
+        catch (IOException|OutOfMemoryError e) {
             System.out.println("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage());
             return null;
         }
