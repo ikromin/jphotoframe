@@ -138,7 +138,7 @@ public class Controller implements KeyListener {
                     // http://woeid.rosselliot.co.nz
                     YahooWeatherService service = new YahooWeatherService();
                     Channel channel = service.getForecast("" + config.getWeatherWoeid(), DegreeUnit.CELSIUS);
-                    view.setForecast(channel.getItem().getForecasts());
+                    view.setForecastChannel(channel);
                 } catch (Exception e) {
                     System.out.println("Could not fetch weather forecast, error: " + e.getMessage());
                 }

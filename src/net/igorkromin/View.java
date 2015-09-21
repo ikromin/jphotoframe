@@ -20,6 +20,7 @@
 
 package net.igorkromin;
 
+import com.github.fedy2.weather.data.Channel;
 import com.github.fedy2.weather.data.Forecast;
 
 import javax.imageio.ImageIO;
@@ -58,6 +59,7 @@ public class View extends JFrame {
     Color textOutlineColor;
     BasicStroke outlineStroke;
     AlphaComposite bgComposite;
+    Channel forecastChannel;
     List<Forecast> forecast;
     AffineTransform tx;
 
@@ -159,7 +161,8 @@ public class View extends JFrame {
         int positionWidth = config.getWeatherDayWidth();
 
         String forecastText = forecast.getDay().toString() + "  " + forecast.getLow() + "/" + forecast.getHigh();
-        String condition = WeatherConditionCodes.fromInt(forecast.getCode()).toString();
+        WeatherConditionCodes conditionEnum = WeatherConditionCodes.fromInt(forecast.getCode());
+        String condition = conditionEnum.toString();
 
         TextLayout text;
         Rectangle textBounds;
@@ -175,6 +178,20 @@ public class View extends JFrame {
         textBounds = text.getBounds().getBounds();
         tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2);
         drawText(g, forecastFont, text);
+
+        // forecast text
+        text = new TextLayout(conditionEnum.getInfoText(), forecastFont, fontRenderContext);
+        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - offsetY2);
+        drawText(g, forecastFont, text);
+
+        // forecast location
+        if (position == 0) {
+            String locationText = forecastChannel.getLocation().getCity() + ", " + forecastChannel.getLocation().getCountry();
+            text = new TextLayout(locationText, forecastFont, fontRenderContext);
+            textBounds = text.getBounds().getBounds();
+            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 50);
+            drawText(g, forecastFont, text);
+        }
     }
 
     private void drawDateTime(Graphics2D g, Rectangle rect, Font font, String dispString, int offsetX, int offsetY) {
@@ -253,7 +270,8 @@ public class View extends JFrame {
         return currentImage;
     }
 
-    public void setForecast(List<Forecast> forecast) {
-        this.forecast = forecast;
+    public void setForecastChannel(Channel channel) {
+        this.forecastChannel = channel;
+        this.forecast = channel.getItem().getForecasts();
     }
 }
