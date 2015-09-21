@@ -1,4 +1,4 @@
-# JPhotoFrame v0.2
+# JPhotoFrame v0.3
 
 JPhotoFrame is a simple Java application for displaying a collection of photos in a full-screen slideshow. It is meant to be used when creating a DIY photo frame.
 
@@ -10,6 +10,10 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Adjustable text font sizes
 * Fills in the background on vertical photos using the photo as the source
 * Weather forecast using Yahoo! Weather
+
+## Issues Fixed
+
+#1 OutOfMemoryError when loading image stops images from cycling
 
 ## Screenshots
 
