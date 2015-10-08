@@ -39,6 +39,7 @@ public class ConfigOptions {
     private static final String PROP_FONT_SIZE_TIME = "fontSizeTime";
     private static final String PROP_FONT_SIZE_WEATHER_CONDITION = "fontSizeWeatherCondition";
     private static final String PROP_FONT_SIZE_WEATHER_FORECAST = "fontSizeWeatherForecast";
+    private static final String PROP_FONT_SIZE_LOCATION = "fontSizeLocation";
     private static final String PROP_FORMAT_TIME = "timeFormat";
     private static final String PROP_FORMAT_DATE = "dateFormat";
     private static final String PROP_DATE_OFFSET_X = "dateOffsetX";
@@ -80,6 +81,7 @@ public class ConfigOptions {
     private boolean showWeather;
     private float fontSizeWeatherCondition;
     private int fontSizeWeatherForecast;
+    private int fontSizeLocation;
     private int weatherOffsetX;
     private int weatherConditionOffsetY;
     private int weatherForecastOffsetY;
@@ -117,6 +119,7 @@ public class ConfigOptions {
             showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, ConfigDefaults.DEFAULT_SHOW_WEATHER));
             fontSizeWeatherCondition = Float.parseFloat(getValue(props, PROP_FONT_SIZE_WEATHER_CONDITION, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_CONDITION));
             fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_FORECAST));
+            fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, ConfigDefaults.DEFAULT_FONT_SIZE_LOCATION));
             weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, ConfigDefaults.DEFAULT_WEATHER_OFFSET_X));
             weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CONDITION_OFFSET_Y));
             weatherForecastOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_OFFSET_Y));
@@ -134,6 +137,10 @@ public class ConfigOptions {
         catch (Exception e) {
             throw new RuntimeException("Invalid configuration detected: " + e.getMessage());
         }
+    }
+
+    public int getFontSizeLocation() {
+        return fontSizeLocation;
     }
 
     public float getFontSizeWeatherCondition() {

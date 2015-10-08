@@ -51,6 +51,7 @@ public class View extends JFrame {
     Font timeFont;
     Font conditionFont;
     Font forecastFont;
+    Font locationFont;
     boolean ready = false;
     SimpleDateFormat dateFormat;
     SimpleDateFormat timeFormat;
@@ -96,6 +97,7 @@ public class View extends JFrame {
         conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE))
                 .deriveFont(config.getFontSizeWeatherCondition());
         forecastFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeWeatherForecast());
+        locationFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeLocation());
 
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
@@ -191,10 +193,10 @@ public class View extends JFrame {
         // forecast location
         if (position == 0) {
             String locationText = forecastChannel.getLocation().getCity() + ", " + forecastChannel.getLocation().getCountry();
-            text = new TextLayout(locationText, forecastFont, fontRenderContext);
+            text = new TextLayout(locationText, locationFont, fontRenderContext);
             textBounds = text.getBounds().getBounds();
-            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 50);
-            drawText(g, forecastFont, text);
+            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 30);
+            drawText(g, locationFont, text);
         }
     }
 
