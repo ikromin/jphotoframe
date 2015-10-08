@@ -170,7 +170,11 @@ public class View extends JFrame {
 
         // condition 'icon'
         text = new TextLayout(condition, conditionFont, fontRenderContext);
-        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - offsetY1);
+        int conditionWidth = (int) text.getBounds().getWidth();
+        int conditionHeight = (int) text.getBounds().getHeight();
+        int nudgeX = (positionWidth > conditionWidth) ? (positionWidth - conditionWidth) / 2 : 0; // center in allocated space
+        int nudgeY = (offsetY1 - conditionHeight); // align to top
+        tx.setToTranslation(nudgeX + offsetX + (position * positionWidth), rect.height - offsetY1 - nudgeY);
         drawText(g, conditionFont, text);
 
         // forecast text

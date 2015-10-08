@@ -24,11 +24,11 @@ public class ConfigDefaults {
     public static final String DEFAULT_SHOW_WEATHER = "false";
     public static final String DEFAULT_WEATHER_WOEID = "0";
     public static final String DEFAULT_FONT_SIZE_WEATHER_CONDITION = "90";
-    public static final String DEFAULT_FONT_SIZE_WEATHER_FORECAST = "16";
+    public static final String DEFAULT_FONT_SIZE_WEATHER_FORECAST = "19";
     public static final String DEFAULT_WEATHER_OFFSET_X = "20";
-    public static final String DEFAULT_WEATHER_CONDITION_OFFSET_Y = "45";
-    public static final String DEFAULT_WEATHER_FORECAST_OFFSET_Y = "150";
-    public static final String DEFAULT_WEATHER_DAY_WIDTH = "130";
+    public static final String DEFAULT_WEATHER_CONDITION_OFFSET_Y = "110";
+    public static final String DEFAULT_WEATHER_FORECAST_OFFSET_Y = "20";
+    public static final String DEFAULT_WEATHER_DAY_WIDTH = "140";
     public static final String DEFAULT_WEATHER_FORECAST_DAYS = "3";
 
 }
