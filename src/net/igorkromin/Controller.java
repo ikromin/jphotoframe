@@ -27,6 +27,8 @@ import com.github.fedy2.weather.data.unit.DegreeUnit;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +37,9 @@ import java.io.IOException;
 /**
  * Created by ikromin on 30/08/2015.
  */
-public class Controller implements KeyListener {
+public class Controller implements KeyListener, MouseListener {
 
-    private static final int FIRST_TICK_TIMEOUT = 1000;
+    private static final int FIRST_TICK_TIMEOUT = 2000;
 
     GraphicsDevice device;
     View view;
@@ -56,6 +58,7 @@ public class Controller implements KeyListener {
 
         this.view = view;
         view.addKeyListener(this);
+        view.addMouseListener(this);
 
         photoChangeThread = new Thread() {
             @Override
@@ -194,4 +197,31 @@ public class Controller implements KeyListener {
         // not implemented
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // Exit on mouse click
+        stop();
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // Exit on mouse press
+        stop();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // not implemented
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // not implemented
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // not implemented
+    }
 }
