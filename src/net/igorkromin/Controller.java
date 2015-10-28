@@ -24,6 +24,7 @@ import com.github.fedy2.weather.YahooWeatherService;
 import com.github.fedy2.weather.data.Channel;
 import com.github.fedy2.weather.data.unit.DegreeUnit;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -85,12 +86,18 @@ public class Controller implements KeyListener, MouseListener {
         System.out.println("Starting photo frame");
 
         try {
-            device.setFullScreenWindow(view);
-            view.setReady(true);
+            if (config.isFullScreenWindow()) {
+                device.setFullScreenWindow(view);
+            }
+            else {
+                view.setExtendedState(view.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            }
 
             // stupid workaround for OS X losing focus
             view.setVisible(false);
             view.setVisible(true);
+
+            view.setReady(true);
 
             imageDirectory.startWatching();
             imageDirectory.sync();
@@ -98,7 +105,7 @@ public class Controller implements KeyListener, MouseListener {
             photoChangeThread.start();
             timeChangeThread.start();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             System.out.println("Error starting: " + e.getMessage());
             stop();
         }

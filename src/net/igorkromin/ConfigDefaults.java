@@ -31,5 +31,6 @@ public class ConfigDefaults {
     public static final String DEFAULT_WEATHER_FORECAST_OFFSET_Y = "20";
     public static final String DEFAULT_WEATHER_DAY_WIDTH = "140";
     public static final String DEFAULT_WEATHER_FORECAST_DAYS = "3";
+    public static final String DEFAULT_FULL_SCREEN_WINDOW = "true";
 
 }

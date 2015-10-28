@@ -58,6 +58,7 @@ public class ConfigOptions {
     private static final String PROP_BG_OPACITY = "backgroundOpacity";
     private static final String PROP_SHOW_WEATHER = "showWeather";
     private static final String PROP_WEATHER_WOEID = "weatherWoeid";
+    private static final String PROP_FULL_SCREEN_WINDOW = "fullScreenWindow";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -79,6 +80,7 @@ public class ConfigOptions {
     private float bgPercent;
     private float bgOpacity;
     private boolean showWeather;
+    private boolean fullScreenWindow;
     private float fontSizeWeatherCondition;
     private int fontSizeWeatherForecast;
     private int fontSizeLocation;
@@ -117,6 +119,7 @@ public class ConfigOptions {
             bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, ConfigDefaults.DEFAULT_BG_PERCENT));
             bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, ConfigDefaults.DEFAULT_BG_OPACITY));
             showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, ConfigDefaults.DEFAULT_SHOW_WEATHER));
+            fullScreenWindow = Boolean.parseBoolean(getValue(props, PROP_FULL_SCREEN_WINDOW, ConfigDefaults.DEFAULT_FULL_SCREEN_WINDOW));
             fontSizeWeatherCondition = Float.parseFloat(getValue(props, PROP_FONT_SIZE_WEATHER_CONDITION, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_CONDITION));
             fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_FORECAST));
             fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, ConfigDefaults.DEFAULT_FONT_SIZE_LOCATION));
@@ -210,6 +213,10 @@ public class ConfigOptions {
 
     public boolean isShowWeather() {
         return showWeather;
+    }
+
+    public boolean isFullScreenWindow() {
+        return fullScreenWindow;
     }
 
     public int getTextOutlineOffset() {
