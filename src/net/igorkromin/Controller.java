@@ -153,7 +153,7 @@ public class Controller implements KeyListener {
                 view.displayImage(c);
             }
             else {
-                BufferedImage img = view.displayImage(f);
+                BufferedImage img = view.getCurrentImage();
                 if (img != null) {
                     imageDirectory.cacheImage(f, img);
                 }

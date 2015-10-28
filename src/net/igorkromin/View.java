@@ -225,9 +225,9 @@ public class View extends JFrame {
         this.ready = ready;
     }
 
-    public BufferedImage displayImage(File file) {
+    public void displayImage(File file) {
         if (!ready) {
-            return null;
+            return;
         }
 
         // load the image
@@ -237,12 +237,12 @@ public class View extends JFrame {
         }
         catch (IOException|OutOfMemoryError e) {
             System.out.println("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage());
-            return null;
+            return;
         }
 
         if (img == null) {
             System.out.println("Could not load file: " + file.getAbsolutePath());
-            return null;
+            return;
         }
 
         Rectangle bounds = getBounds();
@@ -259,25 +259,36 @@ public class View extends JFrame {
             newWidth = (newHeight * width) / height;
         }
 
-        // create and draw the image scaled to the device we're displaying on
-        currentImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_3BYTE_BGR);
-        Graphics2D g = currentImage.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g.drawImage(img, 0, 0, newWidth, newHeight, null);
-        g.dispose();
+        try {
+            // create and draw the image scaled to the device we're displaying on
+            currentImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_3BYTE_BGR);
+            Graphics2D g = currentImage.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g.drawImage(img, 0, 0, newWidth, newHeight, null);
+            g.dispose();
 
-        // create background image
-        int bgWidth = (int) (newWidth * config.getBackgroundPercent());
-        int bgHeight = (int) (newHeight * config.getBackgroundPercent());
-        backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
+            // create background image
+            int bgWidth = (int) (newWidth * config.getBackgroundPercent());
+            int bgHeight = (int) (newHeight * config.getBackgroundPercent());
+            backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
+        }
+        catch (Exception e) {
+            System.out.println("Could not create memory image: " + e.getMessage());
+            currentImage = null;
+            backgroundImage = null;
+        }
 
         repaint();
-        return currentImage;
     }
 
     public void setForecastChannel(Channel channel) {
         this.forecastChannel = channel;
         this.forecast = channel.getItem().getForecasts();
     }
+
+    public BufferedImage getCurrentImage() {
+        return currentImage;
+    }
+
 }
