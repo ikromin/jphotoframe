@@ -63,6 +63,7 @@ public class View extends JFrame {
     Channel forecastChannel;
     List<Forecast> forecast;
     AffineTransform tx;
+    int maxConditionHeight = -1;
 
     public View(ConfigOptions config)
             throws IOException, FontFormatException
@@ -173,10 +174,8 @@ public class View extends JFrame {
         // condition 'icon'
         text = new TextLayout(condition, conditionFont, fontRenderContext);
         int conditionWidth = (int) text.getBounds().getWidth();
-        int conditionHeight = (int) text.getBounds().getHeight();
         int nudgeX = (positionWidth > conditionWidth) ? (positionWidth - conditionWidth) / 2 : 0; // center in allocated space
-        int nudgeY = (offsetY1 - conditionHeight); // align to top
-        tx.setToTranslation(nudgeX + offsetX + (position * positionWidth), rect.height - offsetY1 - nudgeY);
+        tx.setToTranslation(nudgeX + offsetX + (position * positionWidth), rect.height - offsetY1);
         drawText(g, conditionFont, text);
 
         // forecast text
@@ -189,13 +188,14 @@ public class View extends JFrame {
         text = new TextLayout(conditionEnum.getInfoText(), forecastFont, fontRenderContext);
         tx.setToTranslation(offsetX + (position * positionWidth), rect.height - offsetY2);
         drawText(g, forecastFont, text);
+        // TODO have separte y offset for this
 
         // forecast location
         if (position == 0) {
             String locationText = forecastChannel.getLocation().getCity() + ", " + forecastChannel.getLocation().getCountry();
             text = new TextLayout(locationText, locationFont, fontRenderContext);
             textBounds = text.getBounds().getBounds();
-            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 30);
+            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 180);
             drawText(g, locationFont, text);
         }
     }

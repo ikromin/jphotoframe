@@ -27,7 +27,7 @@ public class ConfigDefaults {
     public static final String DEFAULT_FONT_SIZE_WEATHER_FORECAST = "19";
     public static final String DEFAULT_FONT_SIZE_LOCATION = "26";
     public static final String DEFAULT_WEATHER_OFFSET_X = "20";
-    public static final String DEFAULT_WEATHER_CONDITION_OFFSET_Y = "120";
+    public static final String DEFAULT_WEATHER_CONDITION_OFFSET_Y = "105";
     public static final String DEFAULT_WEATHER_FORECAST_OFFSET_Y = "20";
     public static final String DEFAULT_WEATHER_DAY_WIDTH = "140";
     public static final String DEFAULT_WEATHER_FORECAST_DAYS = "3";
