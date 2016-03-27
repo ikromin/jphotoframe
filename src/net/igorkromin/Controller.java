@@ -86,6 +86,9 @@ public class Controller implements KeyListener, MouseListener {
         System.out.println("Starting photo frame");
 
         try {
+            // get the initial list of files to display
+            imageDirectory.sync();
+
             if (config.isFullScreenWindow()) {
                 device.setFullScreenWindow(view);
             }
@@ -97,13 +100,12 @@ public class Controller implements KeyListener, MouseListener {
             view.setVisible(false);
             view.setVisible(true);
 
-            view.setReady(true);
-
+            // start all the support threads
             imageDirectory.startWatching();
-            imageDirectory.sync();
-
             photoChangeThread.start();
             timeChangeThread.start();
+
+            view.setReady(true);
         }
         catch (Exception e) {
             System.out.println("Error starting: " + e.getMessage());

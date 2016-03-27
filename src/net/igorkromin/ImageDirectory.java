@@ -30,6 +30,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Collections;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -71,8 +72,8 @@ public class ImageDirectory {
     public void startWatching()
             throws IOException
     {
-        imageDirPath.register(dirWatcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         (new WatcherThread(dirWatcher)).start();
+        imageDirPath.register(dirWatcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
     }
 
     public void stopWatching() {
@@ -92,12 +93,13 @@ public class ImageDirectory {
 
         File[] files = imageDirFile.listFiles();
         for (File f : files) {
-            if (f.isFile() && f.canRead()) {
+            if (f.isFile() && f.canRead() && !f.isHidden()) {
                 imageFiles.add(f);
             }
         }
 
         Collections.shuffle(imageFiles);
+        System.out.println("Found " + imageFiles.size() + " files");
     }
 
     public File nextFile() {
@@ -161,9 +163,13 @@ public class ImageDirectory {
             try {
                 for (;;) {
                     WatchKey key = dirWatcher.take();
+                    key.pollEvents();
+
                     if (key.isValid()) {
                         sync();
                     }
+
+                    key.reset();
                 }
             }
             catch (Exception e) {
