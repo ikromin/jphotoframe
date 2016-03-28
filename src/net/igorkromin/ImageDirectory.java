@@ -44,6 +44,8 @@ public class ImageDirectory {
     File cacheDirFile;
     Vector<File> imageFiles;
     int imageIndex;
+    Object lock = new Object();
+    boolean foundPauseFile = false;
 
     public ImageDirectory(ConfigOptions config)
             throws IOException
@@ -90,15 +92,32 @@ public class ImageDirectory {
         imageFiles.clear();
         imageIndex = 0;
 
+        boolean wasPaused = (foundPauseFile == true);
+
+        foundPauseFile = false;
         File[] files = imageDirFile.listFiles();
         for (File f : files) {
             if (f.isFile() && f.canRead() && !f.isHidden()) {
                 imageFiles.add(f);
+
+                // check if we should pause processing and wait
+                if (f.getName().equals("pause.txt")) {
+                    foundPauseFile = true;
+                    System.out.println("Pausing");
+                }
             }
         }
 
         Collections.shuffle(imageFiles);
         System.out.println("Found " + imageFiles.size() + " files");
+
+        // notify all waiting threads that they can resume
+        if (wasPaused && foundPauseFile == false) {
+            System.out.println("Resuming");
+            synchronized (lock) {
+                lock.notifyAll();
+            }
+        }
     }
 
     public File nextFile() {
@@ -146,6 +165,18 @@ public class ImageDirectory {
         File newFile = newPath.toFile();
 
         return newFile;
+    }
+
+    public  void waitIfPaused() {
+        if (foundPauseFile) {
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+            }
+        }
     }
 
     private class WatcherThread extends Thread {

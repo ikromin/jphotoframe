@@ -10,6 +10,7 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Adjustable text font sizes
 * Fills in the background on vertical photos using the photo as the source
 * Weather forecast using Yahoo! Weather
+* Pausable operation i.e. during photo frame offline hours
 
 ## Issues Fixed
 
@@ -138,6 +139,11 @@ All weather conditions are displayed using Weather Icons (http://erikflowers.git
 Below are the icons, conditions and condition codes used:
 
 ![](https://github.com/ikromin/jphotoframe/blob/master/conditions.png)
+
+## Pausable Operation
+
+The time and photo updates can be paused by creating a file called *pause.txt* in the photos directory. If this file is found, the photo frame will become idle until that file is removed again.
+This is useful to suspend photo updates during photo frame offline hours i.e. during the night.
 
 ## License
 

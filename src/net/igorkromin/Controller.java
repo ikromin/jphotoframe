@@ -65,6 +65,7 @@ public class Controller implements KeyListener, MouseListener {
             @Override
             public void run() {
                 while (!stopping) {
+                    imageDirectory.waitIfPaused();
                     updatePhoto();
                 }
             }
@@ -74,12 +75,12 @@ public class Controller implements KeyListener, MouseListener {
             @Override
             public void run() {
                 while (!stopping) {
-                    while (!stopping) {
-                        updateTime();
-                    }
+                    imageDirectory.waitIfPaused();
+                    updateTime();
                 }
             }
         };
+
     }
 
     public void start() {
