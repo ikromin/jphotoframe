@@ -123,8 +123,11 @@ inside it. The directory structure should look like this:
 
 ```
 +-- lib/
-|   +-- slf4j-api-1.7.2.jar
-|   +-- yahoo-weather-java-api-1.2.0.jar
+|   +-- commons-logging-1.2.jar
+|   +-- httpclient-4.2.3.jar
+|   +-- httpcore-4.2.2.jar
+|   +-- json-20070829.jar
+|   +-- owm-lib-2.1.2.jar
 +-- jphotoframe.jar
 ```
 
