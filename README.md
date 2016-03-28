@@ -114,6 +114,8 @@ To run, launch the jar file like so:
 
 `java -Xms32m -Xmx32m -jar jphotoframe.jar&`
 
+Alternatively copy the *jphotoframe.jar* file to the same directory as the *run.sh* (after building using ant) and execute the *run.sh* script instead.
+
 Make sure that there is a *lib* directory with the *slf4j-api-1.7.2.jar* and *yahoo-weather-java-api-1.2.0.jar* files
 inside it. The directory structure should look like this:
 
@@ -145,10 +147,53 @@ Below are the icons, conditions and condition codes used:
 The time and photo updates can be paused by creating a file called *pause.txt* in the photos directory. If this file is found, the photo frame will become idle until that file is removed again.
 This is useful to suspend photo updates during photo frame offline hours i.e. during the night.
 
+## Scheduled Tasks
+
+There is a script provided along with the source code called *onoff.sh* that can be used to control when the screen is turned on and off using *xset*. This script also controls whether the pausible operation is enabled or not.
+
+To use make sure the *onoff_times.txt* file sets relevant times for when your screen should be on or off. The format of the file is the hour (24 hour format) followed by a tab, then either the word 'on' or 'off'.
+
+The default file is as follows:
+
+```
+00	off
+01	off
+02	off
+03	off
+04	off
+05	off
+06	on
+07	on
+08	on
+09	on
+10	on
+11	on
+12	on
+13	on
+14	on
+15	on
+16	on
+17	on
+18	on
+19	on
+20	on
+21	on
+22	off
+23	off
+```
+
+Update the *onoff.sh* script to set the correct directories and display number.
+
+Set your crontab to below (update paths as required):
+
+```
+0 * * * * sh /home/pi/jphotoframe/onoff.sh
+```
+
 ## License
 
 JPhotoFrame - a simple Java application for displaying a collection of photos in a full-screen slideshow.
-Copyright (C) 2015  Igor Kromin
+Copyright (C) 2015-2016  Igor Kromin
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
