@@ -57,8 +57,9 @@ public class ConfigOptions {
     private static final String PROP_BG_PERCENT = "backgroundSourcePercent";
     private static final String PROP_BG_OPACITY = "backgroundOpacity";
     private static final String PROP_SHOW_WEATHER = "showWeather";
-    private static final String PROP_WEATHER_WOEID = "weatherWoeid";
+    private static final String PROP_WEATHER_CITY = "weatherCity";
     private static final String PROP_FULL_SCREEN_WINDOW = "fullScreenWindow";
+    private static final String PROP_WEATHER_UPDATE_TIME = "weatherUpdateTime";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -69,7 +70,7 @@ public class ConfigOptions {
     private int timeOffsetX;
     private int textOutlineOffset;
     private int timeOffsetY;
-    private int weatherWoeid;
+    private String weatherCity;
     private int[] textColor;
     private int[] textOutlineColor;
     private String imageDirectory;
@@ -89,6 +90,7 @@ public class ConfigOptions {
     private int weatherForecastOffsetY;
     private int weatherDayWidth;
     private int weatherForecastDays;
+    private int weatherUpdateTime;
 
 
     public ConfigOptions(File configFile)
@@ -108,7 +110,7 @@ public class ConfigOptions {
             timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, ConfigDefaults.DEFAULT_TIME_OFFSET_X));
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, ConfigDefaults.DEFAULT_TIME_OFFSET_Y));
             textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET, ConfigDefaults.DEFAULT_TEXT_OUTLINE_OFFSET));
-            weatherWoeid = Integer.parseInt(getValue(props, PROP_WEATHER_WOEID, ConfigDefaults.DEFAULT_WEATHER_WOEID));
+            weatherCity = getValue(props, PROP_WEATHER_CITY, ConfigDefaults.DEFAULT_WEATHER_CITY);
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY, null);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, null);
             fontName = getValue(props, PROP_FONT_NAME, ConfigDefaults.DEFAULT_FONT_NAME);
@@ -128,11 +130,20 @@ public class ConfigOptions {
             weatherForecastOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_OFFSET_Y));
             weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, ConfigDefaults.DEFAULT_WEATHER_DAY_WIDTH));
             weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS));
+            weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME));
 
-            if (showWeather && weatherWoeid == 0) {
-                throw new RuntimeException("Please provide a valid the weatherWoeid parameter to show weather.\n" +
-                        "WOEIDs can be looked up here: http://woeid.rosselliot.co.nz");
+            int dwut = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME);
+            if (weatherUpdateTime < dwut) {
+                System.out.println("Weather update time less than 10 mins, forcing to 10 mins");
+                weatherUpdateTime = dwut;
             }
+
+            int dwfd = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS);
+            if (weatherForecastDays > dwfd) {
+                System.out.println("Weather forecast days exceeded, forcing to " + dwfd + " days");
+                weatherForecastDays = dwfd;
+            }
+
         }
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
@@ -207,8 +218,8 @@ public class ConfigOptions {
         }
     }
 
-    public int getWeatherWoeid() {
-        return weatherWoeid;
+    public String getWeatherCity() {
+        return weatherCity;
     }
 
     public boolean isShowWeather() {
@@ -289,5 +300,9 @@ public class ConfigOptions {
 
     public float getBackgroundOpacity() {
         return bgOpacity;
+    }
+
+    public int getWeatherUpdateTime() {
+        return weatherUpdateTime;
     }
 }

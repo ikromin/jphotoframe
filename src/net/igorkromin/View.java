@@ -20,9 +20,6 @@
 
 package net.igorkromin;
 
-import com.github.fedy2.weather.data.Channel;
-import com.github.fedy2.weather.data.Forecast;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 /**
  * Created by ikromin on 29/08/2015.
@@ -60,10 +56,8 @@ public class View extends JFrame {
     Color textOutlineColor;
     BasicStroke outlineStroke;
     AlphaComposite bgComposite;
-    Channel forecastChannel;
-    List<Forecast> forecast;
     AffineTransform tx;
-    int maxConditionHeight = -1;
+    Weather weather;
 
     public View(ConfigOptions config)
             throws IOException, FontFormatException
@@ -144,8 +138,8 @@ public class View extends JFrame {
         drawDateTime(g, rect, timeFont, timeFormat.format(dateTime), config.getTimeOffsetX(), config.getTimeOffsetY());
 
         int position = 0;
-        if (forecast != null) {
-            for (Forecast f : forecast) {
+        if (weather != null) {
+            for (Weather.Forecast f : weather.getForecast()) {
                 if (position < config.getWeatherForecastDays()) {
                     drawForecast(g, rect, f, position);
                 }
@@ -157,22 +151,22 @@ public class View extends JFrame {
         }
     }
 
-    private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
+    private void drawForecast(Graphics2D g, Rectangle rect, Weather.Forecast forecast, int position) {
         int offsetX = config.getWeatherOffsetX();
         int offsetY1 = config.getWeatherConditionOffsetY();
         int offsetY2 = config.getWeatherForecastOffsetY();
         int positionWidth = config.getWeatherDayWidth();
 
-        String forecastText = forecast.getDay().toString() + "  " + forecast.getLow() + "/" + forecast.getHigh();
+        String forecastText = forecast.getDay() + " " + forecast.getLow() + "/" + forecast.getHigh();
         WeatherConditionCodes conditionEnum = WeatherConditionCodes.fromInt(forecast.getCode());
-        String condition = conditionEnum.toString();
+        String conditionIcon = conditionEnum.toString();
 
         TextLayout text;
         Rectangle textBounds;
         FontRenderContext fontRenderContext = g.getFontRenderContext();
 
-        // condition 'icon'
-        text = new TextLayout(condition, conditionFont, fontRenderContext);
+        // conditionIcon 'icon'
+        text = new TextLayout(conditionIcon, conditionFont, fontRenderContext);
         int conditionWidth = (int) text.getBounds().getWidth();
         int nudgeX = (positionWidth > conditionWidth) ? (positionWidth - conditionWidth) / 2 : 0; // center in allocated space
         tx.setToTranslation(nudgeX + offsetX + (position * positionWidth), rect.height - offsetY1);
@@ -192,7 +186,7 @@ public class View extends JFrame {
 
         // forecast location
         if (position == 0) {
-            String locationText = forecastChannel.getLocation().getCity() + ", " + forecastChannel.getLocation().getCountry();
+            String locationText = weather.getCity() + ", " + weather.getCountry();
             text = new TextLayout(locationText, locationFont, fontRenderContext);
             textBounds = text.getBounds().getBounds();
             tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 180);
@@ -282,9 +276,8 @@ public class View extends JFrame {
         repaint();
     }
 
-    public void setForecastChannel(Channel channel) {
-        this.forecastChannel = channel;
-        this.forecast = channel.getItem().getForecasts();
+    public void setWeather(Weather weather) {
+        this.weather = weather;
     }
 
     public BufferedImage getCurrentImage() {

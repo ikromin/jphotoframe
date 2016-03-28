@@ -7,6 +7,7 @@ public class ConfigDefaults {
 
     public static final String DEFAULT_DEVICE_NUM = "0";
     public static final String DEFAULT_IMG_TIME = "30000";
+    public static final String DEFAULT_WEATHER_UPDATE_TIME = "600000";
     public static final String DEFAULT_FONT_NAME = "Verdana";
     public static final String DEFAULT_FONT_SIZE_DATE = "40";
     public static final String DEFAULT_FONT_SIZE_TIME = "100";
@@ -22,7 +23,7 @@ public class ConfigDefaults {
     public static final String DEFAULT_BG_PERCENT = "0.01";
     public static final String DEFAULT_BG_OPACITY = "0.2";
     public static final String DEFAULT_SHOW_WEATHER = "false";
-    public static final String DEFAULT_WEATHER_WOEID = "0";
+    public static final String DEFAULT_WEATHER_CITY = "Brisbane,AU";
     public static final String DEFAULT_FONT_SIZE_WEATHER_CONDITION = "90";
     public static final String DEFAULT_FONT_SIZE_WEATHER_FORECAST = "19";
     public static final String DEFAULT_FONT_SIZE_LOCATION = "26";
@@ -30,7 +31,7 @@ public class ConfigDefaults {
     public static final String DEFAULT_WEATHER_CONDITION_OFFSET_Y = "105";
     public static final String DEFAULT_WEATHER_FORECAST_OFFSET_Y = "20";
     public static final String DEFAULT_WEATHER_DAY_WIDTH = "140";
-    public static final String DEFAULT_WEATHER_FORECAST_DAYS = "3";
+    public static final String DEFAULT_WEATHER_FORECAST_DAYS = "5";
     public static final String DEFAULT_FULL_SCREEN_WINDOW = "true";
 
 }

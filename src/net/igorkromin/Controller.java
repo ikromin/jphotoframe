@@ -20,9 +20,10 @@
 
 package net.igorkromin;
 
-import com.github.fedy2.weather.YahooWeatherService;
-import com.github.fedy2.weather.data.Channel;
-import com.github.fedy2.weather.data.unit.DegreeUnit;
+import org.bitpipeline.lib.owm.OwmClient;
+import org.bitpipeline.lib.owm.WeatherData;
+import org.bitpipeline.lib.owm.WeatherForecastResponse;
+import org.bitpipeline.lib.owm.WeatherStatusResponse;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +48,7 @@ public class Controller implements KeyListener, MouseListener {
     ImageDirectory imageDirectory;
     Thread photoChangeThread;
     Thread timeChangeThread;
+    Thread weatherChangeThread;
     boolean stopping = false;
     boolean firstTick = true;
     boolean fastTick = false;
@@ -81,6 +83,16 @@ public class Controller implements KeyListener, MouseListener {
             }
         };
 
+        weatherChangeThread = new Thread() {
+            @Override
+            public void run() {
+                while (!stopping) {
+                    imageDirectory.waitIfPaused();
+                    updateWeather();
+                }
+            }
+        };
+
     }
 
     public void start() {
@@ -105,6 +117,7 @@ public class Controller implements KeyListener, MouseListener {
             imageDirectory.startWatching();
             photoChangeThread.start();
             timeChangeThread.start();
+            weatherChangeThread.start();
 
             view.setReady(true);
         }
@@ -126,6 +139,7 @@ public class Controller implements KeyListener, MouseListener {
 
         photoChangeThread.interrupt();
         timeChangeThread.interrupt();
+        weatherChangeThread.interrupt();
 
         imageDirectory.stopWatching();
         device.setFullScreenWindow(null);
@@ -144,18 +158,6 @@ public class Controller implements KeyListener, MouseListener {
                 fastTick = false;
             }
             Thread.sleep(sleepTime);
-
-            // get the forecast if configured
-            if (config.isShowWeather()) {
-                try {
-                    // http://woeid.rosselliot.co.nz
-                    YahooWeatherService service = new YahooWeatherService();
-                    Channel channel = service.getForecast("" + config.getWeatherWoeid(), DegreeUnit.CELSIUS);
-                    view.setForecastChannel(channel);
-                } catch (Exception e) {
-                    System.out.println("Could not fetch weather forecast, error: " + e.getMessage());
-                }
-            }
 
             File f = imageDirectory.nextFile();
             File c = imageDirectory.getCachedFile(f);
@@ -187,6 +189,32 @@ public class Controller implements KeyListener, MouseListener {
         }
         catch (InterruptedException e) {
             // ignore interruption exception, just exit the method
+        }
+    }
+
+    private void updateWeather() {
+        // get the forecast if configured
+        if (config.isShowWeather()) {
+            OwmClient owm = new OwmClient();
+            try {
+                System.out.println("Getting weather data");
+                WeatherForecastResponse forecast = owm.forecastWeatherAtCity(config.getWeatherCity());
+
+                if (forecast.hasCity() && forecast.hasForecasts()) {
+                    view.setWeather(new Weather(forecast));
+                    view.repaint();
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Could not fetch weather forecast, error: " + e.getMessage());
+            }
+
+            try {
+                Thread.sleep(config.getWeatherUpdateTime());
+            }
+            catch (InterruptedException e) {
+                // ignore interruption exception, just exit the method
+            }
         }
     }
 

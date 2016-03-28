@@ -6,56 +6,74 @@ package net.igorkromin;
  */
 public enum WeatherConditionCodes {
 
-    TORNADO                 (0,    0xf056, "Tornado"),
-    TROPICAL_STORM          (1,    0xf01d, "Storms"),
-    HURRICANE               (2,    0xf073, "Hurricane"),
-    SEVERE_THUNDERSTOMS     (3,    0xf01e, "Thunder"),
-    THUNDERSTOMS            (4,    0xf01e, "Thunders"),
-    MIXED_RAIN_AND_SNOW     (5,    0xf017, "Rain+Snow"),
-    MIXED_RAIN_AND_SLEET    (6,    0xf0b5, "Rain+Sleet"),
-    MIXED_SNOW_AND_SLEET    (7,    0xf0b5, "Snow+Sleet"),
-    FREEZING_DRIZZLE        (8,    0xf04e, "Drizzle"),
-    DRIZZLE                 (9,    0xf04e, "Drizzle"),
-    FREEZING_RAIN           (10,   0xf019, "Rain"),
-    SHOWERS1                (11,   0xf01a, "Showers"),
-    SHOWERS2                (12,   0xf01a, "Showers"),
-    SNOW_FLURRIES           (13,   0xf01b, "Snow"),
-    LIGHT_SNOW_SHOWERS      (14,   0xf01b, "Snow"),
-    BLOWING_SNOW            (15,   0xf064, "Snow"),
-    SNOW                    (16,   0xf01b, "Snow"),
-    HAIL                    (17,   0xf015, "Hail"),
-    SLEET                   (18,   0xf0b5, "Sleet"),
-    DUST                    (19,   0xf063, "Dust"),
-    FOGGY                   (20,   0xf014, "Foggy"),
-    HAZE                    (21,   0xf0b6, "Haze"),
-    SMOKY                   (22,   0xf062, "Smoky"),
-    BLUSTERY                (23,   0xf050, "Blustery"),
-    WINDY                   (24,   0xf021, "Windy"),
-    COLD                    (25,   0xf076, "Cold"),
-    CLOUDY                  (26,   0xf013, "Cloudy"),
-    MOSTLY_CLOUDY_NIGHT     (27,   0xf086, "Cloudy"),
-    MOSTLY_CLOUDY_DAY       (28,   0xf002, "Cloudy"),
-    PARTLY_CLOUDY_NIGHT     (29,   0xf083, "Cloudy"),
-    PARTLY_CLOUDY_DAY       (30,   0xf00c, "Cloudy"),
-    CLEAR_NIGHT             (31,   0xf02e, "Clear"),
-    SUNNY                   (32,   0xf00d, "Sunny"),
-    FAIR_NIGHT              (33,   0xf02e, "Fair"),
-    FAIR_DAY                (34,   0xf00d, "Fair"),
-    MIXED_RAIN_AND_HAIL     (35,   0xf015, "Rain+Hail"),
-    HOT                     (36,   0xf072, "Hot"),
-    ISOLATED_THUNDERSTORMS  (37,   0xf01e, "Thunder"),
-    SCATTERED_THUNDERSTORMS1(38,   0xf01e, "Thunder"),
-    SCATTERED_THUNDERSTORMS2(39,   0xf01e, "Thunder"),
-    SCATTERED_SHOWERS       (40,   0xf01a, "Showers"),
-    HEAVY_SNOW1             (41,   0xf01b, "Snow"),
-    SCATTERD_SNOW_SHOWERS   (42,   0xf01b, "Snow"),
-    HEAVY_SNOW2             (43,   0xf01b, "Snow"),
-    PARTLY_CLOUDY           (44,   0xf013, "Cloudy"),
-    THUNDERSHOWERS          (45,   0xf01e, "Showers"),
-    SNOW_SHOWERS            (46,   0xf01b, "Snow"),
-    ISOLATED_THUNDERSHOWERS (47,   0xf01d, "Thunder"),
-    NOT_AVAILABLE           (3200, 0xf075, "N/A")
-    ;
+    THUNDERSTORM_WITH_LIGHT_RAIN     (200,    0xf01e, "Thunder"),
+    THUNDERSTORM_WITH_RAIN           (201,    0xf01e, "Thunder"),
+    THUNDERSTORM_WITH_HEAVY_RAIN     (202,    0xf01e, "Thunder"),
+    LIGHT_THUNDERSTORM               (210,    0xf01e, "Thunder"),
+    THUNDERSTORM                     (211,    0xf01e, "Thunder"),
+    HEAVY_THUNDERSTORM               (212,    0xf01e, "Thunder"),
+    RAGGED_THUNDERSTORM              (221,    0xf01e, "Thunder"),
+    THUNDERSTORM_WITH_LIGHT_DRIZZLE  (230,    0xf01e, "Thunder"),
+    THUNDERSTORM_WITH_DRIZZLE        (231,    0xf01e, "Thunder"),
+    THUNDERSTORM_WITH_HEAVY_DRIZZLE  (232,    0xf01e, "Thunder"),
+
+    LIGHT_INTENSITY_DRIZZLE          (300,    0xf04e, "Drizzle"),
+    DRIZZLE                          (301,    0xf04e, "Drizzle"),
+    HEAVY_INTENSITY_DRIZZLE          (302,    0xf04e, "Drizzle"),
+    LIGHT_INTENSITY_DRIZZLE_RAIN     (310,    0xf04e, "Drizzle"),
+    DRIZZLE_RAIN                     (311,    0xf04e, "Drizzle"),
+    HEAVY_INTENSITY_DRIZZLE_RAIN     (312,    0xf04e, "Drizzle"),
+    SHOWER_RAIN_DRIZZLE              (313,    0xf04e, "Drizzle"),
+    HEAVY_SHOWER_RAIN_DRIZZLE        (314,    0xf04e, "Drizzle"),
+    SHOWER_DRIZZLE                   (321,    0xf04e, "Drizzle"),
+
+    LIGHT_RAIN                       (500,    0xf019, "Rain"),
+    MODERATE_RAIN                    (501,    0xf019, "Rain"),
+    HEAVY_INTENSITY_RAIN             (502,    0xf019, "Rain"),
+    VERY_HEAVY_RAIN                  (503,    0xf019, "Rain"),
+    EXTREME_RAIN                     (504,    0xf019, "Rain"),
+    FREEZING_RAIN                    (511,    0xf019, "Rain"),
+    LIGHT_INTENSITY_SHOWER_RAIN      (520,    0xf019, "Rain"),
+    SHOWER_RAIN                      (521,    0xf019, "Rain"),
+    HEAVY_INTENSITY_SHOWER_RAIN      (522,    0xf019, "Rain"),
+    RAGGED_SHOWER_RAIN               (531,    0xf019, "Rain"),
+
+    LIGHT_SNOW                       (600,    0xf01b, "Snow"),
+    SNOW                             (601,    0xf01b, "Snow"),
+    HEAVY_SNOW                       (602,    0xf01b, "Snow"),
+    SLEET                            (611,    0xf01b, "Snow"),
+    SHOWER_SLEET                     (612,    0xf01b, "Snow"),
+    LIGHT_RAIN_SNOW                  (615,    0xf01b, "Snow"),
+    RAIN_SNOW                        (616,    0xf01b, "Snow"),
+    LIGHT_SHOWER_SNOW                (620,    0xf01b, "Snow"),
+    SHOWER_SNOW                      (621,    0xf01b, "Snow"),
+    HEAVY_SHOWER_SNOW                (622,    0xf01b, "Snow"),
+
+    MIST                             (701,    0xf014, "Mist"),
+    SMOKE                            (711,    0xf062, "Smoke"),
+    HAZE                             (721,    0xf0b6, "Haze"),
+    SAND_OR_DUST_WHIRLS              (731,    0xf063, "Dust"),
+    FOG                              (741,    0xf014, "Fog"),
+    SAND                             (751,    0xf063, "Sand"),
+    DUST                             (761,    0xf063, "Dust"),
+    VOLCANIC_ASH                     (762,    0xf063, "Ash"),
+    TORNADO1                         (751,    0xf056, "Tornado"),
+
+    SKY_IS_CLEAR                     (800,    0xf00d, "Clear"),
+    FEW_CLOUDS                       (801,    0xf013, "Clouds"),
+    SCATTERED_CLOUDS                 (802,    0xf013, "Clouds"),
+    BROKEN_CLOUDS                    (803,    0xf013, "Clouds"),
+    OVERCAST_CLOUDS                  (804,    0xf013, "Clouds"),
+
+    TORNADO2                         (900,    0xf056, "Tornado"),
+    TROPICAL_STORM                   (901,    0xf01d, "Storm"),
+    HURRICANE                        (902,    0xf073, "Hurricane"),
+    COLD                             (903,    0xf076, "Cold"),
+    HOT                              (904,    0xf072, "Hot"),
+    WINDY                            (905,    0xf021, "Wind"),
+    HAIL                             (906,    0xf015, "Hail"),
+
+    NOT_AVAILABLE                    (3200, 0xf075, "N/A");
 
     int code;
     int character;
@@ -75,7 +93,7 @@ public enum WeatherConditionCodes {
             }
         }
 
-        return null;
+        return NOT_AVAILABLE;
     }
 
     public String getInfoText() {

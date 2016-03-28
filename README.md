@@ -9,7 +9,7 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Current date/time display with custom date/time formats
 * Adjustable text font sizes
 * Fills in the background on vertical photos using the photo as the source
-* Weather forecast using Yahoo! Weather
+* Weather forecast using OpenWeatherMap
 * Pausable operation i.e. during photo frame offline hours
 
 ## Issues Fixed
@@ -50,7 +50,7 @@ textOutlineOffset=2
 backgroundSourcePercent=0.01
 backgroundOpacity=0.2
 showWeather=true
-weatherWoeid=1100661
+weatherCity=Brisbane,AU
 ```
 ### Configuration Options
 
@@ -86,10 +86,10 @@ These are the available configuration options. All apart frmo the directory sett
 |timeOffsetY             |Vertical offset from the top of the screen when displaying the time.
 |weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the weather condition icon.
 |weatherDayWidth         |Amout of pixels that each forecast day should take on screen, includes condition icon and forecast text.
-|weatherForecastDays     |Maximum number of days to display the the forecast. Values larger than 5 will have no effect.
+|weatherForecastDays     |Maximum number of days to display the the forecast. Values larger than 5 will be set to 5.
 |weatherForecastOffsetY  |Vertical offset from the bottom of the screen when displaying the forecast (day min/max).
 |weatherOffsetX          |Horizontal offset from the left side of the screen when displaying the weather icons.
-|weatherWoeid            |The WOEID of the location to get the weather forecast for. These can be looked up here: http://woeid.rosselliot.co.nz
+|weatherUpdateTime       |Time to wait between fetching weather data, in milliseconds. Values lower than 600000 will be set to 600000 i.e. 10 minutes.
 
 #### String/Text Values
 
@@ -100,6 +100,8 @@ These are the available configuration options. All apart frmo the directory sett
 |fontName                |Name of the font to use when displaying all text.
 |imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored.
 |timeFormat              |Time format string as per teh SimpleDateFormat Java class.
+|weatherCity             |The city to get weather forecast for. Format is City,Country.
+
 
 ### Color/RGB Values
 
@@ -131,16 +133,9 @@ automatically.
 
 ## Weather Forecasts
 
-Weather is retrieved from Yahoo! Weather using this library: https://github.com/fedy2/yahoo-weather-java-api.
-
-A WOEID must be configured for your location to retrieve forecasts. These can be looked up here:
-http://woeid.rosselliot.co.nz.
+Weather is retrieved from OpenWeatherMap using this library: https://github.com/migtavares/owmClient.
 
 All weather conditions are displayed using Weather Icons (http://erikflowers.github.io/weather-icons/).
-
-Below are the icons, conditions and condition codes used:
-
-![](https://github.com/ikromin/jphotoframe/blob/master/conditions.png)
 
 ## Pausable Operation
 
