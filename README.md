@@ -187,7 +187,7 @@ Update the *onoff.sh* script to set the correct directories and display number.
 Set your crontab to below (update paths as required):
 
 ```
-0 * * * * sh /home/pi/jphotoframe/onoff.sh
+0 * * * * bash /home/pi/jphotoframe/onoff.sh
 ```
 
 ## License
