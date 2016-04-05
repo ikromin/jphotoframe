@@ -168,6 +168,7 @@ public class Controller implements KeyListener, MouseListener {
                 view.displayImage(c);
             }
             else {
+                view.displayImage(f);
                 BufferedImage img = view.getCurrentImage();
                 if (img != null) {
                     imageDirectory.cacheImage(f, img);
