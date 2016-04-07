@@ -54,7 +54,7 @@ public class ConfigOptions {
     private static final String PROP_WEATHER_FORECAST_DAYS = "weatherForecastDays";
     private static final String PROP_TEXT_COLOR = "textColor";
     private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
-    private static final String PROP_TEXT_OUTLINE_OFFSET = "textOutlineOffset";
+    private static final String PROP_TEXT_OUTLINE_WIDTH = "textOutlineWidth";
     private static final String PROP_BG_PERCENT = "backgroundSourcePercent";
     private static final String PROP_BG_OPACITY = "backgroundOpacity";
     private static final String PROP_SHOW_WEATHER = "showWeather";
@@ -69,7 +69,7 @@ public class ConfigOptions {
     private int dateOffsetX;
     private int dateOffsetY;
     private int timeOffsetX;
-    private int textOutlineOffset;
+    private int textOutlineWidth;
     private int timeOffsetY;
     private String weatherCity;
     private int[] textColor;
@@ -111,7 +111,7 @@ public class ConfigOptions {
             dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y, ConfigDefaults.DEFAULT_DATE_OFFSET_Y));
             timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, ConfigDefaults.DEFAULT_TIME_OFFSET_X));
             timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, ConfigDefaults.DEFAULT_TIME_OFFSET_Y));
-            textOutlineOffset = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_OFFSET, ConfigDefaults.DEFAULT_TEXT_OUTLINE_OFFSET));
+            textOutlineWidth = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_WIDTH, ConfigDefaults.DEFAULT_TEXT_OUTLINE_WIDTH));
             weatherCity = getValue(props, PROP_WEATHER_CITY, ConfigDefaults.DEFAULT_WEATHER_CITY);
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY, null);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, null);
@@ -237,8 +237,8 @@ public class ConfigOptions {
         return fullScreenWindow;
     }
 
-    public int getTextOutlineOffset() {
-        return textOutlineOffset;
+    public int getTextOutlineWidth() {
+        return textOutlineWidth;
     }
 
     public int getGfxDeviceNum() {

@@ -81,7 +81,7 @@ These are the available configuration options. All apart frmo the directory sett
 |fontSizeTime            |Size of the font used to display the time.
 |imageTimeout            |How long each photo is displayed, in milliseconds.
 |screenNumber            |The monitor/screen to use for full screen display. The default value of 0 should work in most cases.
-|textOutlineOffset       |Width of the text outline.
+|textOutlineWidth        |Width of the text outline.
 |timeOffsetX             |Horizontal offset from the right side of the screen when displaying the time.
 |timeOffsetY             |Vertical offset from the top of the screen when displaying the time.
 |weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the weather condition icon.

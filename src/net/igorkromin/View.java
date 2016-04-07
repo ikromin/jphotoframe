@@ -102,7 +102,7 @@ public class View extends JFrame {
         textColor = new Color(rgb1[0], rgb1[1], rgb1[2]);
         textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
 
-        outlineStroke = new BasicStroke(config.getTextOutlineOffset());
+        outlineStroke = new BasicStroke(config.getTextOutlineWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
         bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, config.getBackgroundOpacity());
     }
