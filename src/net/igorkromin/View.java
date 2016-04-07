@@ -94,6 +94,8 @@ public class View extends JFrame {
         forecastFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeWeatherForecast());
         locationFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeLocation());
 
+        System.out.println("Font set to " + dateFont.getFontName());
+
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
 
