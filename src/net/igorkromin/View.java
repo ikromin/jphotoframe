@@ -139,7 +139,7 @@ public class View extends JFrame {
 
         int position = 0;
         if (weather != null) {
-            for (Weather.Forecast f : weather.getForecast()) {
+            for (Forecast f : weather.getForecast()) {
                 if (position < config.getWeatherForecastDays()) {
                     drawForecast(g, rect, f, position);
                 }
@@ -151,7 +151,7 @@ public class View extends JFrame {
         }
     }
 
-    private void drawForecast(Graphics2D g, Rectangle rect, Weather.Forecast forecast, int position) {
+    private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
         int offsetX = config.getWeatherOffsetX();
         int offsetY1 = config.getWeatherConditionOffsetY();
         int offsetY2 = config.getWeatherForecastOffsetY();

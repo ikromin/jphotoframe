@@ -73,7 +73,9 @@ public enum WeatherConditionCodes {
     WINDY                            (905,    0xf021, "Wind"),
     HAIL                             (906,    0xf015, "Hail"),
 
-    NOT_AVAILABLE                    (3200, 0xf075, "N/A");
+    NOT_AVAILABLE                    (3200, 0xf075, "N/A"),
+
+    NO_CONNECTION                    (-1, 0xf0c6, "No Connection");
 
     int code;
     int character;

@@ -207,6 +207,8 @@ public class Controller implements KeyListener, MouseListener {
                 }
             }
             catch (Exception e) {
+                view.setWeather(Weather.getNoConnectionDummyForecast());
+                view.repaint();
                 System.out.println("Could not fetch weather forecast, error: " + e.getMessage());
             }
 

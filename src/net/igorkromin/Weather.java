@@ -1,7 +1,6 @@
 package net.igorkromin;
 
 import org.bitpipeline.lib.owm.ForecastWeatherData;
-import org.bitpipeline.lib.owm.WeatherData;
 import org.bitpipeline.lib.owm.WeatherForecastResponse;
 
 import java.text.SimpleDateFormat;
@@ -15,6 +14,7 @@ public class Weather {
     private static Calendar cal = Calendar.getInstance();
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     private static HashMap<Integer, String> dayOfWeek = new HashMap<>();
+    private static Weather noConnectionForecast = null;
 
     static {
         dayOfWeek.put(Calendar.MONDAY, "MON");
@@ -29,6 +29,10 @@ public class Weather {
     private String city;
     private String country;
     private List<Forecast> forecasts;
+
+    private Weather() {
+        // private constructor for no-connection forecast static
+    }
 
     public Weather(WeatherForecastResponse forecast) {
         if (forecast.hasCity()) {
@@ -98,78 +102,27 @@ public class Weather {
     }
 
     /**
-     * Data class to record forecast information for a single day.
+     * Creates a dummy forecast that shows that there is no Internet connection.
+     * @return
      */
-    public class Forecast {
+    public static Weather getNoConnectionDummyForecast() {
+        if (noConnectionForecast == null) {
+            Forecast ncForecast = new Forecast();
+            ncForecast.setDay("Now");
+            ncForecast.setHigh(0);
+            ncForecast.setLow(0);
+            ncForecast.setCode(WeatherConditionCodes.NO_CONNECTION);
 
-        private String day;
-        private int low = Integer.MAX_VALUE;
-        private int high = Integer.MIN_VALUE;
-        private int code = WeatherConditionCodes.NOT_AVAILABLE.code;
-        private HashMap<WeatherData.WeatherCondition.ConditionCode, Integer> conditions = new HashMap<>();
+            ArrayList<Forecast> ncForecasts = new ArrayList<>(1);
+            ncForecasts.add(ncForecast);
 
-        public String getDay() {
-            return day;
+            noConnectionForecast = new Weather();
+            noConnectionForecast.city = "Error";
+            noConnectionForecast.country = "No Connection";
+            noConnectionForecast.forecasts = ncForecasts;
         }
 
-        public int getLow() {
-            return low;
-        }
-
-        public int getHigh() {
-            return high;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public void setDay(String day) {
-            this.day = day;
-        }
-
-        public void setLow(int low) {
-            this.low = low;
-        }
-
-        public void setHigh(int high) {
-            this.high = high;
-        }
-
-        public void setConditions(List<WeatherData.WeatherCondition> weatherConditions) {
-            if (weatherConditions == null || weatherConditions.size() < 1) {
-                return;
-            }
-
-            WeatherData.WeatherCondition wc = weatherConditions.get(0);
-            WeatherData.WeatherCondition.ConditionCode wcc = wc.getCode();
-
-            int count = 0;
-            if (conditions.containsKey(wcc)) {
-                count = conditions.get(wcc);
-            }
-
-            count++;
-            conditions.put(wcc, count);
-        }
-
-        /**
-         * Determines the most frequently occurring weather condition code for this forecast day
-         */
-        public void calcCondition() {
-            int maxCount = 0;
-            int code = WeatherConditionCodes.NOT_AVAILABLE.code;
-
-            for (WeatherData.WeatherCondition.ConditionCode wcc : conditions.keySet()) {
-                int count = conditions.get(wcc);
-                if (count > maxCount) {
-                    maxCount = count;
-                    code = wcc.getId();
-                }
-            }
-
-            this.code = code;
-        }
+        return noConnectionForecast;
     }
 
 }
