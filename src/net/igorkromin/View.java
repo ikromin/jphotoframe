@@ -157,7 +157,7 @@ public class View extends JFrame {
         int offsetY2 = config.getWeatherForecastOffsetY();
         int positionWidth = config.getWeatherDayWidth();
 
-        String forecastText = forecast.getDay() + " " + forecast.getLow() + "/" + forecast.getHigh();
+        String forecastText = forecast.getDay() + " " + forecast.getLow() + "-" + forecast.getHigh();
         WeatherConditionCodes conditionEnum = WeatherConditionCodes.fromInt(forecast.getCode());
         String conditionIcon = conditionEnum.toString();
 
