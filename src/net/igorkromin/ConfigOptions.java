@@ -48,7 +48,8 @@ public class ConfigOptions {
     private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
     private static final String PROP_WEATHER_OFFSET_X = "weatherOffsetX";
     private static final String PROP_WEATHER_CONDITION_OFFSET_Y = "weatherConditionOffsetY";
-    private static final String PROP_WEATHER_FORECAST_OFFSET_Y = "weatherForecastOffsetY";
+    private static final String PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y = "weatherForecastDayTempOffsetY";
+    private static final String PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y = "weatherForecastConditionOffsetY";
     private static final String PROP_WEATHER_DAY_WIDTH = "weatherDayWidth";
     private static final String PROP_WEATHER_FORECAST_DAYS = "weatherForecastDays";
     private static final String PROP_TEXT_COLOR = "textColor";
@@ -87,7 +88,8 @@ public class ConfigOptions {
     private int fontSizeLocation;
     private int weatherOffsetX;
     private int weatherConditionOffsetY;
-    private int weatherForecastOffsetY;
+    private int weatherForecastDayTempOffsetY;
+    private int weatherForecastConditionOffsetY;
     private int weatherDayWidth;
     private int weatherForecastDays;
     private int weatherUpdateTime;
@@ -127,7 +129,8 @@ public class ConfigOptions {
             fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, ConfigDefaults.DEFAULT_FONT_SIZE_LOCATION));
             weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, ConfigDefaults.DEFAULT_WEATHER_OFFSET_X));
             weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CONDITION_OFFSET_Y));
-            weatherForecastOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_OFFSET_Y));
+            weatherForecastDayTempOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYTEMP_OFFSET_Y));
+            weatherForecastConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y));
             weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, ConfigDefaults.DEFAULT_WEATHER_DAY_WIDTH));
             weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS));
             weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME));
@@ -173,8 +176,12 @@ public class ConfigOptions {
         return weatherConditionOffsetY;
     }
 
-    public int getWeatherForecastOffsetY() {
-        return weatherForecastOffsetY;
+    public int getWeatherForecastDayTempOffsetY() {
+        return weatherForecastDayTempOffsetY;
+    }
+
+    public int getWeatherForecastConditionOffsetY() {
+        return weatherForecastConditionOffsetY;
     }
 
     public int getWeatherDayWidth() {

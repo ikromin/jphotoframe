@@ -26,10 +26,11 @@ public class ConfigDefaults {
     public static final String DEFAULT_WEATHER_CITY = "Brisbane,AU";
     public static final String DEFAULT_FONT_SIZE_WEATHER_CONDITION = "90";
     public static final String DEFAULT_FONT_SIZE_WEATHER_FORECAST = "19";
-    public static final String DEFAULT_FONT_SIZE_LOCATION = "26";
+    public static final String DEFAULT_FONT_SIZE_LOCATION = "29";
     public static final String DEFAULT_WEATHER_OFFSET_X = "20";
     public static final String DEFAULT_WEATHER_CONDITION_OFFSET_Y = "105";
-    public static final String DEFAULT_WEATHER_FORECAST_OFFSET_Y = "20";
+    public static final String DEFAULT_WEATHER_FORECAST_DAYTEMP_OFFSET_Y = "20";
+    public static final String DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y = "0";
     public static final String DEFAULT_WEATHER_DAY_WIDTH = "140";
     public static final String DEFAULT_WEATHER_FORECAST_DAYS = "5";
     public static final String DEFAULT_FULL_SCREEN_WINDOW = "true";

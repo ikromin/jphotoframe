@@ -154,7 +154,8 @@ public class View extends JFrame {
     private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
         int offsetX = config.getWeatherOffsetX();
         int offsetY1 = config.getWeatherConditionOffsetY();
-        int offsetY2 = config.getWeatherForecastOffsetY();
+        int offsetY2 = config.getWeatherForecastDayTempOffsetY();
+        int offsetY3 = config.getWeatherForecastConditionOffsetY();
         int positionWidth = config.getWeatherDayWidth();
 
         String forecastText = forecast.getDay() + " " + forecast.getLow() + "-" + forecast.getHigh();
@@ -172,17 +173,17 @@ public class View extends JFrame {
         tx.setToTranslation(nudgeX + offsetX + (position * positionWidth), rect.height - offsetY1);
         drawText(g, conditionFont, text);
 
-        // forecast text
+        // forecast day+temp text
         text = new TextLayout(forecastText, forecastFont, fontRenderContext);
         textBounds = text.getBounds().getBounds();
         tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2);
         drawText(g, forecastFont, text);
 
-        // forecast text
+        // forecast condition text
         text = new TextLayout(conditionEnum.getInfoText(), forecastFont, fontRenderContext);
-        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - offsetY2);
+        textBounds = text.getBounds().getBounds();
+        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY3);
         drawText(g, forecastFont, text);
-        // TODO have separte y offset for this
 
         // forecast location
         if (position == 0) {

@@ -87,7 +87,8 @@ These are the available configuration options. All apart frmo the directory sett
 |weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the weather condition icon.
 |weatherDayWidth         |Amout of pixels that each forecast day should take on screen, includes condition icon and forecast text.
 |weatherForecastDays     |Maximum number of days to display the the forecast. Values larger than 5 will be set to 5.
-|weatherForecastOffsetY  |Vertical offset from the bottom of the screen when displaying the forecast (day min/max).
+|weatherForecastDayTempOffsetY   |Vertical offset from the bottom of the screen when displaying the forecast (day and temp min-max).
+|weatherForecastConditionOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (condition).
 |weatherOffsetX          |Horizontal offset from the left side of the screen when displaying the weather icons.
 |weatherUpdateTime       |Time to wait between fetching weather data, in milliseconds. Values lower than 600000 will be set to 600000 i.e. 10 minutes.
 
