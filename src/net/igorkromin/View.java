@@ -158,6 +158,7 @@ public class View extends JFrame {
         int offsetY1 = config.getWeatherConditionOffsetY();
         int offsetY2 = config.getWeatherForecastDayTempOffsetY();
         int offsetY3 = config.getWeatherForecastConditionOffsetY();
+        int offsetY4 = config.getWeatherCityOffsetY();
         int positionWidth = config.getWeatherDayWidth();
 
         String forecastText = forecast.getDay() + " " + forecast.getLow() + "-" + forecast.getHigh();
@@ -192,7 +193,7 @@ public class View extends JFrame {
             String locationText = weather.getCity() + ", " + weather.getCountry();
             text = new TextLayout(locationText, locationFont, fontRenderContext);
             textBounds = text.getBounds().getBounds();
-            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2 - 180);
+            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY4);
             drawText(g, locationFont, text);
         }
     }

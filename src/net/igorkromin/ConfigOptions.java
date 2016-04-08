@@ -47,6 +47,7 @@ public class ConfigOptions {
     private static final String PROP_TIME_OFFSET_X = "timeOffsetX";
     private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
     private static final String PROP_WEATHER_OFFSET_X = "weatherOffsetX";
+    private static final String PROP_WEATHER_CITY_OFFSET_Y = "weatherCityOffsetY";
     private static final String PROP_WEATHER_CONDITION_OFFSET_Y = "weatherConditionOffsetY";
     private static final String PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y = "weatherForecastDayTempOffsetY";
     private static final String PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y = "weatherForecastConditionOffsetY";
@@ -87,6 +88,7 @@ public class ConfigOptions {
     private int fontSizeWeatherForecast;
     private int fontSizeLocation;
     private int weatherOffsetX;
+    private int weatherCityOffsetY;
     private int weatherConditionOffsetY;
     private int weatherForecastDayTempOffsetY;
     private int weatherForecastConditionOffsetY;
@@ -128,6 +130,7 @@ public class ConfigOptions {
             fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_FORECAST));
             fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, ConfigDefaults.DEFAULT_FONT_SIZE_LOCATION));
             weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, ConfigDefaults.DEFAULT_WEATHER_OFFSET_X));
+            weatherCityOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CITY_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CITY_OFFSET_Y));
             weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CONDITION_OFFSET_Y));
             weatherForecastDayTempOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYTEMP_OFFSET_Y));
             weatherForecastConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y));
@@ -170,6 +173,10 @@ public class ConfigOptions {
 
     public int getWeatherOffsetX() {
         return weatherOffsetX;
+    }
+
+    public int getWeatherCityOffsetY() {
+        return weatherCityOffsetY;
     }
 
     public int getWeatherConditionOffsetY() {
