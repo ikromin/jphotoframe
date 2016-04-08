@@ -24,7 +24,7 @@ Version 0.2, standard layout.
 
 Version 0.3, alternative layout (using config_altweather.properties)
 
-![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.3_altweather.png)
+![](https://github.com/ikromin/jphotoframe/blob/0.3/screenshots/v0.3_alt_weather.png)
 
 ## Building
 
