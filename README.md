@@ -14,11 +14,17 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 
 ## Issues Fixed
 
-#1 OutOfMemoryError when loading image stops images from cycling
+Bug #1 OutOfMemoryError when loading image stops images from cycling
 
 ## Screenshots
 
+Version 0.2, standard layout.
+
 ![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.2_with_weather.png)
+
+Version 0.3, alternative layout (using config_altweather.properties)
+
+![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.3_altweather.png)
 
 ## Building
 
