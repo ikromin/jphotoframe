@@ -1,10 +1,5 @@
 package net.igorkromin;
 
-import org.bitpipeline.lib.owm.WeatherData;
-
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * Data class to record forecast information for a single day.
  */
@@ -14,7 +9,7 @@ public class Forecast {
     private int low = Integer.MAX_VALUE;
     private int high = Integer.MIN_VALUE;
     private int code = WeatherConditionCodes.NOT_AVAILABLE.code;
-    private HashMap<WeatherData.WeatherCondition.ConditionCode, Integer> conditions = new HashMap<>();
+    //private HashMap<WeatherData.WeatherCondition.ConditionCode, Integer> conditions = new HashMap<>();
 
     public String getDay() {
         return day;
@@ -48,27 +43,29 @@ public class Forecast {
         this.code = code.code;
     }
 
-    public void setConditions(List<WeatherData.WeatherCondition> weatherConditions) {
-        if (weatherConditions == null || weatherConditions.size() < 1) {
-            return;
-        }
+    public void setConditions(int code) { // List<WeatherData.WeatherCondition> weatherConditions) {
+        //if (weatherConditions == null || weatherConditions.size() < 1) {
+        //    return;
+        //}
 
-        WeatherData.WeatherCondition wc = weatherConditions.get(0);
-        WeatherData.WeatherCondition.ConditionCode wcc = wc.getCode();
+        //WeatherData.WeatherCondition wc = weatherConditions.get(0);
+        //WeatherData.WeatherCondition.ConditionCode wcc = wc.getCode();
 
-        int count = 0;
-        if (conditions.containsKey(wcc)) {
-            count = conditions.get(wcc);
-        }
+        //int count = 0;
+        //if (conditions.containsKey(wcc)) {
+        //    count = conditions.get(wcc);
+        //}
 
-        count++;
-        conditions.put(wcc, count);
+        //count++;
+        //conditions.put(wcc, count);
+
+        this.code = code;
     }
 
     /**
      * Determines the most frequently occurring weather condition code for this forecast day
      */
-    public void calcCondition() {
+    /*public void calcCondition() {
         int maxCount = 0;
         int code = WeatherConditionCodes.NOT_AVAILABLE.code;
 
@@ -81,5 +78,5 @@ public class Forecast {
         }
 
         this.code = code;
-    }
+    }*/
 }

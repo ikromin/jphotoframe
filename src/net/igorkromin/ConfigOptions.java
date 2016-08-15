@@ -62,6 +62,8 @@ public class ConfigOptions {
     private static final String PROP_WEATHER_CITY = "weatherCity";
     private static final String PROP_FULL_SCREEN_WINDOW = "fullScreenWindow";
     private static final String PROP_WEATHER_UPDATE_TIME = "weatherUpdateTime";
+    private static final String PROP_WEATHER_API_KEY = "owmApiKey";
+    private static final String PROP_WEATHER_UNITS = "weatherUnits";
 
     private int gfxDeviceNum;
     private int imageTimeout;
@@ -95,6 +97,8 @@ public class ConfigOptions {
     private int weatherDayWidth;
     private int weatherForecastDays;
     private int weatherUpdateTime;
+    private String weatherApiKey;
+    private String weatherUnits;
 
 
     public ConfigOptions(File configFile)
@@ -137,6 +141,8 @@ public class ConfigOptions {
             weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, ConfigDefaults.DEFAULT_WEATHER_DAY_WIDTH));
             weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS));
             weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME));
+            weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, null);
+            weatherUnits = getValue(props, PROP_WEATHER_UNITS, ConfigDefaults.DEFAULT_WEATHER_UNITS);
 
             int dwut = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME);
             if (weatherUpdateTime < dwut) {
@@ -150,6 +156,10 @@ public class ConfigOptions {
                 weatherForecastDays = dwfd;
             }
 
+            if (showWeather && weatherApiKey == null) {
+                System.out.println("Weather API key is not set, weather will be disabled");
+                showWeather = false;
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
@@ -319,4 +329,13 @@ public class ConfigOptions {
     public int getWeatherUpdateTime() {
         return weatherUpdateTime;
     }
+
+    public String getWeatherApiKey() {
+        return weatherApiKey;
+    }
+
+    public String getWeatherUnits() {
+        return weatherUnits;
+    }
+
 }

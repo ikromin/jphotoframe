@@ -34,6 +34,7 @@ public class ConfigDefaults {
     public static final String DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y = "0";
     public static final String DEFAULT_WEATHER_DAY_WIDTH = "140";
     public static final String DEFAULT_WEATHER_FORECAST_DAYS = "5";
+    public static final String DEFAULT_WEATHER_UNITS = "metric";
     public static final String DEFAULT_FULL_SCREEN_WINDOW = "true";
 
 }

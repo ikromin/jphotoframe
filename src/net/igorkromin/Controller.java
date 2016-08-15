@@ -20,10 +20,8 @@
 
 package net.igorkromin;
 
-import org.bitpipeline.lib.owm.OwmClient;
-import org.bitpipeline.lib.owm.WeatherData;
-import org.bitpipeline.lib.owm.WeatherForecastResponse;
-import org.bitpipeline.lib.owm.WeatherStatusResponse;
+import net.aksingh.owmjapis.DailyForecast;
+import net.aksingh.owmjapis.OpenWeatherMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -196,12 +194,17 @@ public class Controller implements KeyListener, MouseListener {
     private void updateWeather() {
         // get the forecast if configured
         if (config.isShowWeather()) {
-            OwmClient owm = new OwmClient();
+            OpenWeatherMap.Units units = (config.getWeatherUnits().equals(ConfigDefaults.DEFAULT_WEATHER_UNITS) == true)
+                    ?  OpenWeatherMap.Units.METRIC
+                    : OpenWeatherMap.Units.IMPERIAL;
+            OpenWeatherMap owm = new OpenWeatherMap(units, config.getWeatherApiKey());
+
             try {
                 System.out.println("Getting weather data");
-                WeatherForecastResponse forecast = owm.forecastWeatherAtCity(config.getWeatherCity());
 
-                if (forecast.hasCity() && forecast.hasForecasts()) {
+                DailyForecast forecast = owm.dailyForecastByCityName(config.getWeatherCity(), (byte) config.getWeatherForecastDays());
+
+                if (forecast.hasCityInstance() && forecast.hasForecastCount()) {
                     view.setWeather(new Weather(forecast));
                     view.repaint();
                 }

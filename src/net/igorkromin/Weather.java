@@ -1,7 +1,7 @@
 package net.igorkromin;
 
-import org.bitpipeline.lib.owm.ForecastWeatherData;
-import org.bitpipeline.lib.owm.WeatherForecastResponse;
+import net.aksingh.owmjapis.AbstractForecast;
+import net.aksingh.owmjapis.DailyForecast;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,12 +34,12 @@ public class Weather {
         // private constructor for no-connection forecast static
     }
 
-    public Weather(WeatherForecastResponse forecast) {
-        if (forecast.hasCity()) {
-            WeatherForecastResponse.City city = forecast.getCity();
+    public Weather(DailyForecast forecast) {
+        if (forecast.hasCityInstance()) {
+            AbstractForecast.City city = forecast.getCityInstance();
 
-            if (city.hasName()) {
-                this.city = city.getName();
+            if (city.hasCityName()) {
+                this.city = city.getCityName();
             }
 
             if (city.hasCountryCode()) {
@@ -47,14 +47,17 @@ public class Weather {
             }
         }
 
-        if (forecast.hasForecasts()) {
-            List<ForecastWeatherData> forecasts = forecast.getForecasts();
+        if (forecast.hasForecastCount()) {
+            //List<ForecastWeatherData> forecasts = forecast.getForecasts();
 
             this.forecasts = new ArrayList<>();
             HashMap<String, Forecast> forecastMap = new HashMap<>();
 
-            for (ForecastWeatherData fwd : forecasts) {
-                Date dt = new Date(fwd.getDateTime() * 1000);
+            for (int i = 0; i < forecast.getForecastCount(); i++) {
+            //for (ForecastWeatherData fwd : forecasts) {
+                DailyForecast.Forecast fwd = forecast.getForecastInstance(i);
+
+                Date dt = fwd.getDateTime();
                 String date = sdf.format(dt);
 
                 Forecast f;
@@ -71,22 +74,27 @@ public class Weather {
                     f = forecastMap.get(date);
                 }
 
-                int temp = (int) fwd.getTemp();
-                if (temp < f.getLow()) {
-                    f.setLow(temp);
-                }
+                DailyForecast.Forecast.Temperature temperature = fwd.getTemperatureInstance();
 
-                if (temp > f.getHigh()) {
-                    f.setHigh(temp);
-                }
+                //int temp = (int) fwd.getTemperatureInstance().get getTemp();
+                //if (temp < f.getLow()) {
+                //    f.setLow(temp);
+                //}
+                f.setLow((int) temperature.getMinimumTemperature());
 
-                f.setConditions(fwd.getWeatherConditions());
+                //if (temp > f.getHigh()) {
+                //    f.setHigh(temp);
+                //}
+                f.setHigh((int) temperature.getMaximumTemperature());
+
+                // TODO: get back to multiple weather instances
+                f.setConditions(fwd.getWeatherInstance(0).getWeatherCode());
             }
         }
 
-        for (Forecast f : this.forecasts) {
-            f.calcCondition();
-        }
+        //for (Forecast f : this.forecasts) {
+        //    f.calcCondition();
+        //}
     }
 
     public List<Forecast> getForecast() {

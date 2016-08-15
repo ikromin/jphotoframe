@@ -133,10 +133,8 @@
   
   <path id="jphotoframe.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
-    <pathelement location="${module.jphotoframe.basedir}/lib/httpcore-4.2.2.jar"/>
-    <pathelement location="${module.jphotoframe.basedir}/lib/httpclient-4.2.3.jar"/>
     <pathelement location="${module.jphotoframe.basedir}/lib/json-20070829.jar"/>
-    <pathelement location="${module.jphotoframe.basedir}/lib/owm-lib-2.1.2.jar"/>
+    <pathelement location="${module.jphotoframe.basedir}/lib/owm-japis-2.5.0.5.jar"/>
   </path>
   
   <path id="jphotoframe.module.production.classpath">
