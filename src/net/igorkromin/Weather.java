@@ -1,13 +1,13 @@
 package net.igorkromin;
 
 import net.aksingh.owmjapis.AbstractForecast;
+import net.aksingh.owmjapis.AbstractWeather;
 import net.aksingh.owmjapis.DailyForecast;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by ikromin on 28/03/2016.
+ * Maps data returned by OWM 2.5 API to local classes.
  */
 public class Weather {
 
@@ -48,13 +48,11 @@ public class Weather {
         }
 
         if (forecast.hasForecastCount()) {
-            //List<ForecastWeatherData> forecasts = forecast.getForecasts();
 
             this.forecasts = new ArrayList<>();
             HashMap<String, Forecast> forecastMap = new HashMap<>();
 
             for (int i = 0; i < forecast.getForecastCount(); i++) {
-            //for (ForecastWeatherData fwd : forecasts) {
                 DailyForecast.Forecast fwd = forecast.getForecastInstance(i);
 
                 Date dt = fwd.getDateTime();
@@ -76,25 +74,37 @@ public class Weather {
 
                 DailyForecast.Forecast.Temperature temperature = fwd.getTemperatureInstance();
 
-                //int temp = (int) fwd.getTemperatureInstance().get getTemp();
-                //if (temp < f.getLow()) {
-                //    f.setLow(temp);
-                //}
                 f.setLow((int) temperature.getMinimumTemperature());
-
-                //if (temp > f.getHigh()) {
-                //    f.setHigh(temp);
-                //}
                 f.setHigh((int) temperature.getMaximumTemperature());
 
-                // TODO: get back to multiple weather instances
-                f.setConditions(fwd.getWeatherInstance(0).getWeatherCode());
+                // count all weather codes, not optimal with autoboxing, but this doesn't happen often
+                HashMap<Integer, Integer> conditions = new HashMap<>();
+                for (int j = 0; j < fwd.getWeatherCount(); j++) {
+                    AbstractWeather.Weather weather = fwd.getWeatherInstance(j);
+                    int code = weather.getWeatherCode();
+
+                    if (conditions.get(code) == null) {
+                        conditions.put(code, 1);
+                    }
+                    else {
+                        conditions.put(code, conditions.get(code) + 1);
+                    }
+                }
+
+                // find the maximum occurring condition code
+                int condCode = WeatherConditionCodes.NOT_AVAILABLE.code;
+                int maxOccurs = 0;
+                for (Integer code : conditions.keySet()) {
+                    int occurs = conditions.get(code);
+                    if (occurs > maxOccurs) {
+                        maxOccurs = occurs;
+                        condCode = code;
+                    }
+                }
+
+                f.setConditions(condCode);
             }
         }
-
-        //for (Forecast f : this.forecasts) {
-        //    f.calcCondition();
-        //}
     }
 
     public List<Forecast> getForecast() {

@@ -14,7 +14,8 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 
 ## Issues Fixed
 
-Bug #1 OutOfMemoryError when loading image stops images from cycling
+* Bug #1 OutOfMemoryError when loading image stops images from cycling
+* OWM weather information not shown due to 2.1 API removal
 
 ## Screenshots
 
@@ -34,7 +35,7 @@ Use Ant to build. Edit the *jphotoframe.properties* to point to your JDK locatio
 
 ## Configuration
 
-Configuration is simple. Add a file called *config.properties* into the same directory as the jar file. Below is a sample configuration file.
+Configuration is simple. Add a file called *config.properties* into the same directory as the jar file. Below is a sample configuration file (note that you will need a valid OWM API key to get weather data).
 
 ```
 screenNumber=0
@@ -57,6 +58,7 @@ backgroundSourcePercent=0.01
 backgroundOpacity=0.2
 showWeather=true
 weatherCity=Brisbane,AU
+owmApiKey=xxxxxxxxxxxxxxxxxxxxxxx
 ```
 ### Configuration Options
 
@@ -92,8 +94,8 @@ These are the available configuration options. All apart frmo the directory sett
 |timeOffsetY             |Vertical offset from the top of the screen when displaying the time.
 |weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the weather condition icon.
 |weatherDayWidth         |Amout of pixels that each forecast day should take on screen, includes condition icon and forecast text.
-|weatherForecastCityOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (location city, country).
-|weatherForecastConditionOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (condition).
+|weatherCityOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (location city, country).
+|weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (condition).
 |weatherForecastDays     |Maximum number of days to display the the forecast. Values larger than 5 will be set to 5.
 |weatherForecastDayTempOffsetY   |Vertical offset from the bottom of the screen when displaying the forecast (day and temp min-max).
 |weatherOffsetX          |Horizontal offset from the left side of the screen when displaying the weather icons.
@@ -107,8 +109,10 @@ These are the available configuration options. All apart frmo the directory sett
 |dateFormat              |Date format string as per the SimpleDateFormat Java class.
 |fontName                |Name of the font to use when displaying all text.
 |imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored.
+|owmApiKey               |API Key used to get weather data, from http://openweathermap.org/appid
 |timeFormat              |Time format string as per teh SimpleDateFormat Java class.
 |weatherCity             |The city to get weather forecast for. Format is City,Country.
+|weatherUnits            |Metric/Imperial units to use for weather, valid values: *metric* or *imperial*. Defaults to metric.
 
 
 ### Color/RGB Values
@@ -131,11 +135,8 @@ inside it. The directory structure should look like this:
 
 ```
 +-- lib/
-|   +-- commons-logging-1.2.jar
-|   +-- httpclient-4.2.3.jar
-|   +-- httpcore-4.2.2.jar
 |   +-- json-20070829.jar
-|   +-- owm-lib-2.1.2.jar
+|   +-- owm-japis-2.5.0.5.jar
 +-- jphotoframe.jar
 ```
 
@@ -144,7 +145,7 @@ automatically.
 
 ## Weather Forecasts
 
-Weather is retrieved from OpenWeatherMap using this library: https://github.com/migtavares/owmClient.
+Weather is retrieved from OpenWeatherMap using this library: https://github.com/akapribot/OWM-JAPIs
 
 All weather conditions are displayed using Weather Icons (http://erikflowers.github.io/weather-icons/).
 

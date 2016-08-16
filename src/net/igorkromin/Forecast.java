@@ -9,7 +9,6 @@ public class Forecast {
     private int low = Integer.MAX_VALUE;
     private int high = Integer.MIN_VALUE;
     private int code = WeatherConditionCodes.NOT_AVAILABLE.code;
-    //private HashMap<WeatherData.WeatherCondition.ConditionCode, Integer> conditions = new HashMap<>();
 
     public String getDay() {
         return day;
@@ -43,40 +42,7 @@ public class Forecast {
         this.code = code.code;
     }
 
-    public void setConditions(int code) { // List<WeatherData.WeatherCondition> weatherConditions) {
-        //if (weatherConditions == null || weatherConditions.size() < 1) {
-        //    return;
-        //}
-
-        //WeatherData.WeatherCondition wc = weatherConditions.get(0);
-        //WeatherData.WeatherCondition.ConditionCode wcc = wc.getCode();
-
-        //int count = 0;
-        //if (conditions.containsKey(wcc)) {
-        //    count = conditions.get(wcc);
-        //}
-
-        //count++;
-        //conditions.put(wcc, count);
-
+    public void setConditions(int code) {
         this.code = code;
     }
-
-    /**
-     * Determines the most frequently occurring weather condition code for this forecast day
-     */
-    /*public void calcCondition() {
-        int maxCount = 0;
-        int code = WeatherConditionCodes.NOT_AVAILABLE.code;
-
-        for (WeatherData.WeatherCondition.ConditionCode wcc : conditions.keySet()) {
-            int count = conditions.get(wcc);
-            if (count > maxCount) {
-                maxCount = count;
-                code = wcc.getId();
-            }
-        }
-
-        this.code = code;
-    }*/
 }
