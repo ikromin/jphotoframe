@@ -29,13 +29,15 @@ import java.io.IOException;
  */
 public class PhotoFrame {
 
+    private static final String ARG_VAL_FIX_ROTATION = "-fixrotation";
     private static final String DEFAULT_CONFIG_FILE = "config.properties";
     private static final int RET_STATUS_HEADLESS_ERR = 1;
     private static final int RET_STATUS_CONFIG_ERR = 2;
+    private static final int RET_STATUS_NO_ROT_DIR = 3;
 
     public static void main(String args[]) throws IOException, FontFormatException {
 
-        File configFile;
+        File configFile = null;
         ConfigOptions config = null;
 
         if (GraphicsEnvironment.isHeadless()) {
@@ -43,25 +45,46 @@ public class PhotoFrame {
             System.exit(RET_STATUS_HEADLESS_ERR);
         }
 
+        boolean fixRotation = false;
+
         if (args.length > 0) {
-            configFile = new File(args[0]);
+            // check if there are any command line arguments specified for image rotation fix utility
+            if (ARG_VAL_FIX_ROTATION.equals(args[0])) {
+                if (args.length > 1) {
+                    fixRotation = true;
+                }
+                else {
+                    System.out.println("Please specify a photos directory");
+                    System.exit(RET_STATUS_NO_ROT_DIR);
+                }
+            }
+            // assume custom config file name if no other matching args specified
+            else{
+                configFile = new File(args[0]);
+            }
         }
         else {
             configFile = new File(DEFAULT_CONFIG_FILE);
         }
 
-        try {
-            config = new ConfigOptions(configFile);
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.exit(RET_STATUS_CONFIG_ERR);
+        if (configFile != null) {
+            try {
+                config = new ConfigOptions(configFile);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(RET_STATUS_CONFIG_ERR);
+            }
         }
 
-        View frame = new View(config);
-        Controller controller = new Controller(config, frame);
-
-        controller.start();
+        if (fixRotation) {
+            RotationFixer rotationFixer = new RotationFixer(args[1]);
+            rotationFixer.start();
+        }
+        else {
+            View frame = new View(config);
+            Controller controller = new Controller(config, frame);
+            controller.start();
+        }
     }
 
 }

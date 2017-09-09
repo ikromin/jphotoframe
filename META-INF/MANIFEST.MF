@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
 Main-Class: net.igorkromin.PhotoFrame
-Class-Path: lib/json-20070829.jar lib/owm-japis-2.5.0.5.jar
+Class-Path: lib/json-20070829.jar lib/owm-japis-2.5.0.5.jar lib/mediautil-1.0-withfixes.jar

@@ -1,4 +1,4 @@
-# JPhotoFrame v0.3
+# JPhotoFrame v0.3.1
 
 JPhotoFrame is a simple Java application for displaying a collection of photos in a full-screen slideshow. It is meant to be used when creating a DIY photo frame.
 
@@ -11,6 +11,7 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Fills in the background on vertical photos using the photo as the source
 * Weather forecast using OpenWeatherMap
 * Pausable operation i.e. during photo frame offline hours
+* Image rotation correction utility
 
 ## Issues Fixed
 
@@ -60,6 +61,9 @@ showWeather=true
 weatherCity=Brisbane,AU
 owmApiKey=xxxxxxxxxxxxxxxxxxxxxxx
 ```
+
+You can specify a custom configuration file to load by using a command line argument, simply give the location of the custom config file to the *run.sh* script or when running the *java* command. See how to run below.
+
 ### Configuration Options
 
 These are the available configuration options. All apart frmo the directory settings are optional and have default values that will be used if nothing is provided for them.
@@ -126,7 +130,7 @@ These are the available configuration options. All apart frmo the directory sett
 
 To run, launch the jar file like so:
 
-`java -Xms32m -Xmx32m -jar jphotoframe.jar&`
+`java -Xms32m -Xmx32m -jar jphotoframe.jar`
 
 Alternatively copy the *jphotoframe.jar* file to the same directory as the *run.sh* (after building using ant) and execute the *run.sh* script instead.
 
@@ -137,6 +141,7 @@ inside it. The directory structure should look like this:
 +-- lib/
 |   +-- json-20070829.jar
 |   +-- owm-japis-2.5.0.5.jar
+|   +-- mediautil-1.0-withfixes.jar
 +-- jphotoframe.jar
 ```
 
@@ -196,6 +201,14 @@ Set your crontab to below (update paths as required):
 ```
 0 * * * * bash /home/pi/jphotoframe/onoff.sh
 ```
+
+## Image Rotation Correction Utility
+
+Sometimes JPEG files have rotation information saved into them. JPhotoFrame uses the standard Java JPEG loader and doesn't try to auto-orient images after loading. This can result in incorrectly rotated images.
+
+A utility is provided to pre-process all of your photos and re-orinent them. This is done with the help of the mediautil library (http://mediachest.sourceforge.net/mediautil/).
+
+To use this utility, run the *fixrotation.sh* script or pass the *-fixrotation* parameter when running JPhotoFrame manually. This utility expect a command line argument specifying the photo directory name.
 
 ## License
 

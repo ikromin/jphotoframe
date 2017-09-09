@@ -64,7 +64,7 @@ public class ImageDirectory {
             dirWatcher = FileSystems.getDefault().newWatchService();
         }
         else {
-            throw new RuntimeException("Image directory not available: " + cacheDirFile.getAbsolutePath());
+            throw new RuntimeException("Image directory not available: " + imageDirFile.getAbsolutePath());
         }
 
         imageFiles = new Vector<>();

@@ -135,6 +135,7 @@
     <!-- Paths to be included in compilation bootclasspath -->
     <pathelement location="${module.jphotoframe.basedir}/lib/json-20070829.jar"/>
     <pathelement location="${module.jphotoframe.basedir}/lib/owm-japis-2.5.0.5.jar"/>
+    <pathelement location="${module.jphotoframe.basedir}/lib/mediautil-1.0-withfixes.jar"/>
   </path>
   
   <path id="jphotoframe.module.production.classpath">
@@ -175,7 +176,7 @@
   
   <target name="compile.module.jphotoframe.production" description="Compile module JPhotoFrame; production classes">
     <mkdir dir="${jphotoframe.output.dir}"/>
-    <javac destdir="${jphotoframe.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jphotoframe}/javac">
+    <javac source="1.7" target="1.7" destdir="${jphotoframe.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jphotoframe}/javac">
       <compilerarg line="${compiler.args.jphotoframe}"/>
       <bootclasspath refid="jphotoframe.module.bootclasspath"/>
       <classpath refid="jphotoframe.module.production.classpath"/>
