@@ -30,9 +30,9 @@ Version 0.3, alternative layout (using config_altweather.properties)
 
 ## Building
 
-Use Ant to build. Edit the *jphotoframe.properties* to point to your JDK location prior to building.
+Use Maven to build.
 
-``ant``
+``mvn clean package``
 
 ## Configuration
 
@@ -139,7 +139,7 @@ inside it. The directory structure should look like this:
 
 ```
 +-- lib/
-|   +-- json-20070829.jar
+|   +-- json-20170516.jar
 |   +-- owm-japis-2.5.0.5.jar
 |   +-- mediautil-1.0-withfixes.jar
 +-- jphotoframe.jar

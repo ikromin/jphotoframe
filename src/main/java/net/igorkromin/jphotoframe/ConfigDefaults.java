@@ -36,5 +36,6 @@ public class ConfigDefaults {
     public static final String DEFAULT_WEATHER_FORECAST_DAYS = "5";
     public static final String DEFAULT_WEATHER_UNITS = "metric";
     public static final String DEFAULT_FULL_SCREEN_WINDOW = "true";
+    public static final String DEFAULT_WEATHER_API_KEY = "NOT_A_VALID_KEY";
 
 }

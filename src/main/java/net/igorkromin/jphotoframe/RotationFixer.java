@@ -89,7 +89,7 @@ public class RotationFixer {
                     }
                 }
                 catch (Exception e) {
-                    Log.error("\tUnable to process file (" + e.getMessage() + ")");
+                    Log.error("Unable to process file (" + e.getMessage() + ")", e);
                 }
             }
             else if (f.isDirectory() && !f.isHidden()) {

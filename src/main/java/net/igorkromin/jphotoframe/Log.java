@@ -18,7 +18,9 @@ public class Log {
 
     public static void config(String msg, boolean isDefault) {
         if (isDefault) {
-            System.out.println("Config: [DEFAULT] " + msg);
+            if (isVerbose) {
+                System.out.println("Config: [DEFAULT] " + msg);
+            }
         }
         else {
             System.out.println("Config: [LOADED ] " + msg);
@@ -40,8 +42,9 @@ public class Log {
         System.out.println("Warning: " + msg);
     }
 
-    public static void error(String msg) {
+    public static void error(String msg, Throwable e) {
         System.err.println("Error: " + msg);
+        e.printStackTrace();
     }
 
 }

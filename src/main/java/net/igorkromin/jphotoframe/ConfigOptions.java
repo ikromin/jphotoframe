@@ -141,7 +141,7 @@ public class ConfigOptions {
             weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, ConfigDefaults.DEFAULT_WEATHER_DAY_WIDTH));
             weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS));
             weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME));
-            weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, null);
+            weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, ConfigDefaults.DEFAULT_WEATHER_API_KEY);
             weatherUnits = getValue(props, PROP_WEATHER_UNITS, ConfigDefaults.DEFAULT_WEATHER_UNITS);
 
             int dwut = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME);
@@ -156,7 +156,7 @@ public class ConfigOptions {
                 weatherForecastDays = dwfd;
             }
 
-            if (showWeather && weatherApiKey == null) {
+            if (showWeather && weatherApiKey.equals(ConfigDefaults.DEFAULT_WEATHER_API_KEY)) {
                 Log.warning("Weather API key is not set, weather will be disabled");
                 showWeather = false;
             }

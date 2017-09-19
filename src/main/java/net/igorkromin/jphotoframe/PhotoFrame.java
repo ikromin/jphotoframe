@@ -51,7 +51,7 @@ public class PhotoFrame {
                     fixRotation = true;
                 }
                 else {
-                    Log.error("Please specify a photos directory");
+                    Log.error("Please specify a photos directory", null);
                     System.exit(RET_STATUS_NO_ROT_DIR);
                 }
             }
@@ -77,7 +77,7 @@ public class PhotoFrame {
             }
         }
         catch (Exception e) {
-            Log.error(e.getMessage());
+            Log.error("Could not run application due to error: " + e.getMessage(), e);
             System.exit(RET_STATUS_START_ERR);
         }
     }

@@ -156,7 +156,7 @@ public class ImageDirectory {
             ImageIO.write(bufferedImage, "JPG", cachedFile);
         }
         catch (Exception e) {
-            Log.error("Failed to cache image: " + file.getAbsolutePath() + " cause: " + e.getMessage());
+            Log.error("Failed to cache image: " + file.getAbsolutePath() + " cause: " + e.getMessage(), e);
         }
     }
 

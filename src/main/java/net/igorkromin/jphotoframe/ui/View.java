@@ -42,8 +42,8 @@ import java.util.*;
  */
 public class View extends JFrame {
 
-    private static final String WEATHER_ICONS_FONT_FILE = "/net/igorkromin/jphotoframe/weather/weathericons-regular-webfont.ttf";
-    private static final String DEFAULT_IMAGE_FILE = "net/igorkromin/jphotoframe/archetype.png";
+    private static final String WEATHER_ICONS_FONT_FILE = "/weathericons-regular-webfont.ttf";
+    private static final String DEFAULT_IMAGE_FILE = "archetype.png";
 
     BufferedImage defaultImage;
     BufferedImage currentImage;
@@ -250,12 +250,12 @@ public class View extends JFrame {
             img = ImageIO.read(file);
         }
         catch (IOException|OutOfMemoryError e) {
-            Log.error("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage());
+            Log.error("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage(), e);
             return;
         }
 
         if (img == null) {
-            Log.error("Could not load file: " + file.getAbsolutePath());
+            Log.error("Could not load file: " + file.getAbsolutePath(), null);
             return;
         }
 

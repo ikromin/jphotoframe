@@ -126,7 +126,7 @@ public class Controller implements KeyListener, MouseListener {
             view.setReady(true);
         }
         catch (Exception e) {
-            Log.error("Error starting: " + e.getMessage());
+            Log.error("Error starting: " + e.getMessage(), e);
             stop();
         }
     }
@@ -218,7 +218,7 @@ public class Controller implements KeyListener, MouseListener {
             catch (Exception e) {
                 view.setWeather(Weather.getNoConnectionDummyForecast());
                 view.repaint();
-                Log.error("Could not fetch weather forecast, error: " + e.getMessage());
+                Log.error("Could not fetch weather forecast, error: " + e.getMessage(), e);
             }
 
             try {
