@@ -1,4 +1,4 @@
-package net.igorkromin;
+package net.igorkromin.jphotoframe;
 
 /**
  * Created by ikromin on 8/09/2015.

@@ -18,10 +18,16 @@
  * You can find this and my other open source projects here - http://github.com/ikromin
  */
 
-package net.igorkromin;
+package net.igorkromin.jphotoframe.ui;
 
 import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
+import net.igorkromin.jphotoframe.ConfigDefaults;
+import net.igorkromin.jphotoframe.ConfigOptions;
+import net.igorkromin.jphotoframe.ImageDirectory;
+import net.igorkromin.jphotoframe.Log;
+import net.igorkromin.jphotoframe.ui.View;
+import net.igorkromin.jphotoframe.weather.Weather;
 
 import javax.swing.*;
 import java.awt.*;

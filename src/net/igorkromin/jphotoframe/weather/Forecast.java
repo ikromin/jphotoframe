@@ -1,4 +1,4 @@
-package net.igorkromin;
+package net.igorkromin.jphotoframe.weather;
 
 /**
  * Data class to record forecast information for a single day.

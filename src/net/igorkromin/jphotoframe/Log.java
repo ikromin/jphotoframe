@@ -1,4 +1,4 @@
-package net.igorkromin;
+package net.igorkromin.jphotoframe;
 
 /**
  * Simple 'logger' class that outputs messages to the standard output or standard error.

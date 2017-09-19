@@ -18,7 +18,12 @@
  * You can find this and my other open source projects here - http://github.com/ikromin
  */
 
-package net.igorkromin;
+package net.igorkromin.jphotoframe.ui;
+
+import net.igorkromin.jphotoframe.*;
+import net.igorkromin.jphotoframe.weather.Forecast;
+import net.igorkromin.jphotoframe.weather.Weather;
+import net.igorkromin.jphotoframe.weather.WeatherConditionCodes;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,8 +42,8 @@ import java.util.*;
  */
 public class View extends JFrame {
 
-    private static final String WEATHER_ICONS_FONT_FILE = "/net/igorkromin/weathericons-regular-webfont.ttf";
-    private static final String DEFAULT_IMAGE_FILE = "net/igorkromin/archetype.png";
+    private static final String WEATHER_ICONS_FONT_FILE = "/net/igorkromin/jphotoframe/weather/weathericons-regular-webfont.ttf";
+    private static final String DEFAULT_IMAGE_FILE = "net/igorkromin/jphotoframe/archetype.png";
 
     BufferedImage defaultImage;
     BufferedImage currentImage;
@@ -60,8 +65,12 @@ public class View extends JFrame {
     Weather weather;
 
     public View(ConfigOptions config)
-            throws IOException, FontFormatException
+            throws IOException
     {
+        if (GraphicsEnvironment.isHeadless()) {
+            throw new RuntimeException("Cannot run in headless mode");
+        }
+
         this.config = config;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -89,8 +98,15 @@ public class View extends JFrame {
 
         dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
         timeFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeTime());
-        conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE))
-                .deriveFont(config.getFontSizeWeatherCondition());
+
+        try {
+            conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE))
+                    .deriveFont(config.getFontSizeWeatherCondition());
+        }
+        catch (FontFormatException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         forecastFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeWeatherForecast());
         locationFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeLocation());
 

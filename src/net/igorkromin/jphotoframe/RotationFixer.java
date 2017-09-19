@@ -1,4 +1,4 @@
-package net.igorkromin;
+package net.igorkromin.jphotoframe;
 
 import mediautil.image.jpeg.AbstractImageInfo;
 import mediautil.image.jpeg.Entry;

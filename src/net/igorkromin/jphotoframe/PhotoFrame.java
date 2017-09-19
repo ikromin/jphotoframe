@@ -18,32 +18,29 @@
  * You can find this and my other open source projects here - http://github.com/ikromin
  */
 
-package net.igorkromin;
+package net.igorkromin.jphotoframe;
 
-import java.awt.*;
+import net.igorkromin.jphotoframe.ui.Controller;
+import net.igorkromin.jphotoframe.ui.View;
+
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by ikromin on 29/08/2015.
+ * Entry point to the JPhotoFrame App. This class is mostly responsible for loading the config and then creating
+ * either the rotation utility class or the controller class for the photo frame.
  */
 public class PhotoFrame {
 
     private static final String ARG_VAL_FIX_ROTATION = "-fixrotation";
     private static final String DEFAULT_CONFIG_FILE = "config.properties";
-    private static final int RET_STATUS_HEADLESS_ERR = 1;
-    private static final int RET_STATUS_CONFIG_ERR = 2;
+
+    private static final int RET_STATUS_START_ERR = 1;
     private static final int RET_STATUS_NO_ROT_DIR = 3;
 
-    public static void main(String args[]) throws IOException, FontFormatException {
+    public static void main(String args[]) throws IOException {
 
         File configFile = null;
-        ConfigOptions config = null;
-
-        if (GraphicsEnvironment.isHeadless()) {
-            Log.error("Cannot run in headless mode");
-            System.exit(RET_STATUS_HEADLESS_ERR);
-        }
 
         boolean fixRotation = false;
 
@@ -67,23 +64,21 @@ public class PhotoFrame {
             configFile = new File(DEFAULT_CONFIG_FILE);
         }
 
-        if (configFile != null) {
-            try {
-                config = new ConfigOptions(configFile);
-            } catch (Exception e) {
-                Log.error(e.getMessage());
-                System.exit(RET_STATUS_CONFIG_ERR);
+        try {
+            ConfigOptions config = new ConfigOptions(configFile);
+
+            if (fixRotation) {
+                RotationFixer rotationFixer = new RotationFixer(args[1]);
+                rotationFixer.start();
+            } else {
+                View frame = new View(config);
+                Controller controller = new Controller(config, frame);
+                controller.start();
             }
         }
-
-        if (fixRotation) {
-            RotationFixer rotationFixer = new RotationFixer(args[1]);
-            rotationFixer.start();
-        }
-        else {
-            View frame = new View(config);
-            Controller controller = new Controller(config, frame);
-            controller.start();
+        catch (Exception e) {
+            Log.error(e.getMessage());
+            System.exit(RET_STATUS_START_ERR);
         }
     }
 

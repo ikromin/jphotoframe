@@ -1,4 +1,4 @@
-package net.igorkromin;
+package net.igorkromin.jphotoframe.weather;
 
 /**
  * Maps the Yahoo! Weather codes to the weather icons font characters

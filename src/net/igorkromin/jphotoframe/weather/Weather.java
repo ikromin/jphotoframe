@@ -1,4 +1,4 @@
-package net.igorkromin;
+package net.igorkromin.jphotoframe.weather;
 
 import net.aksingh.owmjapis.AbstractForecast;
 import net.aksingh.owmjapis.AbstractWeather;

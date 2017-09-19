@@ -18,7 +18,7 @@
  * You can find this and my other open source projects here - http://github.com/ikromin
  */
 
-package net.igorkromin;
+package net.igorkromin.jphotoframe;
 
 import java.io.File;
 import java.io.FileInputStream;
