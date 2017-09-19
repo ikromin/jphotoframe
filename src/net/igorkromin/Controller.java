@@ -94,7 +94,7 @@ public class Controller implements KeyListener, MouseListener {
     }
 
     public void start() {
-        System.out.println("Starting photo frame");
+        Log.info("Starting photo frame");
 
         try {
             // get the initial list of files to display
@@ -120,7 +120,7 @@ public class Controller implements KeyListener, MouseListener {
             view.setReady(true);
         }
         catch (Exception e) {
-            System.out.println("Error starting: " + e.getMessage());
+            Log.error("Error starting: " + e.getMessage());
             stop();
         }
     }
@@ -130,7 +130,7 @@ public class Controller implements KeyListener, MouseListener {
             return;
         }
 
-        System.out.println("Stopping photo frame");
+        Log.info("Stopping photo frame");
         stopping = true;
 
         view.setReady(false);
@@ -162,7 +162,7 @@ public class Controller implements KeyListener, MouseListener {
 
             // display cached file if it exists
             if (c != null && c.exists() && c.canRead()) {
-                System.out.println("Using cached image: " + c.getAbsolutePath());
+                Log.verbose("Using cached image: " + c.getAbsolutePath());
                 view.displayImage(c);
             }
             else {
@@ -200,7 +200,7 @@ public class Controller implements KeyListener, MouseListener {
             OpenWeatherMap owm = new OpenWeatherMap(units, config.getWeatherApiKey());
 
             try {
-                System.out.println("Getting weather data");
+                Log.verbose("Getting weather data");
 
                 DailyForecast forecast = owm.dailyForecastByCityName(config.getWeatherCity(), (byte) config.getWeatherForecastDays());
 
@@ -212,7 +212,7 @@ public class Controller implements KeyListener, MouseListener {
             catch (Exception e) {
                 view.setWeather(Weather.getNoConnectionDummyForecast());
                 view.repaint();
-                System.out.println("Could not fetch weather forecast, error: " + e.getMessage());
+                Log.error("Could not fetch weather forecast, error: " + e.getMessage());
             }
 
             try {

@@ -87,7 +87,7 @@ public class ImageDirectory {
     }
 
     public void sync() {
-        System.out.println("Synchronising directory contents");
+        Log.info("Synchronising directory contents");
 
         imageFiles.clear();
         imageIndex = 0;
@@ -103,17 +103,17 @@ public class ImageDirectory {
                 // check if we should pause processing and wait
                 if (f.getName().equals("pause.txt")) {
                     foundPauseFile = true;
-                    System.out.println("Pausing");
+                    Log.info("Pausing");
                 }
             }
         }
 
         Collections.shuffle(imageFiles);
-        System.out.println("Found " + imageFiles.size() + " files");
+        Log.info("Found " + imageFiles.size() + " files");
 
         // notify all waiting threads that they can resume
         if (wasPaused && foundPauseFile == false) {
-            System.out.println("Resuming");
+            Log.info("Resuming");
             synchronized (lock) {
                 lock.notifyAll();
             }
@@ -149,14 +149,14 @@ public class ImageDirectory {
 
     public void cacheImage(final File file, final BufferedImage bufferedImage)
     {
-        System.out.println("Caching image: " + file.getAbsolutePath());
+        Log.verbose("Caching image: " + file.getAbsolutePath());
         File cachedFile = getCachedFileName(file);
 
         try {
             ImageIO.write(bufferedImage, "JPG", cachedFile);
         }
         catch (Exception e) {
-            System.out.println("Failed to cache image: " + file.getAbsolutePath() + " cause: " + e.getMessage());
+            Log.error("Failed to cache image: " + file.getAbsolutePath() + " cause: " + e.getMessage());
         }
     }
 
@@ -188,7 +188,7 @@ public class ImageDirectory {
 
         @Override
         public void run() {
-            System.out.println("Started watching directory");
+            Log.verbose("Started watching directory");
 
             try {
                 for (;;) {
@@ -203,7 +203,7 @@ public class ImageDirectory {
                 }
             }
             catch (Exception e) {
-                System.out.println("Stopped watching directory");
+                Log.verbose("Stopped watching directory");
             }
         }
     }

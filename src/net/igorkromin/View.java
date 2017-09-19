@@ -94,7 +94,7 @@ public class View extends JFrame {
         forecastFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeWeatherForecast());
         locationFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeLocation());
 
-        System.out.println("Font set to " + dateFont.getFontName());
+        Log.verbose("Font set to " + dateFont.getFontName());
 
         dateFormat = new SimpleDateFormat(config.getDateFormat());
         timeFormat = new SimpleDateFormat(config.getTimeFormat());
@@ -234,12 +234,12 @@ public class View extends JFrame {
             img = ImageIO.read(file);
         }
         catch (IOException|OutOfMemoryError e) {
-            System.out.println("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage());
+            Log.error("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage());
             return;
         }
 
         if (img == null) {
-            System.out.println("Could not load file: " + file.getAbsolutePath());
+            Log.error("Could not load file: " + file.getAbsolutePath());
             return;
         }
 
@@ -272,7 +272,7 @@ public class View extends JFrame {
             backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
         }
         catch (Exception e) {
-            System.out.println("Could not create memory image: " + e.getMessage());
+            Log.warning("Could not create memory image: " + e.getMessage());
             currentImage = null;
             backgroundImage = null;
         }

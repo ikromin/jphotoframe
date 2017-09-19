@@ -103,7 +103,7 @@ public class ConfigOptions {
 
     public ConfigOptions(File configFile)
     {
-        System.out.println("Loading configuration properties");
+        Log.info("Loading configuration properties");
 
         try {
             Properties props = new Properties();
@@ -146,18 +146,18 @@ public class ConfigOptions {
 
             int dwut = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME);
             if (weatherUpdateTime < dwut) {
-                System.out.println("Weather update time less than 10 mins, forcing to 10 mins");
+                Log.warning("Weather update time less than 10 mins, forcing to 10 mins");
                 weatherUpdateTime = dwut;
             }
 
             int dwfd = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS);
             if (weatherForecastDays > dwfd) {
-                System.out.println("Weather forecast days exceeded, forcing to " + dwfd + " days");
+                Log.warning("Weather forecast days exceeded, forcing to " + dwfd + " days");
                 weatherForecastDays = dwfd;
             }
 
             if (showWeather && weatherApiKey == null) {
-                System.out.println("Weather API key is not set, weather will be disabled");
+                Log.warning("Weather API key is not set, weather will be disabled");
                 showWeather = false;
             }
         }
@@ -227,13 +227,13 @@ public class ConfigOptions {
     private String getValue(Properties props, String key, String defaultValue) {
         if (props.containsKey(key)) {
             String value = (String) props.get(key);
-            System.out.println("[CONFIG]  " + key + " = " + value);
+            Log.config(key + " = " + value);
 
             return value;
         }
         else {
             if (defaultValue != null) {
-                System.out.println("[DEFAULT] " + key + " = " + defaultValue);
+                Log.config(key + " = " + defaultValue, true);
                 return defaultValue;
             }
             else {

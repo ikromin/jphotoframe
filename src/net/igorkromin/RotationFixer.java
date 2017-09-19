@@ -24,12 +24,12 @@ public class RotationFixer {
      * Starts a recursive directory traversal and fixing of all incorrectly rotated images
      */
     public void start() {
-        System.out.println("Running image rotation correction utility");
+        Log.info("Running image rotation correction utility");
         fixImages(dir);
     }
 
     public void fixImages(String directory) {
-        System.out.println("Scanning directory: " + directory);
+        Log.info("Scanning directory: " + directory);
 
         Path imageDirPath = FileSystems.getDefault().getPath(directory);
         File imageDirFile = imageDirPath.toFile();
@@ -44,7 +44,7 @@ public class RotationFixer {
         for (File f : files) {
             if (f.isFile() && f.canRead() && !f.isHidden()) {
                 processedFiles++;
-                System.out.println("Reading file - " + f.getAbsolutePath());
+                Log.info("Reading file - " + f.getAbsolutePath());
 
                 try {
                     LLJTran llj = new LLJTran(f);
@@ -54,7 +54,7 @@ public class RotationFixer {
                         throw new Exception("Image has no EXIF data");
                     }
 
-                    System.out.println("\tEXIF data found in image");
+                    Log.verbose("EXIF data found in image");
 
                     Exif exif = (Exif) imageInfo;
                     int orientation = 1;
@@ -68,12 +68,12 @@ public class RotationFixer {
                         operation = Exif.opToCorrectOrientation[orientation];
                     }
                     if (operation != 0) {
-                        System.out.println("\tTransforming image to correct orientation");
+                        Log.info("\tTransforming image to correct orientation");
 
                         llj.read(LLJTran.READ_ALL, true);
                         llj.transform(operation, LLJTran.OPT_DEFAULTS  | LLJTran.OPT_XFORM_ORIENTATION);
 
-                        System.out.println("\tWriting image to disk");
+                        Log.info("\tWriting image to disk");
 
                         OutputStream output = new BufferedOutputStream(new FileOutputStream(f));
                         llj.save(output, LLJTran.OPT_WRITE_ALL);
@@ -85,11 +85,11 @@ public class RotationFixer {
 
                     }
                     else {
-                        System.out.println("\tImage orientation is already correct");
+                        Log.verbose("Image orientation is already correct");
                     }
                 }
                 catch (Exception e) {
-                    System.out.println("\tUnable to process file (" + e.getMessage() + ")");
+                    Log.error("\tUnable to process file (" + e.getMessage() + ")");
                 }
             }
             else if (f.isDirectory() && !f.isHidden()) {
@@ -97,6 +97,6 @@ public class RotationFixer {
             }
         }
 
-        System.out.println("Processed directory = " + directory + "; files = " + processedFiles + "; fixed files = " + fixedFiles);
+        Log.info("Processed directory = " + directory + "; files = " + processedFiles + "; fixed files = " + fixedFiles);
     }
 }

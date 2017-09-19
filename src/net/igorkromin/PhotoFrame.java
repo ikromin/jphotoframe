@@ -41,7 +41,7 @@ public class PhotoFrame {
         ConfigOptions config = null;
 
         if (GraphicsEnvironment.isHeadless()) {
-            System.out.println("Cannot run in headless mode");
+            Log.error("Cannot run in headless mode");
             System.exit(RET_STATUS_HEADLESS_ERR);
         }
 
@@ -54,7 +54,7 @@ public class PhotoFrame {
                     fixRotation = true;
                 }
                 else {
-                    System.out.println("Please specify a photos directory");
+                    Log.error("Please specify a photos directory");
                     System.exit(RET_STATUS_NO_ROT_DIR);
                 }
             }
@@ -71,7 +71,7 @@ public class PhotoFrame {
             try {
                 config = new ConfigOptions(configFile);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                Log.error(e.getMessage());
                 System.exit(RET_STATUS_CONFIG_ERR);
             }
         }
