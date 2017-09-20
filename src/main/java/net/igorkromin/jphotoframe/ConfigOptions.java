@@ -25,8 +25,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import static net.igorkromin.jphotoframe.ConfigDefaults.*;
+
 /**
- * Created by ikromin on 29/08/2015.
+ * Creates the runtime configuration model either from file or based on default values in 
  */
 public class ConfigOptions {
 
@@ -101,68 +103,75 @@ public class ConfigOptions {
     private String weatherUnits;
 
 
-    public ConfigOptions(File configFile)
+    public ConfigOptions(String configFileName)
     {
-        Log.info("Loading configuration properties");
+        Properties props = new Properties();
 
         try {
-            Properties props = new Properties();
-            props.load(new FileInputStream(configFile));
 
-            gfxDeviceNum = Integer.parseInt(getValue(props, PROP_DEVICE_NUM, ConfigDefaults.DEFAULT_DEVICE_NUM));
-            imageTimeout = Integer.parseInt(getValue(props, PROP_IMG_TIME, ConfigDefaults.DEFAULT_IMG_TIME));
-            fontSizeDate = Integer.parseInt(getValue(props, PROP_FONT_SIZE_DATE, ConfigDefaults.DEFAULT_FONT_SIZE_DATE));
-            fontSizeTime = Integer.parseInt(getValue(props, PROP_FONT_SIZE_TIME, ConfigDefaults.DEFAULT_FONT_SIZE_TIME));
-            dateOffsetX = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_X, ConfigDefaults.DEFAULT_DATE_OFFSET_X));
-            dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y, ConfigDefaults.DEFAULT_DATE_OFFSET_Y));
-            timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, ConfigDefaults.DEFAULT_TIME_OFFSET_X));
-            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, ConfigDefaults.DEFAULT_TIME_OFFSET_Y));
-            textOutlineWidth = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_WIDTH, ConfigDefaults.DEFAULT_TEXT_OUTLINE_WIDTH));
-            weatherCity = getValue(props, PROP_WEATHER_CITY, ConfigDefaults.DEFAULT_WEATHER_CITY);
-            imageDirectory = getValue(props, PROP_IMG_DIRECTORY, null);
-            cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, null);
-            fontName = getValue(props, PROP_FONT_NAME, ConfigDefaults.DEFAULT_FONT_NAME);
-            dateFormat = getValue(props, PROP_FORMAT_DATE, ConfigDefaults.DEFAULT_FORMAT_DATE);
-            timeFormat = getValue(props, PROP_FORMAT_TIME, ConfigDefaults.DEFAULT_FORMAT_TIME);
-            textColor = getRgb(getValue(props, PROP_TEXT_COLOR, ConfigDefaults.DEFAULT_TEXT_COLOR));
-            textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR, ConfigDefaults.DEFAULT_TEXT_OUTLINE_COLOR));
-            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, ConfigDefaults.DEFAULT_BG_PERCENT));
-            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, ConfigDefaults.DEFAULT_BG_OPACITY));
-            showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, ConfigDefaults.DEFAULT_SHOW_WEATHER));
-            fullScreenWindow = Boolean.parseBoolean(getValue(props, PROP_FULL_SCREEN_WINDOW, ConfigDefaults.DEFAULT_FULL_SCREEN_WINDOW));
-            fontSizeWeatherCondition = Float.parseFloat(getValue(props, PROP_FONT_SIZE_WEATHER_CONDITION, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_CONDITION));
-            fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, ConfigDefaults.DEFAULT_FONT_SIZE_WEATHER_FORECAST));
-            fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, ConfigDefaults.DEFAULT_FONT_SIZE_LOCATION));
-            weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, ConfigDefaults.DEFAULT_WEATHER_OFFSET_X));
-            weatherCityOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CITY_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CITY_OFFSET_Y));
-            weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_CONDITION_OFFSET_Y));
-            weatherForecastDayTempOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYTEMP_OFFSET_Y));
-            weatherForecastConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y, ConfigDefaults.DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y));
-            weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, ConfigDefaults.DEFAULT_WEATHER_DAY_WIDTH));
-            weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS));
-            weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME));
-            weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, ConfigDefaults.DEFAULT_WEATHER_API_KEY);
-            weatherUnits = getValue(props, PROP_WEATHER_UNITS, ConfigDefaults.DEFAULT_WEATHER_UNITS);
+            if (configFileName == null) {
+                Log.info("Using default configuration");
+            }
+            else {
+                Log.info("Loading configuration properties from file: " + configFileName);
+                File configFile = new File(configFileName);
+                props.load(new FileInputStream(configFile));
+            }
 
-            int dwut = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_UPDATE_TIME);
+            gfxDeviceNum = Integer.parseInt(getValue(props, PROP_DEVICE_NUM, DEFAULT_DEVICE_NUM));
+            imageTimeout = Integer.parseInt(getValue(props, PROP_IMG_TIME, DEFAULT_IMG_TIME));
+            fontSizeDate = Integer.parseInt(getValue(props, PROP_FONT_SIZE_DATE, DEFAULT_FONT_SIZE_DATE));
+            fontSizeTime = Integer.parseInt(getValue(props, PROP_FONT_SIZE_TIME, DEFAULT_FONT_SIZE_TIME));
+            dateOffsetX = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_X, DEFAULT_DATE_OFFSET_X));
+            dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y, DEFAULT_DATE_OFFSET_Y));
+            timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, DEFAULT_TIME_OFFSET_X));
+            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, DEFAULT_TIME_OFFSET_Y));
+            textOutlineWidth = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_WIDTH, DEFAULT_TEXT_OUTLINE_WIDTH));
+            weatherCity = getValue(props, PROP_WEATHER_CITY, DEFAULT_WEATHER_CITY);
+            imageDirectory = getValue(props, PROP_IMG_DIRECTORY, DEFAULT_IMG_DIRECTORY);
+            cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, DEFAULT_CACHE_DIRECTORY);
+            fontName = getValue(props, PROP_FONT_NAME, DEFAULT_FONT_NAME);
+            dateFormat = getValue(props, PROP_FORMAT_DATE, DEFAULT_FORMAT_DATE);
+            timeFormat = getValue(props, PROP_FORMAT_TIME, DEFAULT_FORMAT_TIME);
+            textColor = getRgb(getValue(props, PROP_TEXT_COLOR, DEFAULT_TEXT_COLOR));
+            textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR, DEFAULT_TEXT_OUTLINE_COLOR));
+            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, DEFAULT_BG_PERCENT));
+            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, DEFAULT_BG_OPACITY));
+            showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, DEFAULT_SHOW_WEATHER));
+            fullScreenWindow = Boolean.parseBoolean(getValue(props, PROP_FULL_SCREEN_WINDOW, DEFAULT_FULL_SCREEN_WINDOW));
+            fontSizeWeatherCondition = Float.parseFloat(getValue(props, PROP_FONT_SIZE_WEATHER_CONDITION, DEFAULT_FONT_SIZE_WEATHER_CONDITION));
+            fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, DEFAULT_FONT_SIZE_WEATHER_FORECAST));
+            fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, DEFAULT_FONT_SIZE_LOCATION));
+            weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, DEFAULT_WEATHER_OFFSET_X));
+            weatherCityOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CITY_OFFSET_Y, DEFAULT_WEATHER_CITY_OFFSET_Y));
+            weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, DEFAULT_WEATHER_CONDITION_OFFSET_Y));
+            weatherForecastDayTempOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y, DEFAULT_WEATHER_FORECAST_DAYTEMP_OFFSET_Y));
+            weatherForecastConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y, DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y));
+            weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, DEFAULT_WEATHER_DAY_WIDTH));
+            weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, DEFAULT_WEATHER_FORECAST_DAYS));
+            weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, DEFAULT_WEATHER_UPDATE_TIME));
+            weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, DEFAULT_WEATHER_API_KEY);
+            weatherUnits = getValue(props, PROP_WEATHER_UNITS, DEFAULT_WEATHER_UNITS);
+
+            int dwut = Integer.parseInt(DEFAULT_WEATHER_UPDATE_TIME);
             if (weatherUpdateTime < dwut) {
                 Log.warning("Weather update time less than 10 mins, forcing to 10 mins");
                 weatherUpdateTime = dwut;
             }
 
-            int dwfd = Integer.parseInt(ConfigDefaults.DEFAULT_WEATHER_FORECAST_DAYS);
+            int dwfd = Integer.parseInt(DEFAULT_WEATHER_FORECAST_DAYS);
             if (weatherForecastDays > dwfd) {
                 Log.warning("Weather forecast days exceeded, forcing to " + dwfd + " days");
                 weatherForecastDays = dwfd;
             }
 
-            if (showWeather && weatherApiKey.equals(ConfigDefaults.DEFAULT_WEATHER_API_KEY)) {
+            if (showWeather && weatherApiKey.equals(DEFAULT_WEATHER_API_KEY)) {
                 Log.warning("Weather API key is not set, weather will be disabled");
                 showWeather = false;
             }
         }
         catch (IOException e) {
-            throw new RuntimeException("Cannot read configuration file: " + configFile.getAbsolutePath());
+            throw new RuntimeException("Cannot read configuration file: " + configFileName);
         }
         catch (Exception e) {
             throw new RuntimeException("Invalid configuration detected: " + e.getMessage());

@@ -32,6 +32,8 @@ import java.util.Collections;
 import java.util.Vector;
 
 import static java.nio.file.StandardWatchEventKinds.*;
+import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_CACHE_DIRECTORY;
+import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_IMG_DIRECTORY;
 
 /**
  * Created by ikromin on 30/08/2015.
@@ -42,17 +44,24 @@ public class ImageDirectory {
     Path imageDirPath;
     File imageDirFile;
     File cacheDirFile;
-    Vector<File> imageFiles;
+    Vector<File> imageFiles = new Vector<>();
     int imageIndex;
     Object lock = new Object();
     boolean foundPauseFile = false;
+    boolean isWatching = false;
 
     public ImageDirectory(ConfigOptions config)
             throws IOException
     {
         String dir = config.getImageDirectory();
+        String cacheDir = config.getCacheDirectory();
 
-        cacheDirFile = new File(config.getCacheDirectory());
+        if (DEFAULT_IMG_DIRECTORY.equals(dir) || DEFAULT_CACHE_DIRECTORY.equals(cacheDir)) {
+            Log.warning("No valid image/cache directories specified, will not watch directories");
+            return;
+        }
+
+        cacheDirFile = new File(cacheDir);
         if (!(cacheDirFile.isDirectory() && cacheDirFile.canRead())) {
             throw new RuntimeException("Cache directory not available: " + cacheDirFile.getAbsolutePath());
         }
@@ -67,17 +76,25 @@ public class ImageDirectory {
             throw new RuntimeException("Image directory not available: " + imageDirFile.getAbsolutePath());
         }
 
-        imageFiles = new Vector<>();
+        isWatching = true;
     }
 
     public void startWatching()
             throws IOException
     {
+        if (!isWatching) {
+            return;
+        }
+
         (new WatcherThread(dirWatcher)).start();
         imageDirPath.register(dirWatcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
     }
 
     public void stopWatching() {
+        if (!isWatching) {
+            return;
+        }
+
         try {
             dirWatcher.close();
         }
@@ -87,6 +104,10 @@ public class ImageDirectory {
     }
 
     public void sync() {
+        if (!isWatching) {
+            return;
+        }
+
         Log.info("Synchronising directory contents");
 
         imageFiles.clear();
@@ -138,6 +159,10 @@ public class ImageDirectory {
     }
 
     public File getCachedFile(File file) {
+        if (!isWatching) {
+            return null;
+        }
+
         File cachedFile = getCachedFileName(file);
 
         if (cachedFile.exists() && cachedFile.canRead()) {

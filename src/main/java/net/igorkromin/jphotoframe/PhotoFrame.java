@@ -23,54 +23,32 @@ package net.igorkromin.jphotoframe;
 import net.igorkromin.jphotoframe.ui.Controller;
 import net.igorkromin.jphotoframe.ui.View;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Entry point to the JPhotoFrame App. This class is mostly responsible for loading the config and then creating
  * either the rotation utility class or the controller class for the photo frame.
  */
 public class PhotoFrame {
 
-    private static final String ARG_VAL_FIX_ROTATION = "-fixrotation";
-    private static final String DEFAULT_CONFIG_FILE = "config.properties";
-
     private static final int RET_STATUS_START_ERR = 1;
-    private static final int RET_STATUS_NO_ROT_DIR = 3;
 
-    public static void main(String args[]) throws IOException {
-
-        File configFile = null;
-
-        boolean fixRotation = false;
-
-        if (args.length > 0) {
-            // check if there are any command line arguments specified for image rotation fix utility
-            if (ARG_VAL_FIX_ROTATION.equals(args[0])) {
-                if (args.length > 1) {
-                    fixRotation = true;
-                }
-                else {
-                    Log.error("Please specify a photos directory", null);
-                    System.exit(RET_STATUS_NO_ROT_DIR);
-                }
-            }
-            // assume custom config file name if no other matching args specified
-            else{
-                configFile = new File(args[0]);
-            }
-        }
-        else {
-            configFile = new File(DEFAULT_CONFIG_FILE);
-        }
+    public static void main(String args[]) {
 
         try {
-            ConfigOptions config = new ConfigOptions(configFile);
+            ArgsParser argsParser = new ArgsParser(args);
 
-            if (fixRotation) {
-                RotationFixer rotationFixer = new RotationFixer(args[1]);
+            // set log verbosity if required
+            if (argsParser.verboseLog()) {
+                Log.setVerbose(true);
+            }
+
+            // pick between the rotation utility or the normal photo frame operation
+            if (argsParser.fixRotation()) {
+                RotationFixer rotationFixer = new RotationFixer(argsParser.configPath());
                 rotationFixer.start();
-            } else {
+            }
+            else {
+                ConfigOptions config = new ConfigOptions((argsParser.configPath() != null) ? argsParser.configPath() : null);
+
                 View frame = new View(config);
                 Controller controller = new Controller(config, frame);
                 controller.start();

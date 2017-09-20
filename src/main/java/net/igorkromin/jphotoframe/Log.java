@@ -6,7 +6,7 @@ package net.igorkromin.jphotoframe;
  */
 public class Log {
 
-    private static boolean isVerbose = true;
+    private static boolean isVerbose = false;
 
     public static void setVerbose(boolean isVerbose) {
         Log.isVerbose = isVerbose;

@@ -26,7 +26,6 @@ import net.igorkromin.jphotoframe.ConfigDefaults;
 import net.igorkromin.jphotoframe.ConfigOptions;
 import net.igorkromin.jphotoframe.ImageDirectory;
 import net.igorkromin.jphotoframe.Log;
-import net.igorkromin.jphotoframe.ui.View;
 import net.igorkromin.jphotoframe.weather.Weather;
 
 import javax.swing.*;
@@ -61,6 +60,7 @@ public class Controller implements KeyListener, MouseListener {
     public Controller(ConfigOptions config, View view) throws IOException {
         this.config = config;
         device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[config.getGfxDeviceNum()];
+
         imageDirectory = new ImageDirectory(config);
 
         this.view = view;
@@ -141,13 +141,18 @@ public class Controller implements KeyListener, MouseListener {
 
         view.setReady(false);
 
+        Log.verbose("Stopping threads");
         photoChangeThread.interrupt();
         timeChangeThread.interrupt();
         weatherChangeThread.interrupt();
 
+        Log.verbose("Stopping directory watcher");
         imageDirectory.stopWatching();
+
         device.setFullScreenWindow(null);
         view.dispose();
+
+        Log.verbose("Stopped");
     }
 
     private void updatePhoto() {
@@ -172,13 +177,14 @@ public class Controller implements KeyListener, MouseListener {
                 view.displayImage(c);
             }
             else {
-                view.displayImage(f);
-                BufferedImage img = view.getCurrentImage();
-                if (img != null) {
-                    imageDirectory.cacheImage(f, img);
-                }
-                else {
-                    fastTick = true;
+                if (f != null) {
+                    view.displayImage(f);
+                    BufferedImage img = view.getCurrentImage();
+                    if (img != null) {
+                        imageDirectory.cacheImage(f, img);
+                    } else {
+                        fastTick = true;
+                    }
                 }
             }
         }
@@ -200,14 +206,14 @@ public class Controller implements KeyListener, MouseListener {
     private void updateWeather() {
         // get the forecast if configured
         if (config.isShowWeather()) {
+            Log.verbose("Getting weather data");
+
             OpenWeatherMap.Units units = (config.getWeatherUnits().equals(ConfigDefaults.DEFAULT_WEATHER_UNITS) == true)
                     ?  OpenWeatherMap.Units.METRIC
                     : OpenWeatherMap.Units.IMPERIAL;
             OpenWeatherMap owm = new OpenWeatherMap(units, config.getWeatherApiKey());
 
             try {
-                Log.verbose("Getting weather data");
-
                 DailyForecast forecast = owm.dailyForecastByCityName(config.getWeatherCity(), (byte) config.getWeatherForecastDays());
 
                 if (forecast.hasCityInstance() && forecast.hasForecastCount()) {
@@ -220,13 +226,13 @@ public class Controller implements KeyListener, MouseListener {
                 view.repaint();
                 Log.error("Could not fetch weather forecast, error: " + e.getMessage(), e);
             }
+        }
 
-            try {
-                Thread.sleep(config.getWeatherUpdateTime());
-            }
-            catch (InterruptedException e) {
-                // ignore interruption exception, just exit the method
-            }
+        try {
+            Thread.sleep(config.getWeatherUpdateTime());
+        }
+        catch (InterruptedException e) {
+            // ignore interruption exception, just exit the method
         }
     }
 
