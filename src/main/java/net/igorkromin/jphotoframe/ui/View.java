@@ -25,7 +25,6 @@ import net.igorkromin.jphotoframe.weather.Forecast;
 import net.igorkromin.jphotoframe.weather.Weather;
 import net.igorkromin.jphotoframe.weather.WeatherConditionCodes;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -43,7 +42,6 @@ import java.util.*;
 public class View extends JFrame {
 
     private static final String WEATHER_ICONS_FONT_FILE = "/weathericons-regular-webfont.ttf";
-    private static final String DEFAULT_IMAGE_FILE = "archetype.png";
 
     BufferedImage defaultImage;
     BufferedImage currentImage;
@@ -94,7 +92,7 @@ public class View extends JFrame {
 
         tx = new AffineTransform();
 
-        defaultImage = ImageIO.read(ClassLoader.getSystemResource(DEFAULT_IMAGE_FILE));
+        defaultImage = ImageUtil.getDefaultImage();
 
         dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
         timeFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeTime());
@@ -244,41 +242,21 @@ public class View extends JFrame {
             return;
         }
 
-        // load the image
-        BufferedImage img;
         try {
-            img = ImageIO.read(file);
-        }
-        catch (IOException|OutOfMemoryError e) {
-            Log.error("Could not load file: " + file.getAbsolutePath() + " cause: " + e.getMessage(), e);
-            return;
-        }
+            // load the image
+            BufferedImage img = ImageUtil.readImage(file);
 
-        if (img == null) {
-            Log.error("Could not load file: " + file.getAbsolutePath(), null);
-            return;
-        }
+            int[] dimensions = ImageUtil.getAspectDimensions(img, getBounds());
+            int newWidth = dimensions[0];
+            int newHeight = dimensions[1];
 
-        Rectangle bounds = getBounds();
-        int width = img.getWidth();
-        int height = img.getHeight();
-        int newWidth, newHeight;
-
-        if (width > height) {
-            newWidth = bounds.width;
-            newHeight = (newWidth * height) / width;
-        }
-        else {
-            newHeight = bounds.height;
-            newWidth = (newHeight * width) / height;
-        }
-
-        try {
             // create and draw the image scaled to the device we're displaying on
             currentImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_3BYTE_BGR);
+
             Graphics2D g = currentImage.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
             g.drawImage(img, 0, 0, newWidth, newHeight, null);
             g.dispose();
 
@@ -288,7 +266,7 @@ public class View extends JFrame {
             backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
         }
         catch (Exception e) {
-            Log.warning("Could not create memory image: " + e.getMessage());
+            Log.warning("Could not dispalay image due to error: " + e.getMessage());
             currentImage = null;
             backgroundImage = null;
         }

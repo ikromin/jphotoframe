@@ -22,10 +22,7 @@ package net.igorkromin.jphotoframe.ui;
 
 import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
-import net.igorkromin.jphotoframe.ConfigDefaults;
-import net.igorkromin.jphotoframe.ConfigOptions;
-import net.igorkromin.jphotoframe.ImageDirectory;
-import net.igorkromin.jphotoframe.Log;
+import net.igorkromin.jphotoframe.*;
 import net.igorkromin.jphotoframe.weather.Weather;
 
 import javax.swing.*;
@@ -169,19 +166,20 @@ public class Controller implements KeyListener, MouseListener {
             Thread.sleep(sleepTime);
 
             File f = imageDirectory.nextFile();
-            File c = imageDirectory.getCachedFile(f);
+            File c = imageDirectory.getCachedImageFile(f);
 
             // display cached file if it exists
-            if (c != null && c.exists() && c.canRead()) {
+            if (imageDirectory.fileExists(c)) {
                 Log.verbose("Using cached image: " + c.getAbsolutePath());
                 view.displayImage(c);
             }
+            // fall back to full res image + create a cached copy
             else {
                 if (f != null) {
                     view.displayImage(f);
                     BufferedImage img = view.getCurrentImage();
                     if (img != null) {
-                        imageDirectory.cacheImage(f, img);
+                        ImageUtil.writeImage(c, img);
                     } else {
                         fastTick = true;
                     }

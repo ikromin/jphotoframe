@@ -20,8 +20,6 @@
 
 package net.igorkromin.jphotoframe;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -36,7 +34,7 @@ import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_CACHE_DIRECTORY;
 import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_IMG_DIRECTORY;
 
 /**
- * Created by ikromin on 30/08/2015.
+ * Monitor for the image directory. Also provides various utility methods around cached file names.
  */
 public class ImageDirectory {
 
@@ -158,35 +156,34 @@ public class ImageDirectory {
         }
     }
 
-    public File getCachedFile(File file) {
-        if (!isWatching) {
+    /**
+     * Checks if a file exists and is readable.
+     * @param imageFile
+     * @return
+     */
+    public boolean fileExists(File imageFile) {
+        if (imageFile == null) {
+            return false;
+        }
+
+        if (imageFile != null && imageFile.exists() && imageFile.canRead()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns the cached image file for a (non-cached) image file. No checks are done on whether the passed in
+     * file exists.
+     * @param imageFile
+     * @return
+     */
+    public File getCachedImageFile(File imageFile) {
+        if (imageFile == null || cacheDirFile == null) {
             return null;
         }
 
-        File cachedFile = getCachedFileName(file);
-
-        if (cachedFile.exists() && cachedFile.canRead()) {
-            return cachedFile;
-        }
-
-        return null;
-    }
-
-    public void cacheImage(final File file, final BufferedImage bufferedImage)
-    {
-        Log.verbose("Caching image: " + file.getAbsolutePath());
-        File cachedFile = getCachedFileName(file);
-
-        try {
-            ImageIO.write(bufferedImage, "JPG", cachedFile);
-        }
-        catch (Exception e) {
-            Log.error("Failed to cache image: " + file.getAbsolutePath() + " cause: " + e.getMessage(), e);
-        }
-    }
-
-    private File getCachedFileName(File file) {
-        Path newPath = FileSystems.getDefault().getPath(cacheDirFile.getAbsolutePath(), "X" + file.hashCode());
+        Path newPath = FileSystems.getDefault().getPath(cacheDirFile.getAbsolutePath(), "X" + imageFile.hashCode());
         File newFile = newPath.toFile();
 
         return newFile;
