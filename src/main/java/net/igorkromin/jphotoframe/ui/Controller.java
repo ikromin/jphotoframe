@@ -27,10 +27,6 @@ import net.igorkromin.jphotoframe.weather.Weather;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,12 +35,11 @@ import java.io.IOException;
 /**
  * Created by ikromin on 30/08/2015.
  */
-public class Controller implements KeyListener, MouseListener {
+public class Controller extends EventController {
 
     private static final int FIRST_TICK_TIMEOUT = 2000;
 
     GraphicsDevice device;
-    View view;
     ImageDirectory imageDirectory;
     Thread photoChangeThread;
     Thread timeChangeThread;
@@ -55,20 +50,17 @@ public class Controller implements KeyListener, MouseListener {
     ConfigOptions config;
 
     public Controller(ConfigOptions config, View view) throws IOException {
+        super(view);
+
         this.config = config;
         device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[config.getGfxDeviceNum()];
-
-        imageDirectory = new ImageDirectory(config);
-
-        this.view = view;
-        view.addKeyListener(this);
-        view.addMouseListener(this);
+        imageDirectory = new ImageDirectory(config.getImageDirectory(), config.getCacheDirectory(), this);
 
         photoChangeThread = new Thread() {
             @Override
             public void run() {
                 while (!stopping) {
-                    imageDirectory.waitIfPaused();
+                    waitIfPaused();
                     updatePhoto();
                 }
             }
@@ -78,7 +70,7 @@ public class Controller implements KeyListener, MouseListener {
             @Override
             public void run() {
                 while (!stopping) {
-                    imageDirectory.waitIfPaused();
+                    waitIfPaused();
                     updateTime();
                 }
             }
@@ -88,7 +80,7 @@ public class Controller implements KeyListener, MouseListener {
             @Override
             public void run() {
                 while (!stopping) {
-                    imageDirectory.waitIfPaused();
+                    waitIfPaused();
                     updateWeather();
                 }
             }
@@ -100,9 +92,6 @@ public class Controller implements KeyListener, MouseListener {
         Log.info("Starting photo frame");
 
         try {
-            // get the initial list of files to display
-            imageDirectory.sync();
-
             if (config.isFullScreenWindow()) {
                 device.setFullScreenWindow(view);
             }
@@ -234,48 +223,4 @@ public class Controller implements KeyListener, MouseListener {
         }
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // Exit if any key is pressed
-        stop();
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // Exit if any key is pressed
-        stop();
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // not implemented
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // Exit on mouse click
-        stop();
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // Exit on mouse press
-        stop();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // not implemented
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // not implemented
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // not implemented
-    }
 }

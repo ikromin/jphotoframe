@@ -34,27 +34,31 @@ import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_CACHE_DIRECTORY;
 import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_IMG_DIRECTORY;
 
 /**
- * Monitor for the image directory. Also provides various utility methods around cached file names.
+ * Monitor for the image directory. Requires a listener to be provided to handle pause/resume events.
  */
 public class ImageDirectory {
 
+    private final static String PAUSE_FILE = "pause.txt";
+
+    PauseListener pauseListener;
     WatchService dirWatcher;
     Path imageDirPath;
     File imageDirFile;
     File cacheDirFile;
     Vector<File> imageFiles = new Vector<>();
     int imageIndex;
-    Object lock = new Object();
-    boolean foundPauseFile = false;
     boolean isWatching = false;
+    boolean paused = false;
 
-    public ImageDirectory(ConfigOptions config)
+    public ImageDirectory(String dir, String cacheDir, PauseListener pauseListener)
             throws IOException
     {
-        String dir = config.getImageDirectory();
-        String cacheDir = config.getCacheDirectory();
+        if (pauseListener == null) {
+            throw new RuntimeException("Can't have a null pause listener");
+        }
+        this.pauseListener = pauseListener;
 
-        if (DEFAULT_IMG_DIRECTORY.equals(dir) || DEFAULT_CACHE_DIRECTORY.equals(cacheDir)) {
+        if (dir == null || cacheDir == null || DEFAULT_IMG_DIRECTORY.equals(dir) || DEFAULT_CACHE_DIRECTORY.equals(cacheDir)) {
             Log.warning("No valid image/cache directories specified, will not watch directories");
             return;
         }
@@ -75,6 +79,9 @@ public class ImageDirectory {
         }
 
         isWatching = true;
+
+        // get the initial list of files in the directory
+        sync();
     }
 
     public void startWatching()
@@ -101,44 +108,10 @@ public class ImageDirectory {
         }
     }
 
-    public void sync() {
-        if (!isWatching) {
-            return;
-        }
-
-        Log.info("Synchronising directory contents");
-
-        imageFiles.clear();
-        imageIndex = 0;
-
-        boolean wasPaused = (foundPauseFile == true);
-
-        foundPauseFile = false;
-        File[] files = imageDirFile.listFiles();
-        for (File f : files) {
-            if (f.isFile() && f.canRead() && !f.isHidden()) {
-                imageFiles.add(f);
-
-                // check if we should pause processing and wait
-                if (f.getName().equals("pause.txt")) {
-                    foundPauseFile = true;
-                    Log.info("Pausing");
-                }
-            }
-        }
-
-        Collections.shuffle(imageFiles);
-        Log.info("Found " + imageFiles.size() + " files");
-
-        // notify all waiting threads that they can resume
-        if (wasPaused && foundPauseFile == false) {
-            Log.info("Resuming");
-            synchronized (lock) {
-                lock.notifyAll();
-            }
-        }
-    }
-
+    /**
+     * Gets the file object for the next image to be shown.
+     * @return
+     */
     public File nextFile() {
         if (imageFiles.size() > 0) {
             File f = imageFiles.get(imageIndex);
@@ -147,6 +120,9 @@ public class ImageDirectory {
             imageIndex++;
             if (imageIndex == imageFiles.size()) {
                 imageIndex = 0;
+
+                // shuffle on cycle (maybe this should be configurable?)
+                Collections.shuffle(imageFiles);
             }
 
             return f;
@@ -189,15 +165,42 @@ public class ImageDirectory {
         return newFile;
     }
 
-    public  void waitIfPaused() {
-        if (foundPauseFile) {
-            synchronized (lock) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    // ignore
+    private void sync() {
+        if (!isWatching) {
+            return;
+        }
+
+        Log.info("Synchronising directory contents");
+
+        imageFiles.clear();
+        imageIndex = 0;
+
+        boolean foundPauseFile = false;
+        File[] files = imageDirFile.listFiles();
+
+        for (File f : files) {
+            if (f.isFile() && f.canRead() && !f.isHidden()) {
+                imageFiles.add(f);
+
+                // check if we should pause processing and fire the pause event
+                if (f.getName().equals(PAUSE_FILE)) {
+                    Log.verbose("Found pause file on sync");
+                    if (!paused) {
+                        paused = true;
+                        pauseListener.pauseEvent();
+                    }
+                    foundPauseFile = true;
                 }
             }
+        }
+
+        Collections.shuffle(imageFiles);
+        Log.info("Found " + imageFiles.size() + " files");
+
+        // fire the resume event if the pause file is removed
+        if (paused && foundPauseFile == false) {
+            paused = false;
+            pauseListener.resumeEvent();
         }
     }
 
