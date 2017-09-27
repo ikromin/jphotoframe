@@ -50,7 +50,7 @@ public class PhotoFrame {
             else {
                 ConfigOptions config = new ConfigOptions((argsParser.configPath() != null) ? argsParser.configPath() : null);
 
-                ModelData data = new ModelData(config);
+                ModelData data = new ModelData();
                 View frame = new View(config, data);
                 Controller controller = new Controller(config, frame, data);
 

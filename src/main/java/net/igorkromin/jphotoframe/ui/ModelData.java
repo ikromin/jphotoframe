@@ -1,36 +1,45 @@
 package net.igorkromin.jphotoframe.ui;
 
-import net.igorkromin.jphotoframe.ConfigOptions;
 import net.igorkromin.jphotoframe.ImageUtil;
 import net.igorkromin.jphotoframe.weather.Weather;
 
 import java.awt.image.BufferedImage;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Holds the runtime data for the app 'model'. The View class uses this data to update what's displayed on screen.
  */
 public class ModelData {
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
+    private String date;
+    private String time;
     private Weather weather;
     private BufferedImage currentImage;
 
-    public ModelData(ConfigOptions config) {
-        dateFormat = new SimpleDateFormat(config.getDateFormat());
-        timeFormat = new SimpleDateFormat(config.getTimeFormat());
+    private boolean changed = true; // TODO: change to false once the View class is fully updated
+
+    public boolean hasChanged() {
+        return changed;
+    }
+
+    public void resetChange() {
+        changed = false;
     }
 
     public void setWeather(Weather weather) {
         this.weather = weather;
+        changed = true;
     }
 
     public void setCurrentImage(BufferedImage image) {
         currentImage = image;
+        changed = true;
     }
 
+    public void setDateTime(String date, String time) {
+        this.date = date;
+        this.time = time;
+        changed = true;
+    }
 
     public BufferedImage getCurrentImage() {
         if (currentImage == null) {
@@ -41,13 +50,11 @@ public class ModelData {
     }
 
     public String getDateString() {
-        Date dateTime = new Date();
-        return dateFormat.format(dateTime);
+        return date;
     }
 
     public String getTimeString() {
-        Date dateTime = new Date();
-        return timeFormat.format(dateTime);
+        return time;
     }
 
     public Weather getWeather() {

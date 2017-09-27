@@ -70,15 +70,7 @@ public class Controller extends EventController {
             }
         };
 
-        timeChangeThread = new Thread() {
-            @Override
-            public void run() {
-                while (!stopping) {
-                    waitIfPaused();
-                    updateTime();
-                }
-            }
-        };
+        timeChangeThread = new TimeUpdateThread(this, config, data, 1000);
 
         weatherChangeThread = new Thread() {
             @Override
@@ -129,7 +121,7 @@ public class Controller extends EventController {
         Log.info("Stopping photo frame");
         stopping = true;
 
-        view.setReady(false);
+        view.setReady(false); // TODO: can just use isStopping() ?
 
         Log.verbose("Stopping threads");
         photoChangeThread.interrupt();
@@ -184,16 +176,6 @@ public class Controller extends EventController {
         }
     }
 
-    private void updateTime() {
-        try {
-            Thread.sleep(1000);
-            view.repaint();
-        }
-        catch (InterruptedException e) {
-            // ignore interruption exception, just exit the method
-        }
-    }
-
     private void updateWeather() {
         // get the forecast if configured
         if (config.isShowWeather()) {
@@ -227,4 +209,15 @@ public class Controller extends EventController {
         }
     }
 
+    public boolean isStopping() {
+        return stopping;
+    }
+
+    public void requestUpdate() {
+        synchronized (data) {
+            if (data.hasChanged()) {
+                view.repaint();
+            }
+        }
+    }
 }
