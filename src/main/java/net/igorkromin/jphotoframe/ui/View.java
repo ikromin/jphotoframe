@@ -22,7 +22,6 @@ package net.igorkromin.jphotoframe.ui;
 
 import net.igorkromin.jphotoframe.*;
 import net.igorkromin.jphotoframe.weather.Forecast;
-import net.igorkromin.jphotoframe.weather.Weather;
 import net.igorkromin.jphotoframe.weather.WeatherConditionCodes;
 
 import javax.swing.*;
@@ -33,8 +32,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created by ikromin on 29/08/2015.
@@ -43,8 +40,6 @@ public class View extends JFrame {
 
     private static final String WEATHER_ICONS_FONT_FILE = "/weathericons-regular-webfont.ttf";
 
-    BufferedImage defaultImage;
-    BufferedImage currentImage;
     Image backgroundImage;
     Font dateFont;
     Font timeFont;
@@ -52,17 +47,16 @@ public class View extends JFrame {
     Font forecastFont;
     Font locationFont;
     boolean ready = false;
-    SimpleDateFormat dateFormat;
-    SimpleDateFormat timeFormat;
-    ConfigOptions config;
     Color textColor;
     Color textOutlineColor;
     BasicStroke outlineStroke;
     AlphaComposite bgComposite;
     AffineTransform tx;
-    Weather weather;
 
-    public View(ConfigOptions config)
+    ConfigOptions config;
+    ModelData data;
+
+    public View(ConfigOptions config, ModelData data)
             throws IOException
     {
         if (GraphicsEnvironment.isHeadless()) {
@@ -70,6 +64,7 @@ public class View extends JFrame {
         }
 
         this.config = config;
+        this.data = data;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
@@ -92,8 +87,6 @@ public class View extends JFrame {
 
         tx = new AffineTransform();
 
-        defaultImage = ImageUtil.getDefaultImage();
-
         dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
         timeFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeTime());
 
@@ -110,9 +103,6 @@ public class View extends JFrame {
 
         Log.verbose("Font set to " + dateFont.getFontName());
 
-        dateFormat = new SimpleDateFormat(config.getDateFormat());
-        timeFormat = new SimpleDateFormat(config.getTimeFormat());
-
         int[] rgb1 = config.getTextColor();
         int[] rgb2 = config.getTextOutlineColor();
         textColor = new Color(rgb1[0], rgb1[1], rgb1[2]);
@@ -128,16 +118,14 @@ public class View extends JFrame {
             return;
         }
 
-        if (currentImage == null) {
-            currentImage = defaultImage;
-        }
+        BufferedImage image = data.getCurrentImage();
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         Rectangle rect = getBounds();
-        int width = currentImage.getWidth();
-        int height = currentImage.getHeight();
+        int width = image.getWidth();
+        int height = image.getHeight();
 
         Composite c = g.getComposite();
 
@@ -147,15 +135,14 @@ public class View extends JFrame {
         }
 
         g.setComposite(c);
-        g.drawImage(currentImage, (int) (rect.getWidth() - width) / 2, (int) (rect.getHeight() - height) / 2, null);
+        g.drawImage(image, (int) (rect.getWidth() - width) / 2, (int) (rect.getHeight() - height) / 2, null);
 
-        Date dateTime = new Date();
-        drawDateTime(g, rect, dateFont, dateFormat.format(dateTime), config.getDateOffsetX(), config.getDateOffsetY());
-        drawDateTime(g, rect, timeFont, timeFormat.format(dateTime), config.getTimeOffsetX(), config.getTimeOffsetY());
+        drawDateTime(g, rect, dateFont, data.getDateString(), config.getDateOffsetX(), config.getDateOffsetY());
+        drawDateTime(g, rect, timeFont, data.getTimeString(), config.getTimeOffsetX(), config.getTimeOffsetY());
 
         int position = 0;
-        if (weather != null) {
-            for (Forecast f : weather.getForecast()) {
+        if (data.getWeather() != null) {
+            for (Forecast f : data.getWeather().getForecast()) {
                 if (position < config.getWeatherForecastDays()) {
                     drawForecast(g, rect, f, position);
                 }
@@ -204,7 +191,7 @@ public class View extends JFrame {
 
         // forecast location
         if (position == 0) {
-            String locationText = weather.getCity() + ", " + weather.getCountry();
+            String locationText = data.getWeather().getCity() + ", " + data.getWeather().getCountry();
             text = new TextLayout(locationText, locationFont, fontRenderContext);
             textBounds = text.getBounds().getBounds();
             tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY4);
@@ -245,41 +232,34 @@ public class View extends JFrame {
         try {
             // load the image
             BufferedImage img = ImageUtil.readImage(file);
+            data.setCurrentImage(img);
 
             int[] dimensions = ImageUtil.getAspectDimensions(img, getBounds());
             int newWidth = dimensions[0];
             int newHeight = dimensions[1];
 
             // create and draw the image scaled to the device we're displaying on
-            currentImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_3BYTE_BGR);
-
-            Graphics2D g = currentImage.createGraphics();
+            BufferedImage image = getGraphicsConfiguration().createCompatibleImage(newWidth, newHeight);
+            Graphics2D g = image.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
             g.drawImage(img, 0, 0, newWidth, newHeight, null);
             g.dispose();
 
             // create background image
             int bgWidth = (int) (newWidth * config.getBackgroundPercent());
             int bgHeight = (int) (newHeight * config.getBackgroundPercent());
-            backgroundImage = currentImage.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST);
+            backgroundImage = image.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST); // TODO: changes this to use scaled drawImage() instead
+
+            data.setCurrentImage(image);
         }
         catch (Exception e) {
-            Log.warning("Could not dispalay image due to error: " + e.getMessage());
-            currentImage = null;
+            Log.warning("Could not display image due to error: " + e.getMessage());
+            data.setCurrentImage(null);
             backgroundImage = null;
         }
 
         repaint();
-    }
-
-    public void setWeather(Weather weather) {
-        this.weather = weather;
-    }
-
-    public BufferedImage getCurrentImage() {
-        return currentImage;
     }
 
 }

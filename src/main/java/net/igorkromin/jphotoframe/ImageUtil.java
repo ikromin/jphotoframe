@@ -13,6 +13,8 @@ public class ImageUtil {
 
     private static final String DEFAULT_IMAGE_FILE = "archetype.png";
 
+    private static BufferedImage defaultImage = null;
+
     /**
      * Writes a buffered image to a file. All exceptions are caught and logged but not rethrown.
      * @param imageFile File to write the image to
@@ -31,12 +33,20 @@ public class ImageUtil {
     }
 
     /**
-     * Loads the default logo image from the classpath and returns it as a buffered image object.
-     * @return
-     * @throws IOException
+     * Loads the default logo image from the classpath and returns it as a buffered image object. The image is cached
+     * after the initial load.
+     * @return null if the default image can't be loaded otherwise the loaded BufferedImage object
      */
-    public static BufferedImage getDefaultImage() throws IOException {
-        return ImageIO.read(ClassLoader.getSystemResource(DEFAULT_IMAGE_FILE));
+    public static BufferedImage getDefaultImage() {
+        try {
+            if (defaultImage == null) {
+                defaultImage = ImageIO.read(ClassLoader.getSystemResource(DEFAULT_IMAGE_FILE));
+            }
+            return defaultImage;
+        }
+        catch (IOException e) {
+            return null;
+        }
     }
 
     /**

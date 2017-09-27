@@ -21,6 +21,7 @@
 package net.igorkromin.jphotoframe;
 
 import net.igorkromin.jphotoframe.ui.Controller;
+import net.igorkromin.jphotoframe.ui.ModelData;
 import net.igorkromin.jphotoframe.ui.View;
 
 /**
@@ -49,8 +50,10 @@ public class PhotoFrame {
             else {
                 ConfigOptions config = new ConfigOptions((argsParser.configPath() != null) ? argsParser.configPath() : null);
 
-                View frame = new View(config);
-                Controller controller = new Controller(config, frame);
+                ModelData data = new ModelData(config);
+                View frame = new View(config, data);
+                Controller controller = new Controller(config, frame, data);
+
                 controller.start();
             }
         }

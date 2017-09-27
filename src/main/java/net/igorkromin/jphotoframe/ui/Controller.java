@@ -40,19 +40,23 @@ public class Controller extends EventController {
     private static final int FIRST_TICK_TIMEOUT = 2000;
 
     GraphicsDevice device;
-    ImageDirectory imageDirectory;
     Thread photoChangeThread;
     Thread timeChangeThread;
     Thread weatherChangeThread;
     boolean stopping = false;
     boolean firstTick = true;
     boolean fastTick = false;
-    ConfigOptions config;
 
-    public Controller(ConfigOptions config, View view) throws IOException {
+    ConfigOptions config;
+    ImageDirectory imageDirectory;
+    ModelData data;
+
+    public Controller(ConfigOptions config, View view, ModelData data) throws IOException {
         super(view);
 
         this.config = config;
+        this.data = data;
+
         device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[config.getGfxDeviceNum()];
         imageDirectory = new ImageDirectory(config.getImageDirectory(), config.getCacheDirectory(), this);
 
@@ -155,7 +159,7 @@ public class Controller extends EventController {
             Thread.sleep(sleepTime);
 
             File f = imageDirectory.nextFile();
-            File c = imageDirectory.getCachedImageFile(f);
+            File c = null; // TODO: temporarily disabled imageDirectory.getCachedImageFile(f);
 
             // display cached file if it exists
             if (imageDirectory.fileExists(c)) {
@@ -166,9 +170,9 @@ public class Controller extends EventController {
             else {
                 if (f != null) {
                     view.displayImage(f);
-                    BufferedImage img = view.getCurrentImage();
+                    BufferedImage img = data.getCurrentImage();
                     if (img != null) {
-                        ImageUtil.writeImage(c, img);
+                        // TODO: temporarily disabled ImageUtil.writeImage(c, img); // TODO: This should be done in a separate thread
                     } else {
                         fastTick = true;
                     }
@@ -204,12 +208,12 @@ public class Controller extends EventController {
                 DailyForecast forecast = owm.dailyForecastByCityName(config.getWeatherCity(), (byte) config.getWeatherForecastDays());
 
                 if (forecast.hasCityInstance() && forecast.hasForecastCount()) {
-                    view.setWeather(new Weather(forecast));
+                    data.setWeather(new Weather(forecast));
                     view.repaint();
                 }
             }
             catch (Exception e) {
-                view.setWeather(Weather.getNoConnectionDummyForecast());
+                data.setWeather(Weather.getNoConnectionDummyForecast());
                 view.repaint();
                 Log.error("Could not fetch weather forecast, error: " + e.getMessage(), e);
             }
