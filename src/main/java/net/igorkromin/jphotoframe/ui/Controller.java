@@ -20,10 +20,7 @@
 
 package net.igorkromin.jphotoframe.ui;
 
-import net.aksingh.owmjapis.DailyForecast;
-import net.aksingh.owmjapis.OpenWeatherMap;
 import net.igorkromin.jphotoframe.*;
-import net.igorkromin.jphotoframe.weather.Weather;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,16 +68,7 @@ public class Controller extends EventController {
         };
 
         timeChangeThread = new TimeUpdateThread(this, config, data, 1000);
-
-        weatherChangeThread = new Thread() {
-            @Override
-            public void run() {
-                while (!stopping) {
-                    waitIfPaused();
-                    updateWeather();
-                }
-            }
-        };
+        weatherChangeThread = new WeatherUpdateThread(this, config, data, config.getWeatherUpdateTime());
 
     }
 
@@ -176,48 +164,16 @@ public class Controller extends EventController {
         }
     }
 
-    private void updateWeather() {
-        // get the forecast if configured
-        if (config.isShowWeather()) {
-            Log.verbose("Getting weather data");
-
-            OpenWeatherMap.Units units = (config.getWeatherUnits().equals(ConfigDefaults.DEFAULT_WEATHER_UNITS) == true)
-                    ?  OpenWeatherMap.Units.METRIC
-                    : OpenWeatherMap.Units.IMPERIAL;
-            OpenWeatherMap owm = new OpenWeatherMap(units, config.getWeatherApiKey());
-
-            try {
-                DailyForecast forecast = owm.dailyForecastByCityName(config.getWeatherCity(), (byte) config.getWeatherForecastDays());
-
-                if (forecast.hasCityInstance() && forecast.hasForecastCount()) {
-                    data.setWeather(new Weather(forecast));
-                    view.repaint();
-                }
-            }
-            catch (Exception e) {
-                data.setWeather(Weather.getNoConnectionDummyForecast());
-                view.repaint();
-                Log.error("Could not fetch weather forecast, error: " + e.getMessage(), e);
-            }
-        }
-
-        try {
-            Thread.sleep(config.getWeatherUpdateTime());
-        }
-        catch (InterruptedException e) {
-            // ignore interruption exception, just exit the method
-        }
-    }
-
     public boolean isStopping() {
         return stopping;
     }
 
-    public void requestUpdate() {
-        synchronized (data) {
-            if (data.hasChanged()) {
-                view.repaint();
-            }
+    public synchronized void requestUpdate() {
+        if (data.hasChanged()) {
+            view.repaint();
+        }
+        else {
+            Log.verbose("Data not changed");
         }
     }
 }
