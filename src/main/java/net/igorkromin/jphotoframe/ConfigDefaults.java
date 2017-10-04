@@ -20,8 +20,8 @@ public class ConfigDefaults {
     public static final String DEFAULT_TEXT_COLOR = "255,255,255";
     public static final String DEFAULT_TEXT_OUTLINE_COLOR = "255,0,0";
     public static final String DEFAULT_TEXT_OUTLINE_WIDTH = "6";
-    public static final String DEFAULT_BG_PERCENT = "0.01";
-    public static final String DEFAULT_BG_OPACITY = "0.2";
+    public static final String DEFAULT_BG_PERCENT = "0.05";
+    public static final String DEFAULT_BG_OPACITY = "0.15";
     public static final String DEFAULT_SHOW_WEATHER = "false";
     public static final String DEFAULT_WEATHER_CITY = "Brisbane,AU";
     public static final String DEFAULT_FONT_SIZE_WEATHER_CONDITION = "90";

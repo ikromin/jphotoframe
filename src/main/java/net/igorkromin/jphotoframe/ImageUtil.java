@@ -1,7 +1,14 @@
 package net.igorkromin.jphotoframe;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +23,8 @@ public class ImageUtil {
     private static BufferedImage defaultImage = null;
 
     /**
-     * Writes a buffered image to a file. All exceptions are caught and logged but not rethrown.
+     * Writes a buffered image to a file. Images always written as JPG. All exceptions are caught and logged but not
+     * rethrown.
      * @param imageFile File to write the image to
      * @param bufferedImage Source buffered image object
      */
@@ -25,7 +33,14 @@ public class ImageUtil {
         Log.verbose("Writing image: " + imageFile.getAbsolutePath());
 
         try {
-            ImageIO.write(bufferedImage, "JPG", imageFile);
+            JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
+            jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            jpegParams.setCompressionQuality(0.9f); // TODO: allow config options to set quality here
+
+            ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+            writer.setOutput(new FileImageOutputStream(imageFile));
+
+            writer.write(null, new IIOImage(bufferedImage, null, null), jpegParams);
         }
         catch (Exception e) {
             Log.error("Failed to cache image: " + imageFile.getAbsolutePath() + " cause: " + e.getMessage(), e);
@@ -77,31 +92,35 @@ public class ImageUtil {
     }
 
     /**
-     * Calculates image dimensions correct to the aspect ratio of the passed in image that would fit within the
-     * given rectangle boundary.
-     * @param img
-     * @param bounds
-     * @return Two-element array with the width at index 0 and height at index 1
+     * Creates an image that is a copy of the passed in srcImage but with scaling and opacity applied as loaded in
+     * the config object for the background percentage and opacity values.
+     * @param srcImage
+     * @param config
+     * @return
      */
-    public static int[] getAspectDimensions(BufferedImage img, Rectangle bounds) {
-        int[] dimensions =  new int[2];
+    public static BufferedImage createScaledTranslucentImage(BufferedImage srcImage, ConfigOptions config) {
+        float bgScalar = config.getBackgroundPercent();
 
-        int width = img.getWidth();
-        int height = img.getHeight();
-        int newWidth, newHeight;
+        BufferedImage background = new BufferedImage(
+                (int) (srcImage.getWidth() * bgScalar), (int) (srcImage.getHeight() * bgScalar), srcImage.getType());
+        Graphics2D gb = background.createGraphics();
 
-        if (width > height) {
-            newWidth = bounds.width;
-            newHeight = (newWidth * height) / width;
-        }
-        else {
-            newHeight = bounds.height;
-            newWidth = (newHeight * width) / height;
-        }
+        AffineTransform txB = new AffineTransform();
+        txB.scale(bgScalar, bgScalar);
+        AffineTransformOp opB = new AffineTransformOp(txB, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
-        dimensions[0] = newWidth;
-        dimensions[1] = newHeight;
+        // erase the buffer first
+        gb.setColor(Color.black);
+        gb.fillRect(0, 0, background.getWidth(), background.getHeight());
 
-        return dimensions;
+        // used to blend the image to the black background so only some of the source image luminosity shows
+        Composite bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, config.getBackgroundOpacity());
+
+        gb.setComposite(bgComposite);
+        gb.drawImage(srcImage, opB, 0, 0);
+        gb.dispose();
+
+        return background;
     }
+
 }

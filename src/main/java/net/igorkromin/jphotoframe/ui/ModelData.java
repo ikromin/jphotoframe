@@ -1,6 +1,5 @@
 package net.igorkromin.jphotoframe.ui;
 
-import net.igorkromin.jphotoframe.ImageUtil;
 import net.igorkromin.jphotoframe.weather.Weather;
 
 import java.awt.image.BufferedImage;
@@ -15,7 +14,7 @@ public class ModelData {
     private Weather weather;
     private BufferedImage currentImage;
 
-    private boolean changed = true; // TODO: change to false once the View class is fully updated
+    private boolean changed = false;
 
     public boolean hasChanged() {
         return changed;
@@ -42,10 +41,6 @@ public class ModelData {
     }
 
     public BufferedImage getCurrentImage() {
-        if (currentImage == null) {
-            currentImage = ImageUtil.getDefaultImage();
-        }
-
         return currentImage;
     }
 

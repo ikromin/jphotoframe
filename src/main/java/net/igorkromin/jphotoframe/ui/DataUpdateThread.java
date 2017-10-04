@@ -3,6 +3,8 @@ package net.igorkromin.jphotoframe.ui;
 import net.igorkromin.jphotoframe.ConfigOptions;
 import net.igorkromin.jphotoframe.Log;
 
+import java.awt.*;
+
 /**
  * Abstracts the data update/sleep cycle into its own class and provides the necessary accessors for the data model.
  */
@@ -12,6 +14,7 @@ public abstract class DataUpdateThread extends Thread {
     private ConfigOptions config;
     private ModelData data;
     private int sleepTime;
+    private boolean doNotRun = false;
 
     public DataUpdateThread(Controller controller, ConfigOptions config, ModelData data, int sleepTime) {
         this.controller = controller;
@@ -22,20 +25,49 @@ public abstract class DataUpdateThread extends Thread {
 
     @Override
     public void run() {
+        // check if the 'do not run' flag is set and exit if it is
+        if (doNotRun) {
+            Log.verbose("Early thread exit");
+            return;
+        }
+
         Log.verbose("Starting data update thread");
 
         while (!controller.isStopping()) {
             controller.waitIfPaused();
-            doUpdate();
 
             try {
-                sleep(sleepTime);
-            } catch (InterruptedException e) {
-                Log.warning("Couldn't put thread to sleep");
+                doUpdate();
             }
+            catch (Exception e) {
+                Log.error("Error in data update thread", e);
+            }
+
+            trySleep(sleepTime);
+        }
+
+        try {
+            beforeExit();
+        }
+        catch (Exception e) {
+            Log.error("Error before thread exit", e);
         }
 
         Log.verbose("Exiting data update thread");
+    }
+
+    /**
+     * Puts the thread to sleep for a specified period. Any exceptions are caught and ignored.
+     * @param millis
+     */
+    private void trySleep(long millis) {
+        try {
+            sleep(millis);
+        } catch (InterruptedException e) {
+            if (!controller.isStopping()) {
+                Log.warning("Couldn't put thread to sleep");
+            }
+        }
     }
 
     protected Controller getController() {
@@ -50,6 +82,16 @@ public abstract class DataUpdateThread extends Thread {
         return data;
     }
 
+    protected void doNotRun() {
+        doNotRun = true;
+    }
+
     public abstract void doUpdate();
+
+    /**
+     * Called before the thread terminates. This implementation doesn't do anything so concrete implementing classes
+     * need to override this method.
+     */
+    public void beforeExit() {}
 
 }

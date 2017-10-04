@@ -30,7 +30,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -40,18 +39,16 @@ public class View extends JFrame {
 
     private static final String WEATHER_ICONS_FONT_FILE = "/weathericons-regular-webfont.ttf";
 
-    Image backgroundImage;
     Font dateFont;
     Font timeFont;
     Font conditionFont;
     Font forecastFont;
     Font locationFont;
-    boolean ready = false;
     Color textColor;
     Color textOutlineColor;
     BasicStroke outlineStroke;
-    AlphaComposite bgComposite;
     AffineTransform tx;
+    GraphicsDevice device;
 
     ConfigOptions config;
     ModelData data;
@@ -78,12 +75,24 @@ public class View extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                drawImage((Graphics2D) g);
+                drawScreen((Graphics2D) g);
             }
         };
         panel.setBackground(Color.black);
         panel.setOpaque(true);
         contentPane.add(panel);
+
+        device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[config.getGfxDeviceNum()];
+        if (config.isFullScreenWindow()) {
+            device.setFullScreenWindow(this);
+        }
+        else {
+            setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        }
+
+        // stupid workaround for OS X losing focus
+        setVisible(false);
+        setVisible(true);
 
         tx = new AffineTransform();
 
@@ -109,36 +118,48 @@ public class View extends JFrame {
         textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
 
         outlineStroke = new BasicStroke(config.getTextOutlineWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-
-        bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, config.getBackgroundOpacity());
     }
 
-    private void drawImage(Graphics2D g) {
-        if (!ready) {
-            return;
+    @Override
+    public void dispose() {
+        if (config.isFullScreenWindow()) {
+            device.setFullScreenWindow(null);
         }
 
-        BufferedImage image = data.getCurrentImage();
+        super.dispose();
+    }
 
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    private void drawScreen(Graphics2D g) {
+        BufferedImage image = data.getCurrentImage();
+        Rectangle rect = getBounds();
+
+        // if there is no image loaded, show the logo image instead (centered on screen)
+        if (image == null) {
+            // erase the screen first
+            g.setColor(Color.black);
+            g.fillRect(0, 0, rect.width, rect.height);
+
+            image = ImageUtil.getDefaultImage();
+            int x = (rect.width - image.getWidth()) / 2;
+            int y = (rect.height - image.getHeight()) / 2;
+            g.drawImage(image, x, y, null);
+        }
+        // have image so draw it 'as is' the photo update thread takes care of centering, background, etc
+        else {
+            g.drawImage(image, 0, 0, null);
+        }
+
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        Rectangle rect = getBounds();
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        Composite c = g.getComposite();
-
-        if (backgroundImage != null) {
-            g.setComposite(bgComposite);
-            g.drawImage(backgroundImage, 0, 0, rect.width, rect.height, null);
+        String dateString = data.getDateString();
+        if (dateString != null) {
+            drawDateTime(g, rect, dateFont, dateString, config.getDateOffsetX(), config.getDateOffsetY());
         }
 
-        g.setComposite(c);
-        g.drawImage(image, (int) (rect.getWidth() - width) / 2, (int) (rect.getHeight() - height) / 2, null);
-
-        drawDateTime(g, rect, dateFont, data.getDateString(), config.getDateOffsetX(), config.getDateOffsetY());
-        drawDateTime(g, rect, timeFont, data.getTimeString(), config.getTimeOffsetX(), config.getTimeOffsetY());
+        String timeString = data.getTimeString();
+        if (timeString != null) {
+            drawDateTime(g, rect, timeFont, timeString, config.getTimeOffsetX(), config.getTimeOffsetY());
+        }
 
         int position = 0;
         if (data.getWeather() != null) {
@@ -152,6 +173,8 @@ public class View extends JFrame {
                 position++;
             }
         }
+
+        data.resetChange();
     }
 
     private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
@@ -220,46 +243,9 @@ public class View extends JFrame {
         text.draw(g, 0, 0);
     }
 
-    public void setReady(boolean ready) {
-        this.ready = ready;
-    }
-
-    public void displayImage(File file) {
-        if (!ready) {
-            return;
-        }
-
-        try {
-            // load the image
-            BufferedImage img = ImageUtil.readImage(file);
-            data.setCurrentImage(img);
-
-            int[] dimensions = ImageUtil.getAspectDimensions(img, getBounds());
-            int newWidth = dimensions[0];
-            int newHeight = dimensions[1];
-
-            // create and draw the image scaled to the device we're displaying on
-            BufferedImage image = getGraphicsConfiguration().createCompatibleImage(newWidth, newHeight);
-            Graphics2D g = image.createGraphics();
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g.drawImage(img, 0, 0, newWidth, newHeight, null);
-            g.dispose();
-
-            // create background image
-            int bgWidth = (int) (newWidth * config.getBackgroundPercent());
-            int bgHeight = (int) (newHeight * config.getBackgroundPercent());
-            backgroundImage = image.getScaledInstance(bgWidth, bgHeight, Image.SCALE_FAST); // TODO: changes this to use scaled drawImage() instead
-
-            data.setCurrentImage(image);
-        }
-        catch (Exception e) {
-            Log.warning("Could not display image due to error: " + e.getMessage());
-            data.setCurrentImage(null);
-            backgroundImage = null;
-        }
-
-        repaint();
+    public BufferedImage getImageBuffer() {
+        Rectangle rect = getBounds();
+        return getGraphicsConfiguration().createCompatibleImage(rect.width, rect.height);
     }
 
 }
