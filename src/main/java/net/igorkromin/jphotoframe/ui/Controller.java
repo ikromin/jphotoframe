@@ -23,16 +23,17 @@ package net.igorkromin.jphotoframe.ui;
 import net.igorkromin.jphotoframe.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
- * Created by ikromin on 30/08/2015.
+ * Creates all of the supporting data update threads and manages the start, stop operations as well as the view
+ * update cycle.
  */
 public class Controller extends EventController {
 
-    PhotoUpdateThread photoChangeThread;
-    DataUpdateThread timeChangeThread;
-    DataUpdateThread weatherChangeThread;
+    List<DataUpdateThread> dataThreads;
     boolean stopping = false;
 
     ConfigOptions config;
@@ -44,9 +45,11 @@ public class Controller extends EventController {
         this.config = config;
         this.data = data;
 
-        timeChangeThread = new TimeUpdateThread(this, config, data, 1000);
-        weatherChangeThread = new WeatherUpdateThread(this, config, data, config.getWeatherUpdateTime());
-        photoChangeThread = new PhotoUpdateThread(this, config, data, config.getImageTimeout(), view.getImageBuffer());
+        dataThreads = new ArrayList<>(3);
+
+        dataThreads.add(new TimeUpdateThread(this, config, data, 1000));
+        dataThreads.add(new WeatherUpdateThread(this, config, data, config.getWeatherUpdateTime()));
+        dataThreads.add(new PhotoUpdateThread(this, config, data, config.getImageTimeout(), view.getImageBuffer()));
     }
 
     public void start() {
@@ -54,9 +57,9 @@ public class Controller extends EventController {
 
         try {
             // start all the support threads
-            photoChangeThread.start();
-            timeChangeThread.start();
-            weatherChangeThread.start();
+            for (DataUpdateThread t : dataThreads) {
+                t.start();
+            }
         }
         catch (Exception e) {
             Log.error("Error starting: " + e.getMessage(), e);
@@ -73,9 +76,9 @@ public class Controller extends EventController {
         stopping = true;
 
         Log.verbose("Stopping threads");
-        photoChangeThread.interrupt();
-        timeChangeThread.interrupt();
-        weatherChangeThread.interrupt();
+        for (DataUpdateThread t : dataThreads) {
+            t.interrupt();
+        }
 
         view.dispose();
 
@@ -86,6 +89,9 @@ public class Controller extends EventController {
         return stopping;
     }
 
+    /**
+     * Updates the view if the model data has changed since the last time the view was updated.
+     */
     public synchronized void requestUpdate() {
         if (data.hasChanged()) {
             view.repaint();

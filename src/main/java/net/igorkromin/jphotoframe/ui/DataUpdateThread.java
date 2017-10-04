@@ -3,8 +3,6 @@ package net.igorkromin.jphotoframe.ui;
 import net.igorkromin.jphotoframe.ConfigOptions;
 import net.igorkromin.jphotoframe.Log;
 
-import java.awt.*;
-
 /**
  * Abstracts the data update/sleep cycle into its own class and provides the necessary accessors for the data model.
  */
@@ -35,6 +33,7 @@ public abstract class DataUpdateThread extends Thread {
 
         while (!controller.isStopping()) {
             controller.waitIfPaused();
+            long startTime = System.currentTimeMillis();
 
             try {
                 doUpdate();
@@ -43,7 +42,15 @@ public abstract class DataUpdateThread extends Thread {
                 Log.error("Error in data update thread", e);
             }
 
-            trySleep(sleepTime);
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            long actualSleep = sleepTime - elapsedTime;
+
+            if (actualSleep > 0) {
+                trySleep(actualSleep);
+            }
+            else {
+                Log.warning("Data update thread took longer to update than sleep interval");
+            }
         }
 
         try {
