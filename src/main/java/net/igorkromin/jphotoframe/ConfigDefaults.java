@@ -59,5 +59,6 @@ public class ConfigDefaults {
     public static final String DEFAULT_WEATHER_API_KEY = "NOT_A_VALID_KEY";
     public static final String DEFAULT_IMG_DIRECTORY = "NOT_A_VALID_DIRECTORY";
     public static final String DEFAULT_CACHE_DIRECTORY = "NOT_A_VALID_DIRECTORY";
+    public static final String DEFAULT_LAYOUT_FILE = "layout.json";
 
 }

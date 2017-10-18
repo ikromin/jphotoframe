@@ -67,4 +67,10 @@ public class Log {
         e.printStackTrace();
     }
 
+    public static void layout(String msg) {
+        if (!isVerbose) {
+            return;
+        }
+        System.out.println("Layout: " + msg);
+    }
 }

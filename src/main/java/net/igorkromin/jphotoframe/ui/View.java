@@ -20,38 +20,27 @@
 
 package net.igorkromin.jphotoframe.ui;
 
-import net.igorkromin.jphotoframe.*;
-import net.igorkromin.jphotoframe.weather.Forecast;
-import net.igorkromin.jphotoframe.weather.WeatherConditionCodes;
+import net.igorkromin.jphotoframe.ConfigOptions;
+import net.igorkromin.jphotoframe.ImageUtil;
+import net.igorkromin.jphotoframe.ui.widgets.Factory;
+import net.igorkromin.jphotoframe.ui.widgets.Widget;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by ikromin on 29/08/2015.
  */
 public class View extends JFrame {
 
-    private static final String WEATHER_ICONS_FONT_FILE = "/weathericons-regular-webfont.ttf";
-
-    Font dateFont;
-    Font timeFont;
-    Font conditionFont;
-    Font forecastFont;
-    Font locationFont;
-    Color textColor;
-    Color textOutlineColor;
-    BasicStroke outlineStroke;
-    AffineTransform tx;
     GraphicsDevice device;
 
     ConfigOptions config;
     ModelData data;
+    List<Widget> widgets;
 
     public View(ConfigOptions config, ModelData data)
             throws IOException
@@ -62,6 +51,8 @@ public class View extends JFrame {
 
         this.config = config;
         this.data = data;
+
+        widgets = Factory.makeWidgetsFromLayout(config.getLayoutFile(), data);
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
@@ -93,31 +84,6 @@ public class View extends JFrame {
         // stupid workaround for OS X losing focus
         setVisible(false);
         setVisible(true);
-
-        tx = new AffineTransform();
-
-        dateFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeDate());
-        timeFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeTime());
-
-        try {
-            conditionFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(WEATHER_ICONS_FONT_FILE))
-                    .deriveFont(config.getFontSizeWeatherCondition());
-        }
-        catch (FontFormatException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-        forecastFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeWeatherForecast());
-        locationFont = new Font(config.getFontName(), Font.BOLD, config.getFontSizeLocation());
-
-        Log.verbose("Font set to " + dateFont.getFontName());
-
-        int[] rgb1 = config.getTextColor();
-        int[] rgb2 = config.getTextOutlineColor();
-        textColor = new Color(rgb1[0], rgb1[1], rgb1[2]);
-        textOutlineColor = new Color(rgb2[0], rgb2[1], rgb2[2]);
-
-        outlineStroke = new BasicStroke(config.getTextOutlineWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     }
 
     @Override
@@ -149,98 +115,14 @@ public class View extends JFrame {
             g.drawImage(image, 0, 0, null);
         }
 
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        String dateString = data.getDateString();
-        if (dateString != null) {
-            drawDateTime(g, rect, dateFont, dateString, config.getDateOffsetX(), config.getDateOffsetY());
-        }
-
-        String timeString = data.getTimeString();
-        if (timeString != null) {
-            drawDateTime(g, rect, timeFont, timeString, config.getTimeOffsetX(), config.getTimeOffsetY());
-        }
-
-        int position = 0;
-        if (data.getWeather() != null) {
-            for (Forecast f : data.getWeather().getForecast()) {
-                if (position < config.getWeatherForecastDays()) {
-                    drawForecast(g, rect, f, position);
-                }
-                else {
-                    break;
-                }
-                position++;
-            }
+        // draw all of the screen widgets
+        for (Widget w : widgets) {
+            w.draw(g, rect);
         }
 
         data.resetChange();
-    }
-
-    private void drawForecast(Graphics2D g, Rectangle rect, Forecast forecast, int position) {
-        int offsetX = config.getWeatherOffsetX();
-        int offsetY1 = config.getWeatherConditionOffsetY();
-        int offsetY2 = config.getWeatherForecastDayTempOffsetY();
-        int offsetY3 = config.getWeatherForecastConditionOffsetY();
-        int offsetY4 = config.getWeatherCityOffsetY();
-        int positionWidth = config.getWeatherDayWidth();
-
-        String forecastText = forecast.getDay() + " " + forecast.getLow() + "-" + forecast.getHigh();
-        WeatherConditionCodes conditionEnum = WeatherConditionCodes.fromInt(forecast.getCode());
-        String conditionIcon = conditionEnum.toString();
-
-        TextLayout text;
-        Rectangle textBounds;
-        FontRenderContext fontRenderContext = g.getFontRenderContext();
-
-        // conditionIcon 'icon'
-        text = new TextLayout(conditionIcon, conditionFont, fontRenderContext);
-        int conditionWidth = (int) text.getBounds().getWidth();
-        int nudgeX = (positionWidth > conditionWidth) ? (positionWidth - conditionWidth) / 2 : 0; // center in allocated space
-        tx.setToTranslation(nudgeX + offsetX + (position * positionWidth), rect.height - offsetY1);
-        drawText(g, conditionFont, text);
-
-        // forecast day+temp text
-        text = new TextLayout(forecastText, forecastFont, fontRenderContext);
-        textBounds = text.getBounds().getBounds();
-        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY2);
-        drawText(g, forecastFont, text);
-
-        // forecast condition text
-        text = new TextLayout(conditionEnum.getInfoText(), forecastFont, fontRenderContext);
-        textBounds = text.getBounds().getBounds();
-        tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY3);
-        drawText(g, forecastFont, text);
-
-        // forecast location
-        if (position == 0) {
-            String locationText = data.getWeather().getCity() + ", " + data.getWeather().getCountry();
-            text = new TextLayout(locationText, locationFont, fontRenderContext);
-            textBounds = text.getBounds().getBounds();
-            tx.setToTranslation(offsetX + (position * positionWidth), rect.height - textBounds.height - offsetY4);
-            drawText(g, locationFont, text);
-        }
-    }
-
-    private void drawDateTime(Graphics2D g, Rectangle rect, Font font, String dispString, int offsetX, int offsetY) {
-        FontRenderContext fontRenderContext = g.getFontRenderContext();
-        TextLayout text = new TextLayout(dispString, font, fontRenderContext);
-        Rectangle textBounds = text.getBounds().getBounds();
-        tx.setToTranslation(rect.width - textBounds.width - offsetX, offsetY + textBounds.height);
-        drawText(g, font, text);
-    }
-
-    private void drawText(Graphics2D g, Font font, TextLayout text) {
-        Shape shape = text.getOutline(null);
-
-        g.setFont(font);
-        g.setStroke(outlineStroke);
-        g.setTransform(tx);
-        g.setColor(textOutlineColor);
-        g.draw(shape);
-        g.setColor(textColor);
-
-        text.draw(g, 0, 0);
     }
 
     public BufferedImage getImageBuffer() {

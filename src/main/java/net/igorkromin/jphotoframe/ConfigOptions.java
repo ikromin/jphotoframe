@@ -36,28 +36,9 @@ public class ConfigOptions {
     private static final String PROP_IMG_TIME = "imageTimeout";
     private static final String PROP_IMG_DIRECTORY = "imageDirectory";
     private static final String PROP_CACHE_DIRECTORY = "cacheDirectory";
-    private static final String PROP_FONT_NAME = "fontName";
-    private static final String PROP_FONT_SIZE_DATE = "fontSizeDate";
-    private static final String PROP_FONT_SIZE_TIME = "fontSizeTime";
-    private static final String PROP_FONT_SIZE_WEATHER_CONDITION = "fontSizeWeatherCondition";
-    private static final String PROP_FONT_SIZE_WEATHER_FORECAST = "fontSizeWeatherForecast";
-    private static final String PROP_FONT_SIZE_LOCATION = "fontSizeLocation";
     private static final String PROP_FORMAT_TIME = "timeFormat";
     private static final String PROP_FORMAT_DATE = "dateFormat";
-    private static final String PROP_DATE_OFFSET_X = "dateOffsetX";
-    private static final String PROP_DATE_OFFSET_Y = "dateOffsetY";
-    private static final String PROP_TIME_OFFSET_X = "timeOffsetX";
-    private static final String PROP_TIME_OFFSET_Y = "timeOffsetY";
-    private static final String PROP_WEATHER_OFFSET_X = "weatherOffsetX";
-    private static final String PROP_WEATHER_CITY_OFFSET_Y = "weatherCityOffsetY";
-    private static final String PROP_WEATHER_CONDITION_OFFSET_Y = "weatherConditionOffsetY";
-    private static final String PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y = "weatherForecastDayTempOffsetY";
-    private static final String PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y = "weatherForecastConditionOffsetY";
-    private static final String PROP_WEATHER_DAY_WIDTH = "weatherDayWidth";
     private static final String PROP_WEATHER_FORECAST_DAYS = "weatherForecastDays";
-    private static final String PROP_TEXT_COLOR = "textColor";
-    private static final String PROP_TEXT_OUTLINE_COLOR = "textOutlineColor";
-    private static final String PROP_TEXT_OUTLINE_WIDTH = "textOutlineWidth";
     private static final String PROP_BG_PERCENT = "backgroundSourcePercent";
     private static final String PROP_BG_OPACITY = "backgroundOpacity";
     private static final String PROP_SHOW_WEATHER = "showWeather";
@@ -66,41 +47,14 @@ public class ConfigOptions {
     private static final String PROP_WEATHER_UPDATE_TIME = "weatherUpdateTime";
     private static final String PROP_WEATHER_API_KEY = "owmApiKey";
     private static final String PROP_WEATHER_UNITS = "weatherUnits";
+    private static final String PROP_LAYOUT_FILE = "layout";
 
-    private int gfxDeviceNum;
-    private int imageTimeout;
-    private int fontSizeDate;
-    private int fontSizeTime;
-    private int dateOffsetX;
-    private int dateOffsetY;
-    private int timeOffsetX;
-    private int textOutlineWidth;
-    private int timeOffsetY;
-    private String weatherCity;
-    private int[] textColor;
-    private int[] textOutlineColor;
-    private String imageDirectory;
-    private String cacheDirectory;
-    private String fontName;
-    private String dateFormat;
-    private String timeFormat;
-    private float bgPercent;
-    private float bgOpacity;
-    private boolean showWeather;
-    private boolean fullScreenWindow;
-    private float fontSizeWeatherCondition;
-    private int fontSizeWeatherForecast;
-    private int fontSizeLocation;
-    private int weatherOffsetX;
-    private int weatherCityOffsetY;
-    private int weatherConditionOffsetY;
-    private int weatherForecastDayTempOffsetY;
-    private int weatherForecastConditionOffsetY;
-    private int weatherDayWidth;
-    private int weatherForecastDays;
-    private int weatherUpdateTime;
-    private String weatherApiKey;
-    private String weatherUnits;
+    private boolean showWeather, fullScreenWindow;
+    private int gfxDeviceNum, imageTimeout;
+    private int weatherForecastDays, weatherUpdateTime;
+    private float bgPercent, bgOpacity;
+    private String weatherCity, imageDirectory, cacheDirectory, dateFormat;
+    private String timeFormat, weatherApiKey, weatherUnits, layoutFile;
 
 
     public ConfigOptions(String configFileName)
@@ -118,40 +72,25 @@ public class ConfigOptions {
                 props.load(new FileInputStream(configFile));
             }
 
+            showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, DEFAULT_SHOW_WEATHER));
+            fullScreenWindow = Boolean.parseBoolean(getValue(props, PROP_FULL_SCREEN_WINDOW, DEFAULT_FULL_SCREEN_WINDOW));
+
             gfxDeviceNum = Integer.parseInt(getValue(props, PROP_DEVICE_NUM, DEFAULT_DEVICE_NUM));
             imageTimeout = Integer.parseInt(getValue(props, PROP_IMG_TIME, DEFAULT_IMG_TIME));
-            fontSizeDate = Integer.parseInt(getValue(props, PROP_FONT_SIZE_DATE, DEFAULT_FONT_SIZE_DATE));
-            fontSizeTime = Integer.parseInt(getValue(props, PROP_FONT_SIZE_TIME, DEFAULT_FONT_SIZE_TIME));
-            dateOffsetX = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_X, DEFAULT_DATE_OFFSET_X));
-            dateOffsetY = Integer.parseInt(getValue(props, PROP_DATE_OFFSET_Y, DEFAULT_DATE_OFFSET_Y));
-            timeOffsetX = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_X, DEFAULT_TIME_OFFSET_X));
-            timeOffsetY = Integer.parseInt(getValue(props, PROP_TIME_OFFSET_Y, DEFAULT_TIME_OFFSET_Y));
-            textOutlineWidth = Integer.parseInt(getValue(props, PROP_TEXT_OUTLINE_WIDTH, DEFAULT_TEXT_OUTLINE_WIDTH));
+            weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, DEFAULT_WEATHER_FORECAST_DAYS));
+            weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, DEFAULT_WEATHER_UPDATE_TIME));
+
+            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, DEFAULT_BG_PERCENT));
+            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, DEFAULT_BG_OPACITY));
+
             weatherCity = getValue(props, PROP_WEATHER_CITY, DEFAULT_WEATHER_CITY);
             imageDirectory = getValue(props, PROP_IMG_DIRECTORY, DEFAULT_IMG_DIRECTORY);
             cacheDirectory = getValue(props, PROP_CACHE_DIRECTORY, DEFAULT_CACHE_DIRECTORY);
-            fontName = getValue(props, PROP_FONT_NAME, DEFAULT_FONT_NAME);
             dateFormat = getValue(props, PROP_FORMAT_DATE, DEFAULT_FORMAT_DATE);
             timeFormat = getValue(props, PROP_FORMAT_TIME, DEFAULT_FORMAT_TIME);
-            textColor = getRgb(getValue(props, PROP_TEXT_COLOR, DEFAULT_TEXT_COLOR));
-            textOutlineColor = getRgb(getValue(props, PROP_TEXT_OUTLINE_COLOR, DEFAULT_TEXT_OUTLINE_COLOR));
-            bgPercent = Float.parseFloat(getValue(props, PROP_BG_PERCENT, DEFAULT_BG_PERCENT));
-            bgOpacity = Float.parseFloat(getValue(props, PROP_BG_OPACITY, DEFAULT_BG_OPACITY));
-            showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, DEFAULT_SHOW_WEATHER));
-            fullScreenWindow = Boolean.parseBoolean(getValue(props, PROP_FULL_SCREEN_WINDOW, DEFAULT_FULL_SCREEN_WINDOW));
-            fontSizeWeatherCondition = Float.parseFloat(getValue(props, PROP_FONT_SIZE_WEATHER_CONDITION, DEFAULT_FONT_SIZE_WEATHER_CONDITION));
-            fontSizeWeatherForecast = Integer.parseInt(getValue(props, PROP_FONT_SIZE_WEATHER_FORECAST, DEFAULT_FONT_SIZE_WEATHER_FORECAST));
-            fontSizeLocation = Integer.parseInt(getValue(props, PROP_FONT_SIZE_LOCATION, DEFAULT_FONT_SIZE_LOCATION));
-            weatherOffsetX = Integer.parseInt(getValue(props, PROP_WEATHER_OFFSET_X, DEFAULT_WEATHER_OFFSET_X));
-            weatherCityOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CITY_OFFSET_Y, DEFAULT_WEATHER_CITY_OFFSET_Y));
-            weatherConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_CONDITION_OFFSET_Y, DEFAULT_WEATHER_CONDITION_OFFSET_Y));
-            weatherForecastDayTempOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYTEMP_OFFSET_Y, DEFAULT_WEATHER_FORECAST_DAYTEMP_OFFSET_Y));
-            weatherForecastConditionOffsetY = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_CONDITION_OFFSET_Y, DEFAULT_WEATHER_FORECAST_CONDITION_OFFSET_Y));
-            weatherDayWidth = Integer.parseInt(getValue(props, PROP_WEATHER_DAY_WIDTH, DEFAULT_WEATHER_DAY_WIDTH));
-            weatherForecastDays = Integer.parseInt(getValue(props, PROP_WEATHER_FORECAST_DAYS, DEFAULT_WEATHER_FORECAST_DAYS));
-            weatherUpdateTime = Integer.parseInt(getValue(props, PROP_WEATHER_UPDATE_TIME, DEFAULT_WEATHER_UPDATE_TIME));
             weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, DEFAULT_WEATHER_API_KEY);
             weatherUnits = getValue(props, PROP_WEATHER_UNITS, DEFAULT_WEATHER_UNITS);
+            layoutFile = getValue(props, PROP_LAYOUT_FILE, DEFAULT_LAYOUT_FILE);
 
             int dwut = Integer.parseInt(DEFAULT_WEATHER_UPDATE_TIME);
             if (weatherUpdateTime < dwut) {
@@ -178,59 +117,8 @@ public class ConfigOptions {
         }
     }
 
-    public int getFontSizeLocation() {
-        return fontSizeLocation;
-    }
-
-    public float getFontSizeWeatherCondition() {
-        return fontSizeWeatherCondition;
-    }
-
-    public int getFontSizeWeatherForecast() {
-        return fontSizeWeatherForecast;
-    }
-
-    public int getWeatherOffsetX() {
-        return weatherOffsetX;
-    }
-
-    public int getWeatherCityOffsetY() {
-        return weatherCityOffsetY;
-    }
-
-    public int getWeatherConditionOffsetY() {
-        return weatherConditionOffsetY;
-    }
-
-    public int getWeatherForecastDayTempOffsetY() {
-        return weatherForecastDayTempOffsetY;
-    }
-
-    public int getWeatherForecastConditionOffsetY() {
-        return weatherForecastConditionOffsetY;
-    }
-
-    public int getWeatherDayWidth() {
-        return weatherDayWidth;
-    }
-
     public int getWeatherForecastDays() {
         return weatherForecastDays;
-    }
-
-    private int[] getRgb(String value) {
-        String[] strArr = value.split(",");
-
-        if (strArr.length != 3) {
-            throw new RuntimeException("Expected 3 comma separated numbers, for input: " + value);
-        }
-
-        int[] rgb = new int[3];
-        rgb[0] = Integer.parseInt(strArr[0]);
-        rgb[1] = Integer.parseInt(strArr[1]);
-        rgb[2] = Integer.parseInt(strArr[2]);
-
-        return rgb;
     }
 
     private String getValue(Properties props, String key, String defaultValue) {
@@ -255,16 +143,8 @@ public class ConfigOptions {
         return weatherCity;
     }
 
-    public boolean isShowWeather() {
-        return showWeather;
-    }
-
     public boolean isFullScreenWindow() {
         return fullScreenWindow;
-    }
-
-    public int getTextOutlineWidth() {
-        return textOutlineWidth;
     }
 
     public int getGfxDeviceNum() {
@@ -283,48 +163,12 @@ public class ConfigOptions {
         return cacheDirectory;
     }
 
-    public int getFontSizeDate() {
-        return fontSizeDate;
-    }
-
-    public int getFontSizeTime() {
-        return fontSizeTime;
-    }
-
-    public String getFontName() {
-        return fontName;
-    }
-
     public String getDateFormat() {
         return dateFormat;
     }
 
     public String getTimeFormat() {
         return timeFormat;
-    }
-
-    public int getDateOffsetX() {
-        return dateOffsetX;
-    }
-
-    public int getDateOffsetY() {
-        return dateOffsetY;
-    }
-
-    public int getTimeOffsetX() {
-        return timeOffsetX;
-    }
-
-    public int getTimeOffsetY() {
-        return timeOffsetY;
-    }
-
-    public int[] getTextColor() {
-        return textColor;
-    }
-
-    public int[] getTextOutlineColor() {
-        return textOutlineColor;
     }
 
     public float getBackgroundPercent() {
@@ -345,6 +189,10 @@ public class ConfigOptions {
 
     public String getWeatherUnits() {
         return weatherUnits;
+    }
+
+    public String getLayoutFile() {
+        return layoutFile;
     }
 
 }

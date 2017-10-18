@@ -1,4 +1,4 @@
-# JPhotoFrame v0.3.1
+# JPhotoFrame v0.4
 
 JPhotoFrame is a simple Java application for displaying a collection of photos in a full-screen slideshow. It is meant to be used when creating a DIY photo frame.
 
@@ -7,26 +7,23 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Lightweight and easily configurable
 * Generates cached (resampled) images automatically
 * Current date/time display with custom date/time formats
-* Adjustable text font sizes
 * Fills in the background on vertical photos using the photo as the source
 * Weather forecast using OpenWeatherMap
 * Pausable operation i.e. during photo frame offline hours
 * Image rotation correction utility
+* Configurable widget layout for date, time, weather, etc
 
 ## Issues Fixed
 
 * Bug #1 OutOfMemoryError when loading image stops images from cycling
 * OWM weather information not shown due to 2.1 API removal
+* System.out usage moved to the Log class paving a way to better logging
+* True separation of the model/view/controller objects
+* Thread sleep times are aligned to timeout schedules instead of sleeping the same time every time i.e. if time update is 1000ms and it took 200ms to draw the screen, the thread will sleep only 800ms
 
 ## Screenshots
 
-Version 0.2, standard layout.
-
-![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.2_with_weather.png)
-
-Version 0.3, alternative layout (using config_altweather.properties)
-
-![](https://github.com/ikromin/jphotoframe/blob/0.3/screenshots/v0.3_alt_weather.png)
+TODO
 
 ## Building
 
@@ -43,21 +40,10 @@ screenNumber=0
 imageDirectory=/photos
 cacheDirectory=/photos/cache
 imageTimeout=300000
-fontName=Verdana
-fontSizeDate=20
-fontSizeTime=50
 dateFormat=MMM d yyyy
 timeFormat=H:mm
-dateOffsetX=15
-dateOffsetY=10
-timeOffsetX=10
-timeOffsetY=30
-textColor=0,0,0
-textOutlineColor=255,0,0
-textOutlineOffset=2
 backgroundSourcePercent=0.01
 backgroundOpacity=0.2
-showWeather=true
 weatherCity=Brisbane,AU
 owmApiKey=xxxxxxxxxxxxxxxxxxxxxxx
 ```
@@ -68,41 +54,20 @@ You can specify a custom configuration file to load by using a command line argu
 
 These are the available configuration options. All apart frmo the directory settings are optional and have default values that will be used if nothing is provided for them.
 
-#### Boolean Values
-
-|Configuration Option    |Description
-|------------------------|------------------------------------------------------------------------------------------
-|showWeather             |Whether the weather forecast should be fetched and displayed.
-
 #### Decimal/Floating Point Values
 
 |Configuration Option    |Description
 |------------------------|------------------------------------------------------------------------------------------
 |backgroundOpacity       |Background opacity.
 |backgroundSourcePercent |Percentage of the photo to use to generate the background.
-|fontSizeWeatherCondition|Size of the font used to display the weather condition icon.
 
 #### Integer Values
 
 |Configuration Option    |Description
 |------------------------|------------------------------------------------------------------------------------------
-|dateOffsetX             |Horizontal offset from the right side of the screen when displaying the date.
-|dateOffsetY             |Vertical offset from the top of the screen when displaying the date.
-|fontSizeDate            |Size of the font used to display the date.
-|fontSizeWeatherForecast |Size of the font used to display the weather forecast (day low/high)
-|fontSizeTime            |Size of the font used to display the time.
 |imageTimeout            |How long each photo is displayed, in milliseconds.
 |screenNumber            |The monitor/screen to use for full screen display. The default value of 0 should work in most cases.
-|textOutlineWidth        |Width of the text outline.
-|timeOffsetX             |Horizontal offset from the right side of the screen when displaying the time.
-|timeOffsetY             |Vertical offset from the top of the screen when displaying the time.
-|weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the weather condition icon.
-|weatherDayWidth         |Amout of pixels that each forecast day should take on screen, includes condition icon and forecast text.
-|weatherCityOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (location city, country).
-|weatherConditionOffsetY |Vertical offset from the bottom of the screen when displaying the forecast (condition).
 |weatherForecastDays     |Maximum number of days to display the the forecast. Values larger than 5 will be set to 5.
-|weatherForecastDayTempOffsetY   |Vertical offset from the bottom of the screen when displaying the forecast (day and temp min-max).
-|weatherOffsetX          |Horizontal offset from the left side of the screen when displaying the weather icons.
 |weatherUpdateTime       |Time to wait between fetching weather data, in milliseconds. Values lower than 600000 will be set to 600000 i.e. 10 minutes.
 
 #### String/Text Values
@@ -111,20 +76,15 @@ These are the available configuration options. All apart frmo the directory sett
 |------------------------|------------------------------------------------------------------------------------------
 |cacheDirectory          |Path to store the cached files, should not be the same location as the imageDirectory.
 |dateFormat              |Date format string as per the SimpleDateFormat Java class.
-|fontName                |Name of the font to use when displaying all text.
 |imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored.
 |owmApiKey               |API Key used to get weather data, from http://openweathermap.org/appid
 |timeFormat              |Time format string as per teh SimpleDateFormat Java class.
 |weatherCity             |The city to get weather forecast for. Format is City,Country.
 |weatherUnits            |Metric/Imperial units to use for weather, valid values: *metric* or *imperial*. Defaults to metric.
 
+## Widgets and Layout
 
-### Color/RGB Values
-
-|Configuration Option    |Description
-|------------------------|------------------------------------------------------------------------------------------
-|textColor               |Color to use for all text as RGB (red,green,blue) value.
-|textOutlineColor        |Color to use for the text outline. Should typically be set to 0,0,0 for best results
+TODO - see *layout.json* for now
 
 ## Running
 

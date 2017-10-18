@@ -23,6 +23,7 @@
 				<include>*.sh</include>
 				<include>onoff_times.txt</include>
 				<include>*.properties</include>
+				<include>layout.json</include>
 			</includes>
 			<outputDirectory>.</outputDirectory>
 		</fileSet>
