@@ -26,7 +26,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,21 +45,23 @@ public class Anchor extends Widget {
     private int anchorX = 0;
     private int anchorY = 0;
     private List<Transformable> children = new ArrayList<>();
-    private AffineTransform transform;
 
-    public Anchor(JSONObject json, ModelData data) {
-        super(json);
+    public Anchor(JSONObject json, ModelData data, Rectangle drawAreaBounds) {
+        super(json, drawAreaBounds);
 
         // - anchor
         if (json.has(KEY_ANCHOR)) {
             JSONArray anchors = json.getJSONArray(KEY_ANCHOR);
             if (anchors.length() == 2) {
-                anchorX = anchors.getInt(0);
-                anchorY = anchors.getInt(1);
+                int x = anchors.getInt(0);
+                int y = anchors.getInt(1);
 
-                if (anchorX < 0 || anchorY < 0 || anchorX > 1 || anchorY > 1) {
+                if (x < 0 || y < 0 || x > 1 || y > 1) {
                     throw new RuntimeException("Anchor values can only be 0 or 1");
                 }
+
+                anchorX = (x == 0) ? 0 : drawAreaBounds.width;
+                anchorY = (y == 0) ? 0 : drawAreaBounds.height;
             }
         }
 
@@ -70,7 +71,7 @@ public class Anchor extends Widget {
 
             Log.layout("Adding child widgets to anchor");
             for (int i = 0; i < arr.length(); i++) {
-                Transformable t = (Transformable) Factory.makeWidget(arr.getJSONObject(i), data);
+                Transformable t = (Transformable) Factory.makeWidget(arr.getJSONObject(i), data, drawAreaBounds);
 
                 if (t != null) {
                     children.add(t);
@@ -78,25 +79,21 @@ public class Anchor extends Widget {
             }
             Log.layout("Added " + children.size() + " child widgets");
         }
-
-        transform = new AffineTransform();
     }
 
     @Override
-    public void draw(Graphics2D graphics, Rectangle bounds) {
+    public void draw(Graphics2D graphics) {
 
-        int x = (anchorX == 0) ? 0 : bounds.width;
-        int y = (anchorY == 0) ? 0 : bounds.height;
+        // copy the Graphics2D object to avoid incompatible state changes
+        Graphics2D graphics2 = (Graphics2D) graphics.create();
 
-        transform.setToTranslation(x, y);
-
-        graphics.setTransform(transform);
+        graphics2.translate(anchorX, anchorY);
 
         for (Transformable t : children) {
-            t.preDraw(graphics);
-            t.draw(graphics, bounds);
-            t.postDraw(graphics);
+            t.draw(graphics2);
         }
+
+        graphics2.dispose();
     }
 
 }

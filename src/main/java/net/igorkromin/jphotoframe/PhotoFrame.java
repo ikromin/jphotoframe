@@ -52,8 +52,8 @@ public class PhotoFrame {
 
                 ModelData data = new ModelData();
                 View frame = new View(config, data);
-                Controller controller = new Controller(config, frame, data);
 
+                Controller controller = new Controller(config, frame, data);
                 controller.start();
             }
         }

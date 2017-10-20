@@ -52,8 +52,6 @@ public class View extends JFrame {
         this.config = config;
         this.data = data;
 
-        widgets = Factory.makeWidgetsFromLayout(config.getLayoutFile(), data);
-
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
         setBackground(Color.black);
@@ -85,6 +83,8 @@ public class View extends JFrame {
         setVisible(false);
         setVisible(true);
     }
+
+
 
     @Override
     public void dispose() {
@@ -119,7 +119,7 @@ public class View extends JFrame {
 
         // draw all of the screen widgets
         for (Widget w : widgets) {
-            w.draw(g, rect);
+            w.draw(g);
         }
 
         data.resetChange();
@@ -128,6 +128,10 @@ public class View extends JFrame {
     public BufferedImage getImageBuffer() {
         Rectangle rect = getBounds();
         return getGraphicsConfiguration().createCompatibleImage(rect.width, rect.height);
+    }
+
+    public void loadWidgets() {
+        widgets = Factory.makeWidgetsFromLayout(config.getLayoutFile(), data, getBounds());
     }
 
 }

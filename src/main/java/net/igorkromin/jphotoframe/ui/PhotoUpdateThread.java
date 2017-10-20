@@ -58,7 +58,7 @@ public class PhotoUpdateThread extends DataUpdateThread {
             imageDirectory = new ImageDirectory(config.getImageDirectory(), config.getCacheDirectory(), controller);
             imageDirectory.startWatching();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             Log.error("Could not start watching photo directory", e);
             doNotRun();
         }

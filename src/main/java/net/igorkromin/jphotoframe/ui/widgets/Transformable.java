@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 /**
  * Widget tha supports transformations. Used as a base for other widgets that can be transformed.
@@ -27,12 +26,10 @@ public abstract class Transformable extends Widget {
     private int offsetX = 0;
     private int offsetY = 0;
     private boolean showBounds = false;
-    private AffineTransform originalTx;
-    private AffineTransform transform;
     private Rectangle drawBounds;
 
-    public Transformable(JSONObject json) {
-        super(json);
+    public Transformable(JSONObject json, Rectangle drawAreaBounds) {
+        super(json, drawAreaBounds);
 
         // - origin
         if (json.has(KEY_ORIGIN)) {
@@ -60,43 +57,33 @@ public abstract class Transformable extends Widget {
         if (json.has(KEY_SHOW_BOUNDS)) {
             showBounds = Boolean.parseBoolean(json.getString(KEY_SHOW_BOUNDS));
         }
-
-        transform = new AffineTransform();
     }
 
-    /**
-     * Saves the transformation state of the Graphics2D object.
-     * @param graphics
-     */
-    public void preDraw(Graphics2D graphics) {
-        drawBounds = syncModelToBounds(graphics);
+    public void draw(Graphics2D graphics) {
+        // copy the Graphics2D object to avoid incompatible state changes
+        Graphics2D graphics2 = (Graphics2D) graphics.create();
+
+        drawBounds = syncModelToBounds(graphics2);
 
         if (drawBounds != null) {
-            originalTx = graphics.getTransform();
-
             int x = (originX == 0) ? offsetX : -drawBounds.width + offsetX;
             int y = (originY == 0) ? offsetY : -drawBounds.height + offsetY;
 
-            transform.setToTranslation(x, y);
-            graphics.transform(transform);
+            graphics2.translate(x, y);
 
             if (showBounds) {
-                graphics.setColor(Color.yellow);
-                graphics.drawRect(0, 0, drawBounds.width, drawBounds.height);
+                graphics2.setColor(Color.yellow);
+                graphics2.drawRect(0, 0, drawBounds.width, drawBounds.height);
             }
-        }
-    }
 
-    /**
-     * Restores the previously saved transformation state to the Graphics2D object.
-     * @param graphics
-     */
-    public void postDraw(Graphics2D graphics) {
-        if (drawBounds != null && originalTx != null) {
-            graphics.setTransform(originalTx);
+            drawTransformed(graphics2);
         }
+
+        graphics2.dispose();
     }
 
     public abstract Rectangle syncModelToBounds(Graphics2D graphics);
+
+    public abstract void drawTransformed(Graphics2D graphics);
 
 }

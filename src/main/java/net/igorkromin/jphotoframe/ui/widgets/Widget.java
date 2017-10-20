@@ -36,18 +36,25 @@ public abstract class Widget {
     private static final String KEY_ENABLED = "enabled";
 
     private boolean isEnabled = true;
+    private Rectangle bounds;
 
-    public Widget(JSONObject json) {
+    public Widget(JSONObject json, Rectangle drawAreaBounds) {
         // - enabled
         if (json.has(KEY_ENABLED)) {
             isEnabled = Boolean.parseBoolean(json.getString(KEY_ENABLED));
         }
+
+        this.bounds = drawAreaBounds;
     }
 
     public boolean isEnabled() {
         return isEnabled;
     }
 
-    public abstract void draw(Graphics2D graphics, Rectangle bounds);
+    public Rectangle getDrawAreaBounds() {
+        return bounds;
+    }
+
+    public abstract void draw(Graphics2D graphics);
 
 }

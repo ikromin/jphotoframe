@@ -20,6 +20,7 @@
 
 package net.igorkromin.jphotoframe.ui.widgets;
 
+import net.igorkromin.jphotoframe.Log;
 import net.igorkromin.jphotoframe.ui.ModelData;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,8 +65,8 @@ public class Text extends Transformable {
     private Rectangle textBounds = null;
     private Shape shape = null;
 
-    public Text(JSONObject json, ModelData data) {
-        super(json.getJSONObject(Transformable.KEY_TRANSFORM));
+    public Text(JSONObject json, ModelData data, Rectangle drawAreaBounds) {
+        super(json.getJSONObject(Transformable.KEY_TRANSFORM), drawAreaBounds);
 
         this.data = data;
 
@@ -146,7 +147,7 @@ public class Text extends Transformable {
     }
 
     @Override
-    public void draw(Graphics2D graphics, Rectangle bounds) {
+    public void drawTransformed(Graphics2D graphics) {
         if (text == null) {
             return;
         }

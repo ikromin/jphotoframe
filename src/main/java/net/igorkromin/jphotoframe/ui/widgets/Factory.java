@@ -25,6 +25,7 @@ import net.igorkromin.jphotoframe.ui.ModelData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -46,9 +47,10 @@ public class Factory {
     /**
      * Creates a list of Widget type objects from a layout file.
      * @param layoutFileName
+     * @param bounds
      * @return
      */
-    public static List<Widget> makeWidgetsFromLayout(String layoutFileName, ModelData data) {
+    public static List<Widget> makeWidgetsFromLayout(String layoutFileName, ModelData data, Rectangle bounds) {
 
         List<Widget> widgets = new ArrayList<>();
 
@@ -66,7 +68,7 @@ public class Factory {
                     JSONArray arr = layout.getJSONArray(KEY_WIDGETS);
 
                     for (int i = 0; i < arr.length(); i++) {
-                        Widget widget = makeWidget(arr.getJSONObject(i), data);
+                        Widget widget = makeWidget(arr.getJSONObject(i), data, bounds);
                         if (widget != null) {
                             widgets.add(widget);
                         }
@@ -88,19 +90,20 @@ public class Factory {
      * Creates a single Widget type object from a JSON object. If the widget is not enabled, a null is returned.
      * Unrecognised widget types will return null also.
      * @param object
+     * @param bounds
      * @return
      */
-    public static Widget makeWidget(JSONObject object, ModelData data) {
+    public static Widget makeWidget(JSONObject object, ModelData data, Rectangle bounds) {
         String type = object.getString(Widget.KEY_TYPE);
         Widget widget = null;
 
         Log.layout("Creating widget of type: " + type);
 
         if (TYPE_ANCHOR.equals(type)) {
-            widget = new Anchor(object, data);
+            widget = new Anchor(object, data, bounds);
         }
         else if (TYPE_TEXT.equals(type)) {
-            widget = new Text(object, data);
+            widget = new Text(object, data, bounds);
         }
         else {
             Log.warning("Unrecognised widget type: " + type);
