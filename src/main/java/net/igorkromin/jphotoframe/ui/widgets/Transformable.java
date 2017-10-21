@@ -21,6 +21,9 @@ public abstract class Transformable extends Widget {
     private static final String KEY_OFFSET = "offset";
     private static final String KEY_SHOW_BOUNDS = "showBounds";
 
+    private static final int ORIGIN_WIDTH = 8;
+    private static final int ORIGIN_DISPLACE = ORIGIN_WIDTH / 2;
+
     private int originX = 0;
     private int originY = 0;
     private int offsetX = 0;
@@ -68,12 +71,17 @@ public abstract class Transformable extends Widget {
         if (drawBounds != null) {
             int x = (originX == 0) ? offsetX : -drawBounds.width + offsetX;
             int y = (originY == 0) ? offsetY : -drawBounds.height + offsetY;
-
+            
             graphics2.translate(x, y);
 
             if (showBounds) {
                 graphics2.setColor(Color.yellow);
                 graphics2.drawRect(0, 0, drawBounds.width, drawBounds.height);
+
+                int ox = ((originX == 0) ? 0 : drawBounds.width) - ORIGIN_DISPLACE;
+                int oy = ((originY == 0) ? 0 : drawBounds.height) - ORIGIN_DISPLACE;
+
+                graphics2.fillOval(ox, oy, ORIGIN_WIDTH, ORIGIN_WIDTH);
             }
 
             drawTransformed(graphics2);
