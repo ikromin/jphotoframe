@@ -41,6 +41,7 @@ import java.awt.font.GlyphVector;
  *  - colour : colour of the text
  *  - outlineColour : colour of the outline drawn around the text
  *  - outlineWidth : width of the outline, values larger than 1 will typically exceed draw bounds
+ *  - transform : transformation to apply to this text
  */
 public class Text extends Transformable {
 

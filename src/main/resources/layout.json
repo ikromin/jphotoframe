@@ -9,6 +9,7 @@
           "transform": {
             "origin": [1, 0],
             "offset": [-30, 30],
+            "rotate": 0,
             "showBounds": "true"
           },
           "data": "time",
@@ -16,67 +17,22 @@
           "size": 120,
           "colour": [255,255,255],
           "outlineColour": [0,0,0],
-          "outlineWidth": 2
-        }
-      ]
-    },
-    {
-      "type": "anchor",
-      "anchor": [0, 0],
-      "children": [
+          "outlineWidth": 3
+        },
         {
           "type": "text",
           "transform": {
             "origin": [0, 0],
-            "offset": [30, 30],
+            "offset": [-30, 150],
+            "rotate": 90,
             "showBounds": "true"
           },
-          "data": "time",
+          "data": "date",
           "font": "Verdana",
-          "size": 120,
+          "size": 50,
           "colour": [255,255,255],
           "outlineColour": [0,0,0],
-          "outlineWidth": 2
-        }
-      ]
-    },
-    {
-      "type": "anchor",
-      "anchor": [0, 1],
-      "children": [
-        {
-          "type": "text",
-          "transform": {
-            "origin": [0, 1],
-            "offset": [30, -30],
-            "showBounds": "true"
-          },
-          "data": "time",
-          "font": "Verdana",
-          "size": 120,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 2
-        }
-      ]
-    },
-    {
-      "type": "anchor",
-      "anchor": [1, 1],
-      "children": [
-        {
-          "type": "text",
-          "transform": {
-            "origin": [1, 1],
-            "offset": [-30, -30],
-            "showBounds": "true"
-          },
-          "data": "time",
-          "font": "Verdana",
-          "size": 120,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 2
+          "outlineWidth": 3
         }
       ]
     }

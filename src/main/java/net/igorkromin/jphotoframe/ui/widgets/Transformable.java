@@ -11,6 +11,7 @@ import java.awt.*;
  * Provides the following properties:
  *  - origin : two-integer array specifying the transformation origin, similar to Anchor 'anchor'
  *  - offset : two-integer array specifying the offset in pixels relative to the origin
+ *  - rotate : degrees rotation around the origin point
  *  - showBounds : whether to show the drawing boundary box or not
  */
 public abstract class Transformable extends Widget {
@@ -19,6 +20,7 @@ public abstract class Transformable extends Widget {
 
     private static final String KEY_ORIGIN = "origin";
     private static final String KEY_OFFSET = "offset";
+    private static final String KEY_ROTATE = "rotate";
     private static final String KEY_SHOW_BOUNDS = "showBounds";
 
     private static final int ORIGIN_WIDTH = 8;
@@ -30,6 +32,7 @@ public abstract class Transformable extends Widget {
     private int offsetY = 0;
     private boolean showBounds = false;
     private Rectangle drawBounds;
+    private double radsRotation = 0.0;
 
     public Transformable(JSONObject json, Rectangle drawAreaBounds) {
         super(json, drawAreaBounds);
@@ -56,6 +59,11 @@ public abstract class Transformable extends Widget {
             }
         }
 
+        // - rotate
+        if (json.has(KEY_ROTATE)) {
+            radsRotation = Math.toRadians(json.getInt(KEY_ROTATE));
+        }
+
         // - showBounds
         if (json.has(KEY_SHOW_BOUNDS)) {
             showBounds = Boolean.parseBoolean(json.getString(KEY_SHOW_BOUNDS));
@@ -69,10 +77,15 @@ public abstract class Transformable extends Widget {
         drawBounds = syncModelToBounds(graphics2);
 
         if (drawBounds != null) {
+            // translation
             int x = (originX == 0) ? offsetX : -drawBounds.width + offsetX;
             int y = (originY == 0) ? offsetY : -drawBounds.height + offsetY;
-            
             graphics2.translate(x, y);
+
+            // rotation
+            int rx = ((originX == 0) ? 0 : drawBounds.width);
+            int ry = ((originY == 0) ? 0 : drawBounds.height);
+            graphics2.rotate(radsRotation, rx, ry);
 
             if (showBounds) {
                 graphics2.setColor(Color.yellow);
