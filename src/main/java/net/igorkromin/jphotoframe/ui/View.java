@@ -118,8 +118,10 @@ public class View extends JFrame {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // draw all of the screen widgets
-        for (Widget w : widgets) {
-            w.draw(g);
+        if (widgets != null) {
+            for (Widget w : widgets) {
+                w.draw(g);
+            }
         }
 
         data.resetChange();

@@ -128,6 +128,9 @@ public class Text extends Transformable {
         else if (Factory.DATA_SRC_TIME.equals(dataSource)) {
             newText = data.getTimeString();
         }
+        else if (dataSource != null && !"".equals(dataSource)) {
+            newText = dataSource;
+        }
 
         if (newText != null) {
             if (newText.equals(text)) {

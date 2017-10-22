@@ -12,7 +12,7 @@
             "rotate": 0,
             "showBounds": "true"
           },
-          "data": "time",
+          "data": "$time",
           "font": "Verdana",
           "size": 120,
           "colour": [255,255,255],
@@ -27,12 +27,33 @@
             "rotate": 90,
             "showBounds": "true"
           },
-          "data": "date",
+          "data": "$date",
           "font": "Verdana",
           "size": 50,
           "colour": [255,255,255],
           "outlineColour": [0,0,0],
           "outlineWidth": 3
+        }
+      ]
+    },
+    {
+      "type": "anchor",
+      "anchor": [1, 1],
+      "children": [
+        {
+          "type": "text",
+          "transform": {
+            "origin": [1, 1],
+            "offset": [-30, -30],
+            "rotate": 0,
+            "showBounds": "true"
+          },
+          "data": "JPhotoFrame 0.4",
+          "font": "Verdana",
+          "size": 20,
+          "colour": [255,255,255],
+          "outlineColour": [0,0,0],
+          "outlineWidth": 1
         }
       ]
     }
