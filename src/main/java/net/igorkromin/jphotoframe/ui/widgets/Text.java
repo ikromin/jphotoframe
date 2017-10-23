@@ -22,6 +22,7 @@ package net.igorkromin.jphotoframe.ui.widgets;
 
 import net.igorkromin.jphotoframe.Log;
 import net.igorkromin.jphotoframe.ui.ModelData;
+import net.igorkromin.jphotoframe.weather.Weather;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -83,6 +84,9 @@ public class Text extends Transformable {
         if (json.has(KEY_FORMAT)) {
             textFormat = json.getString(KEY_FORMAT);
         }
+        else {
+            textFormat = "%s";
+        }
 
         // - font name
         if (json.has(KEY_FONT)) {
@@ -128,21 +132,9 @@ public class Text extends Transformable {
 
     @Override
     public Rectangle syncModelToBounds(Graphics2D graphics) {
-        String newText = null;
-
-        if (Factory.DATA_SRC_DATE.equals(dataSource)) {
-            newText = data.getDateString();
-        }
-        else if (Factory.DATA_SRC_TIME.equals(dataSource)) {
-            newText = data.getTimeString();
-        }
-        else if (dataSource != null && !"".equals(dataSource)) {
-            newText = dataSource;
-        }
+        String newText = getModelData();
 
         if (newText != null) {
-            newText = (textFormat == null) ? newText : String.format(textFormat, newText);
-
             if (newText.equals(text)) {
                 return textBounds;
             }
@@ -158,6 +150,34 @@ public class Text extends Transformable {
         }
 
         return null;
+    }
+
+    private String getModelData() {
+        String newText = null;
+
+        try {
+            if (Factory.DATA_SRC_DATE.equals(dataSource)) {
+                newText = String.format(textFormat, data.getDateString());
+            }
+            else if (Factory.DATA_SRC_TIME.equals(dataSource)) {
+                newText = String.format(textFormat, data.getTimeString());
+            }
+            else if (Factory.DATA_SRC_WEATHER_GEO.equals(dataSource)) {
+                Weather w = data.getWeather();
+                if (w != null) {
+                    newText = String.format(textFormat, w.getCountry(), w.getCity());
+                }
+            }
+            else if (dataSource != null && !"".equals(dataSource)) {
+                newText = String.format(textFormat, dataSource);
+            }
+        }
+        catch (Exception e) {
+            Log.error("Error during text formatting", e);
+            return "ERROR! - " + e.getMessage();
+        }
+
+        return newText;
     }
 
     @Override

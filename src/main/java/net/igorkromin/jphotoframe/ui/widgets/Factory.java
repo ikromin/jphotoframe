@@ -39,8 +39,10 @@ public class Factory {
 
     public static final String DATA_SRC_TIME = "$time";
     public static final String DATA_SRC_DATE = "$date";
+    public static final String DATA_SRC_WEATHER_GEO = "$weather.geo";
 
     private static final String KEY_WIDGETS = "widgets";
+
     private static final String TYPE_ANCHOR = "anchor";
     private static final String TYPE_TEXT = "text";
 
