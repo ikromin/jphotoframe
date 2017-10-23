@@ -36,6 +36,7 @@ import java.awt.font.GlyphVector;
  *
  * Provides the following properties:
  *  - data : model data source to display
+ *  - format : text format string
  *  - font : name of the font to use to render the text
  *  - size : font size
  *  - colour : colour of the text
@@ -46,6 +47,7 @@ import java.awt.font.GlyphVector;
 public class Text extends Transformable {
 
     private static final String KEY_DATA = "data";
+    private static final String KEY_FORMAT = "format";
     private static final String KEY_FONT = "font";
     private static final String KEY_SIZE = "size";
     private static final String KEY_COLOUR = "colour";
@@ -56,6 +58,7 @@ public class Text extends Transformable {
     private String text = null;
 
     private String dataSource = null;
+    private String textFormat = null;
     private String fontName = "Verdana";
     private int fontSize = 10;
     private Color colour = null;
@@ -74,6 +77,11 @@ public class Text extends Transformable {
         // - data source
         if (json.has(KEY_DATA)) {
             dataSource = json.getString(KEY_DATA);
+        }
+
+        // - text format
+        if (json.has(KEY_FORMAT)) {
+            textFormat = json.getString(KEY_FORMAT);
         }
 
         // - font name
@@ -133,6 +141,8 @@ public class Text extends Transformable {
         }
 
         if (newText != null) {
+            newText = (textFormat == null) ? newText : String.format(textFormat, newText);
+
             if (newText.equals(text)) {
                 return textBounds;
             }

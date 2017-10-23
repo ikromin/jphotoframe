@@ -49,6 +49,7 @@
             "showBounds": "true"
           },
           "data": "JPhotoFrame 0.4",
+          "format": "%s",
           "font": "Verdana",
           "size": 20,
           "colour": [255,255,255],
