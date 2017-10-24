@@ -47,6 +47,10 @@ import java.awt.font.GlyphVector;
  */
 public class Text extends Transformable {
 
+    private static final String DATA_SRC_TIME = "$time";
+    private static final String DATA_SRC_DATE = "$date";
+    private static final String DATA_SRC_WEATHER_GEO = "$weather.geo";
+
     private static final String KEY_DATA = "data";
     private static final String KEY_FORMAT = "format";
     private static final String KEY_FONT = "font";
@@ -55,18 +59,18 @@ public class Text extends Transformable {
     private static final String KEY_OUTLINE_COLOUR = "outlineColour";
     private static final String KEY_OUTLINE_WIDTH = "outlineWidth";
 
+    private static final int DEFAULT_FONT_SIZE = 10;
+    private static final String DEFAULT_FONT_NAME = "Verdana";
+
     private ModelData data;
     private String text = null;
 
     private String dataSource = null;
     private String textFormat = null;
-    private String fontName = "Verdana";
-    private int fontSize = 10;
     private Color colour = null;
     private Color outlineColour = null;
     private Stroke outlineStroke = null;
     private Font font;
-
     private Rectangle textBounds = null;
     private Shape shape = null;
 
@@ -89,11 +93,13 @@ public class Text extends Transformable {
         }
 
         // - font name
+        String fontName = DEFAULT_FONT_NAME;
         if (json.has(KEY_FONT)) {
             fontName = json.getString(KEY_FONT);
         }
 
         // - font size
+        int fontSize = DEFAULT_FONT_SIZE;
         if (json.has(KEY_DATA)) {
             fontSize = json.getInt(KEY_SIZE);
         }
@@ -156,13 +162,13 @@ public class Text extends Transformable {
         String newText = null;
 
         try {
-            if (Factory.DATA_SRC_DATE.equals(dataSource)) {
+            if (DATA_SRC_DATE.equals(dataSource)) {
                 newText = String.format(textFormat, data.getDateString());
             }
-            else if (Factory.DATA_SRC_TIME.equals(dataSource)) {
+            else if (DATA_SRC_TIME.equals(dataSource)) {
                 newText = String.format(textFormat, data.getTimeString());
             }
-            else if (Factory.DATA_SRC_WEATHER_GEO.equals(dataSource)) {
+            else if (DATA_SRC_WEATHER_GEO.equals(dataSource)) {
                 Weather w = data.getWeather();
                 if (w != null) {
                     newText = String.format(textFormat, w.getCountry(), w.getCity());

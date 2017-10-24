@@ -37,14 +37,11 @@ import java.util.List;
  */
 public class Factory {
 
-    public static final String DATA_SRC_TIME = "$time";
-    public static final String DATA_SRC_DATE = "$date";
-    public static final String DATA_SRC_WEATHER_GEO = "$weather.geo";
-
     private static final String KEY_WIDGETS = "widgets";
 
     private static final String TYPE_ANCHOR = "anchor";
     private static final String TYPE_TEXT = "text";
+    private static final String TYPE_WEATHER = "weather";
 
     /**
      * Creates a list of Widget type objects from a layout file.
@@ -106,6 +103,9 @@ public class Factory {
         }
         else if (TYPE_TEXT.equals(type)) {
             widget = new Text(object, data, bounds);
+        }
+        else if (TYPE_WEATHER.equals(type)) {
+            widget = new WeatherForecast(object, data, bounds);
         }
         else {
             Log.warning("Unrecognised widget type: " + type);

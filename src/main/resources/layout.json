@@ -77,6 +77,28 @@
           "colour": [255,255,255],
           "outlineColour": [0,0,0],
           "outlineWidth": 1
+        },
+
+        {
+          "type": "weather",
+          "transform": {
+            "origin": [0, 1],
+            "offset": [30, -80],
+            "rotate": 0,
+            "showBounds": "true"
+          },
+          "data": "$temperature",
+          "format": "%1$s - %2$s",
+          "font": "Verdana",
+          "size": 20,
+          "colour": [255,255,255],
+          "outlineColour": [0,0,0],
+          "outlineWidth": 1,
+          "items" : {
+            "gap": 150,
+            "gapPosition": "leading",
+            "orientation": "horizontal"
+          }
         }
       ]
     }
