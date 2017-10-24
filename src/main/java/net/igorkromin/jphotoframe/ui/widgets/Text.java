@@ -51,6 +51,7 @@ public class Text extends Transformable {
     private static final String DATA_SRC_DATE = "$date";
     private static final String DATA_SRC_WEATHER_GEO = "$weather.geo";
 
+    private static final String KEY_TEXT = "text";
     private static final String KEY_DATA = "data";
     private static final String KEY_FORMAT = "format";
     private static final String KEY_FONT = "font";
@@ -59,16 +60,20 @@ public class Text extends Transformable {
     private static final String KEY_OUTLINE_COLOUR = "outlineColour";
     private static final String KEY_OUTLINE_WIDTH = "outlineWidth";
 
+    private static final int DEFAULT_OUTLINE_WIDTH = 1;
     private static final int DEFAULT_FONT_SIZE = 10;
     private static final String DEFAULT_FONT_NAME = "Verdana";
+    private static final String DEFAULT_FORMAT = "%s";
+    private static final Color DEFAULT_COLOUR = Color.white;
+    private static final Color DEFAULT_OUTLINE_COLOUR = Color.black;
 
     private ModelData data;
     private String text = null;
 
     private String dataSource = null;
-    private String textFormat = null;
-    private Color colour = null;
-    private Color outlineColour = null;
+    private String textFormat = DEFAULT_FORMAT;
+    private Color colour = DEFAULT_COLOUR;
+    private Color outlineColour = DEFAULT_OUTLINE_COLOUR;
     private Stroke outlineStroke = null;
     private Font font;
     private Rectangle textBounds = null;
@@ -79,57 +84,54 @@ public class Text extends Transformable {
 
         this.data = data;
 
-        // - data source
-        if (json.has(KEY_DATA)) {
-            dataSource = json.getString(KEY_DATA);
-        }
-
-        // - text format
-        if (json.has(KEY_FORMAT)) {
-            textFormat = json.getString(KEY_FORMAT);
-        }
-        else {
-            textFormat = "%s";
-        }
-
-        // - font name
+        int width = DEFAULT_OUTLINE_WIDTH;
         String fontName = DEFAULT_FONT_NAME;
-        if (json.has(KEY_FONT)) {
-            fontName = json.getString(KEY_FONT);
-        }
-
-        // - font size
         int fontSize = DEFAULT_FONT_SIZE;
-        if (json.has(KEY_DATA)) {
-            fontSize = json.getInt(KEY_SIZE);
-        }
 
-        // - colour
-        if (json.has(KEY_COLOUR)) {
-            JSONArray arr = json.getJSONArray(KEY_COLOUR);
-            if (arr.length() == 3) {
-                colour = new Color(arr.getInt(0), arr.getInt(1), arr.getInt(2));
+        // - text
+        if (json.has(KEY_TEXT)) {
+            JSONObject text = json.getJSONObject(KEY_TEXT);
+
+            // - data source
+            if (text.has(KEY_DATA)) {
+                dataSource = text.getString(KEY_DATA);
             }
-        }
-        else {
-            colour = Color.white;
-        }
 
-        // - outlineColour
-        if (json.has(KEY_OUTLINE_COLOUR)) {
-            JSONArray arr = json.getJSONArray(KEY_OUTLINE_COLOUR);
-            if (arr.length() == 3) {
-                outlineColour = new Color(arr.getInt(0), arr.getInt(1), arr.getInt(2));
+            // - text format
+            if (text.has(KEY_FORMAT)) {
+                textFormat = text.getString(KEY_FORMAT);
             }
-        }
-        else {
-            outlineColour = Color.black;
-        }
 
-        // - outlineWidth
-        int width = 1;
-        if (json.has(KEY_OUTLINE_WIDTH)) {
-             width = json.getInt(KEY_OUTLINE_WIDTH);
+            // - font name
+            if (text.has(KEY_FONT)) {
+                fontName = text.getString(KEY_FONT);
+            }
+
+            // - font size
+            if (text.has(KEY_DATA)) {
+                fontSize = text.getInt(KEY_SIZE);
+            }
+
+            // - colour
+            if (text.has(KEY_COLOUR)) {
+                JSONArray arr = text.getJSONArray(KEY_COLOUR);
+                if (arr.length() == 3) {
+                    colour = new Color(arr.getInt(0), arr.getInt(1), arr.getInt(2));
+                }
+            }
+
+            // - outlineColour
+            if (text.has(KEY_OUTLINE_COLOUR)) {
+                JSONArray arr = text.getJSONArray(KEY_OUTLINE_COLOUR);
+                if (arr.length() == 3) {
+                    outlineColour = new Color(arr.getInt(0), arr.getInt(1), arr.getInt(2));
+                }
+            }
+
+            // - outlineWidth
+            if (text.has(KEY_OUTLINE_WIDTH)) {
+                width = text.getInt(KEY_OUTLINE_WIDTH);
+            }
         }
 
         outlineStroke = new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);

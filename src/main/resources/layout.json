@@ -9,15 +9,13 @@
           "transform": {
             "origin": [1, 0],
             "offset": [-30, 30],
-            "rotate": 0,
             "showBounds": "true"
           },
-          "data": "$time",
-          "font": "Verdana",
-          "size": 120,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 3
+          "text" : {
+            "data": "$time",
+            "size": 120,
+            "outlineWidth": 3
+          }
         },
         {
           "type": "text",
@@ -27,12 +25,11 @@
             "rotate": 90,
             "showBounds": "true"
           },
-          "data": "$date",
-          "font": "Verdana",
-          "size": 50,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 3
+          "text" : {
+            "data": "$date",
+            "size": 50,
+            "outlineWidth": 3
+          }
         }
       ]
     },
@@ -45,16 +42,13 @@
           "transform": {
             "origin": [1, 1],
             "offset": [-30, -30],
-            "rotate": 0,
             "showBounds": "true"
           },
-          "data": "JPhotoFrame 0.4",
-          "format": "%s",
-          "font": "Verdana",
-          "size": 20,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 1
+          "text" : {
+            "data": "JPhotoFrame 0.4",
+            "format": "%s",
+            "size": 20
+          }
         }
       ]
     },
@@ -67,16 +61,13 @@
           "transform": {
             "origin": [0, 1],
             "offset": [30, -30],
-            "rotate": 0,
             "showBounds": "true"
           },
-          "data": "$weather.geo",
-          "format": "%2$s, %1$s",
-          "font": "Verdana",
-          "size": 40,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 1
+          "text" : {
+            "data": "$weather.geo",
+            "format": "%2$s, %1$s",
+            "size": 40
+          }
         },
 
         {
@@ -84,16 +75,13 @@
           "transform": {
             "origin": [0, 1],
             "offset": [30, -80],
-            "rotate": 0,
             "showBounds": "true"
           },
-          "data": "$temperature",
-          "format": "%1$s - %2$s",
-          "font": "Verdana",
-          "size": 20,
-          "colour": [255,255,255],
-          "outlineColour": [0,0,0],
-          "outlineWidth": 1,
+          "text" : {
+            "data": "$temperature",
+            "format": "%1$s - %2$s",
+            "size": 20
+          },
           "items" : {
             "gap": 150,
             "gapPosition": "leading",
