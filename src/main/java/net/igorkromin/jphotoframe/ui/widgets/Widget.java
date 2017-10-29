@@ -24,6 +24,8 @@ import org.json.JSONObject;
 
 import java.awt.*;
 
+import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
+
 /**
  * Base class for all widgets.
  * Provides the following properties:
@@ -31,20 +33,26 @@ import java.awt.*;
  */
 public abstract class Widget {
 
-    public static final String KEY_TYPE = "type";
-
-    private static final String KEY_ENABLED = "enabled";
-
     private boolean isEnabled = true;
     private Rectangle bounds;
 
     public Widget(JSONObject json, Rectangle drawAreaBounds) {
-        // - enabled
-        if (json.has(KEY_ENABLED)) {
-            isEnabled = Boolean.parseBoolean(json.getString(KEY_ENABLED));
+
+        if (json != null) {
+            // - enabled
+            if (json.has(KEY_ENABLED)) {
+                isEnabled = Boolean.parseBoolean(json.getString(KEY_ENABLED));
+            }
         }
 
         this.bounds = drawAreaBounds;
+    }
+
+    static protected JSONObject safeGet(JSONObject json, String key) {
+        if (json == null || !json.has(key)) {
+            return null;
+        }
+        return json.getJSONObject(key);
     }
 
     public boolean isEnabled() {

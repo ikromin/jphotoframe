@@ -37,7 +37,22 @@ import java.util.List;
  */
 public class Factory {
 
-    private static final String KEY_WIDGETS = "widgets";
+    public static final String KEY_WIDGETS = "widgets";
+    public static final String KEY_TYPE = "type";
+    public static final String KEY_ENABLED = "enabled";
+    public static final String KEY_TRANSFORM = "transform";
+    public static final String KEY_ORIGIN = "origin";
+    public static final String KEY_OFFSET = "offset";
+    public static final String KEY_ROTATE = "rotate";
+    public static final String KEY_SHOW_BOUNDS = "showBounds";
+    public static final String KEY_TEXT = "text";
+    public static final String KEY_DATA = "data";
+    public static final String KEY_FORMAT = "format";
+    public static final String KEY_FONT = "font";
+    public static final String KEY_SIZE = "size";
+    public static final String KEY_COLOUR = "colour";
+    public static final String KEY_OUTLINE_COLOUR = "outlineColour";
+    public static final String KEY_OUTLINE_WIDTH = "outlineWidth";
 
     private static final String TYPE_ANCHOR = "anchor";
     private static final String TYPE_TEXT = "text";
@@ -93,7 +108,7 @@ public class Factory {
      * @return
      */
     public static Widget makeWidget(JSONObject object, ModelData data, Rectangle bounds) {
-        String type = object.getString(Widget.KEY_TYPE);
+        String type = object.getString(KEY_TYPE);
         Widget widget = null;
 
         Log.layout("Creating widget of type: " + type);

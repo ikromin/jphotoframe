@@ -30,6 +30,8 @@ import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 
+import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
+
 /**
  * Text object bound to a model data source. Supports the following data sources:
  *  - date
@@ -51,15 +53,6 @@ public class Text extends Transformable {
     private static final String DATA_SRC_DATE = "$date";
     private static final String DATA_SRC_WEATHER_GEO = "$weather.geo";
 
-    private static final String KEY_TEXT = "text";
-    private static final String KEY_DATA = "data";
-    private static final String KEY_FORMAT = "format";
-    private static final String KEY_FONT = "font";
-    private static final String KEY_SIZE = "size";
-    private static final String KEY_COLOUR = "colour";
-    private static final String KEY_OUTLINE_COLOUR = "outlineColour";
-    private static final String KEY_OUTLINE_WIDTH = "outlineWidth";
-
     private static final int DEFAULT_OUTLINE_WIDTH = 1;
     private static final int DEFAULT_FONT_SIZE = 10;
     private static final String DEFAULT_FONT_NAME = "Verdana";
@@ -70,17 +63,22 @@ public class Text extends Transformable {
     private ModelData data;
     private String text = null;
 
-    private String dataSource = null;
-    private String textFormat = DEFAULT_FORMAT;
-    private Color colour = DEFAULT_COLOUR;
-    private Color outlineColour = DEFAULT_OUTLINE_COLOUR;
-    private Stroke outlineStroke = null;
-    private Font font;
     private Rectangle textBounds = null;
     private Shape shape = null;
 
+    String dataSource = null;
+    String textFormat = DEFAULT_FORMAT;
+    Color colour = DEFAULT_COLOUR;
+    Color outlineColour = DEFAULT_OUTLINE_COLOUR;
+    Stroke outlineStroke = null;
+    Font font;
+
+    private Text(JSONObject transform, Rectangle drawAreaBounds) {
+        super(transform, drawAreaBounds);
+    }
+
     public Text(JSONObject json, ModelData data, Rectangle drawAreaBounds) {
-        super(json.getJSONObject(Transformable.KEY_TRANSFORM), drawAreaBounds);
+        this(safeGet(json, KEY_TRANSFORM), drawAreaBounds);
 
         this.data = data;
 
@@ -208,4 +206,11 @@ public class Text extends Transformable {
         graphics.setStroke(originalStroke);
     }
 
+    public void overwriteDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public Rectangle getTextBounds() {
+        return textBounds;
+    }
 }

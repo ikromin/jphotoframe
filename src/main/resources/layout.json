@@ -79,12 +79,12 @@
           },
           "text" : {
             "data": "$temperature",
-            "format": "%1$s - %2$s",
+            "format": "%1$s",
             "size": 20
           },
           "items" : {
-            "gap": 150,
-            "gapPosition": "leading",
+            "gap": 100,
+            "gapPosition": "trailing",
             "orientation": "horizontal"
           }
         }

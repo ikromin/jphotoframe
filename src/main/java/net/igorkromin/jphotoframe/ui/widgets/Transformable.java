@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.awt.*;
 
+import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
+
 /**
  * Widget tha supports transformations. Used as a base for other widgets that can be transformed.
  *
@@ -16,57 +18,57 @@ import java.awt.*;
  */
 public abstract class Transformable extends Widget {
 
-    public static final String KEY_TRANSFORM = "transform";
-
-    private static final String KEY_ORIGIN = "origin";
-    private static final String KEY_OFFSET = "offset";
-    private static final String KEY_ROTATE = "rotate";
-    private static final String KEY_SHOW_BOUNDS = "showBounds";
-
     private static final int ORIGIN_WIDTH = 8;
     private static final int ORIGIN_DISPLACE = ORIGIN_WIDTH / 2;
 
-    private int originX = 0;
-    private int originY = 0;
-    private int offsetX = 0;
-    private int offsetY = 0;
-    private boolean showBounds = false;
+    private static final int DEFAULT_COORD_COMPONENT = 0;
+    private static final double DEFAULT_ROTATION = 0.0;
+    private static final boolean DEFAULT_SHOW_BOUNDS = false;
+
+    private int originX = DEFAULT_COORD_COMPONENT;
+    private int originY = DEFAULT_COORD_COMPONENT;
+    private int offsetX = DEFAULT_COORD_COMPONENT;
+    private int offsetY = DEFAULT_COORD_COMPONENT;
+    private boolean showBounds = DEFAULT_SHOW_BOUNDS;
+    private double radsRotation = DEFAULT_ROTATION;
+
     private Rectangle drawBounds;
-    private double radsRotation = 0.0;
 
     public Transformable(JSONObject json, Rectangle drawAreaBounds) {
         super(json, drawAreaBounds);
 
-        // - origin
-        if (json.has(KEY_ORIGIN)) {
-            JSONArray origins = json.getJSONArray(KEY_ORIGIN);
-            if (origins.length() == 2) {
-                originX = origins.getInt(0);
-                originY = origins.getInt(1);
+        if (json != null) {
+            // - origin
+            if (json.has(KEY_ORIGIN)) {
+                JSONArray origins = json.getJSONArray(KEY_ORIGIN);
+                if (origins.length() == 2) {
+                    originX = origins.getInt(0);
+                    originY = origins.getInt(1);
 
-                if (originX < 0 || originY < 0 || originX > 1 || originY > 1) {
-                    throw new RuntimeException("Origin values can only be 0 or 1");
+                    if (originX < 0 || originY < 0 || originX > 1 || originY > 1) {
+                        throw new RuntimeException("Origin values can only be 0 or 1");
+                    }
                 }
             }
-        }
 
-        // - offsets
-        if (json.has(KEY_OFFSET)) {
-            JSONArray offsets = json.getJSONArray(KEY_OFFSET);
-            if (offsets.length() == 2) {
-                offsetX = offsets.getInt(0);
-                offsetY = offsets.getInt(1);
+            // - offsets
+            if (json.has(KEY_OFFSET)) {
+                JSONArray offsets = json.getJSONArray(KEY_OFFSET);
+                if (offsets.length() == 2) {
+                    offsetX = offsets.getInt(0);
+                    offsetY = offsets.getInt(1);
+                }
             }
-        }
 
-        // - rotate
-        if (json.has(KEY_ROTATE)) {
-            radsRotation = Math.toRadians(json.getInt(KEY_ROTATE));
-        }
+            // - rotate
+            if (json.has(KEY_ROTATE)) {
+                radsRotation = Math.toRadians(json.getInt(KEY_ROTATE));
+            }
 
-        // - showBounds
-        if (json.has(KEY_SHOW_BOUNDS)) {
-            showBounds = Boolean.parseBoolean(json.getString(KEY_SHOW_BOUNDS));
+            // - showBounds
+            if (json.has(KEY_SHOW_BOUNDS)) {
+                showBounds = Boolean.parseBoolean(json.getString(KEY_SHOW_BOUNDS));
+            }
         }
     }
 

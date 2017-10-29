@@ -1,9 +1,17 @@
 package net.igorkromin.jphotoframe.ui.widgets;
 
 import net.igorkromin.jphotoframe.ui.ModelData;
+import net.igorkromin.jphotoframe.weather.Forecast;
+import net.igorkromin.jphotoframe.weather.Weather;
+import net.igorkromin.jphotoframe.weather.WeatherConditionCodes;
 import org.json.JSONObject;
 
 import java.awt.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
 
 public class WeatherForecast extends Transformable {
 
@@ -27,15 +35,25 @@ public class WeatherForecast extends Transformable {
 
     private ModelData data;
 
+    private Rectangle bounds = null;
+    private JSONObject textConfig;
+    private List<Text> textWidgets = new ArrayList<>();
+    private List<Text> drawList = new ArrayList<>();
+
     private int itemGap = DEFAULT_GAP_SIZE;
     private int itemBoundScalar = DEFAULT_GAP_SCALAR;
     private int orientationSX = DEFAULT_ORIENTATION_SX;
     private int orientationSY = DEFAULT_ORIENTATION_SY;
 
     public WeatherForecast(JSONObject json, ModelData data, Rectangle drawAreaBounds) {
-        super(json.getJSONObject(Transformable.KEY_TRANSFORM), drawAreaBounds);
+        super(json.getJSONObject(KEY_TRANSFORM), drawAreaBounds);
 
         this.data = data;
+
+        // - text
+        JSONObject text =  (json.has(KEY_TEXT)) ? json.getJSONObject(KEY_TEXT) : new JSONObject();
+        textConfig = new JSONObject();
+        textConfig.put(KEY_TEXT, text);
 
         // - items
         if (json.has(KEY_ITEMS)) {
@@ -76,12 +94,81 @@ public class WeatherForecast extends Transformable {
 
     @Override
     public Rectangle syncModelToBounds(Graphics2D graphics) {
-        return new Rectangle(150, 150);
+
+        Weather weather = data.getWeather();
+        if (weather != null && weather.getForecast() != null) {
+            List<Forecast> forecastList = weather.getForecast();
+            int forecasts = forecastList.size();
+
+            int width = 0;
+            int height = 0;
+
+            adjustWidgetList(forecasts);
+            drawList.clear();
+
+            for (int i = 0; i < forecasts; i++) {
+                Forecast forecast = forecastList.get(i);
+                Text text = textWidgets.get(i);
+
+                WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
+
+                text.overwriteDataSource(code.getInfoText());
+                Rectangle bounds = text.syncModelToBounds(graphics);
+
+                if (bounds != null) {
+                    width += bounds.width + ((i < forecasts - 1) ? itemGap : 0);
+                    height = (bounds.height > height) ? bounds.height : height;
+
+                    drawList.add(text);
+                }
+            }
+
+            return new Rectangle(width, height);
+        }
+
+        return null;
+    }
+
+    /**
+     * Adjusts the text widget list to have one widget per forecast day.
+     * @param newSize
+     */
+    private void adjustWidgetList(int newSize) {
+        int size = textWidgets.size();
+
+        if (newSize == size) {
+            return;
+        }
+
+        // grow the widget list
+        if (size < newSize) {
+            while (size < newSize) {
+                textWidgets.add(new Text(textConfig, data, getDrawAreaBounds()));
+                size++;
+            }
+        }
+        // shrink the widget list
+        else {
+            while (size > newSize) {
+                textWidgets.remove(size - 1);
+                size--;
+            }
+        }
     }
 
     @Override
     public void drawTransformed(Graphics2D graphics) {
+        int tx = 0;
 
+        for (Text text : drawList) {
+            // copy the Graphics2D object to avoid incompatible state changes
+            Graphics2D graphics2 = (Graphics2D) graphics.create();
+
+            graphics2.translate(tx, 0);
+            text.drawTransformed(graphics2);
+
+            tx += text.getTextBounds().width + itemGap;
+        }
     }
 
 }
