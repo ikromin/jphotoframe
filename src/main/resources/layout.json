@@ -104,7 +104,8 @@
           "items" : {
             "gap": 100,
             "gapPosition": "trailing",
-            "orientation": "vertical"
+            "orientation": "vertical",
+            "reverse": "true"
           }
         }
 

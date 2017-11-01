@@ -28,6 +28,7 @@ public class WeatherForecast extends Transformable {
     private static final int DEFAULT_GAP_SIZE = 150;
     private static final int DEFAULT_GAP_SCALAR = 0;
     private static final int DEFAULT_ORIENTATION = 1;
+    private static final boolean DEFAULT_REVERSE = false;
 
     private ModelData data;
 
@@ -39,6 +40,7 @@ public class WeatherForecast extends Transformable {
     private int itemGap = DEFAULT_GAP_SIZE;
     private int itemBoundScalar = DEFAULT_GAP_SCALAR;
     private int orientation = DEFAULT_ORIENTATION;
+    private boolean reverse = DEFAULT_REVERSE;
 
     public WeatherForecast(JSONObject json, ModelData data, Rectangle drawAreaBounds) {
         super(json.getJSONObject(KEY_TRANSFORM), drawAreaBounds);
@@ -57,6 +59,10 @@ public class WeatherForecast extends Transformable {
             // - gap
             if (items.has(KEY_ITEM_GAP)) {
                 itemGap = items.getInt(KEY_ITEM_GAP);
+
+                if (itemGap < 0) {
+                    throw new RuntimeException("Item gap has to be a positive number");
+                }
             }
 
             // - gapPosition
@@ -82,6 +88,11 @@ public class WeatherForecast extends Transformable {
                     this.orientation = ORIENT_VERT;
                 }
             }
+
+            // - reverse
+            if (items.has(KEY_REVERSE)) {
+                reverse = Boolean.parseBoolean(items.getString(KEY_REVERSE));
+            }
         }
     }
 
@@ -100,7 +111,7 @@ public class WeatherForecast extends Transformable {
             drawList.clear();
 
             for (int i = 0; i < forecasts; i++) {
-                Forecast forecast = forecastList.get(i);
+                Forecast forecast = forecastList.get((reverse) ? forecasts - i - 1 : i);
                 Text text = textWidgets.get(i);
 
                 WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());

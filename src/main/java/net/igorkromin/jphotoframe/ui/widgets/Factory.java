@@ -57,6 +57,7 @@ public class Factory {
     public static final String KEY_ITEM_GAP = "gap";
     public static final String KEY_GAP_POSITION = "gapPosition";
     public static final String KEY_ORIENTATION = "orientation";
+    public static final String KEY_REVERSE = "reverse";
 
     private static final String TYPE_ANCHOR = "anchor";
     private static final String TYPE_TEXT = "text";
