@@ -16,6 +16,8 @@ import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
 public class WeatherForecast extends Transformable {
 
     private static final String DATA_SRC_TEMPERATURE = "$temperature";
+    private static final int ORIENT_HORZ = 0;
+    private static final int ORIENT_VERT = 2;
 
     private static final String KEY_ITEMS = "items";
     private static final String KEY_ITEM_GAP = "gap";
@@ -30,8 +32,7 @@ public class WeatherForecast extends Transformable {
 
     private static final int DEFAULT_GAP_SIZE = 150;
     private static final int DEFAULT_GAP_SCALAR = 0;
-    private static final int DEFAULT_ORIENTATION_SX = 1;
-    private static final int DEFAULT_ORIENTATION_SY = 0;
+    private static final int DEFAULT_ORIENTATION = 1;
 
     private ModelData data;
 
@@ -42,8 +43,7 @@ public class WeatherForecast extends Transformable {
 
     private int itemGap = DEFAULT_GAP_SIZE;
     private int itemBoundScalar = DEFAULT_GAP_SCALAR;
-    private int orientationSX = DEFAULT_ORIENTATION_SX;
-    private int orientationSY = DEFAULT_ORIENTATION_SY;
+    private int orientation = DEFAULT_ORIENTATION;
 
     public WeatherForecast(JSONObject json, ModelData data, Rectangle drawAreaBounds) {
         super(json.getJSONObject(KEY_TRANSFORM), drawAreaBounds);
@@ -81,12 +81,10 @@ public class WeatherForecast extends Transformable {
                 String orientation = items.getString(KEY_ORIENTATION);
 
                 if (ORIENTATION_HORZ.equals(orientation)) {
-                    orientationSX = 1;
-                    orientationSY = 0;
+                    this.orientation = ORIENT_HORZ;
                 }
                 else if (ORIENTATION_VERT.equals(orientation)) {
-                    orientationSX = 0;
-                    orientationSY = 1;
+                    this.orientation = ORIENT_VERT;
                 }
             }
         }
@@ -116,8 +114,21 @@ public class WeatherForecast extends Transformable {
                 Rectangle bounds = text.syncModelToBounds(graphics);
 
                 if (bounds != null) {
-                    width += (bounds.width * ((i < forecasts - 1) ? itemBoundScalar : 1)) + ((i < forecasts - 1) ? itemGap : 0);
-                    height = (bounds.height > height) ? bounds.height : height;
+                    switch (orientation) {
+                        case ORIENT_HORZ:
+                            width += (bounds.width * ((i < forecasts - 1) ? itemBoundScalar : 1)) + ((i < forecasts - 1) ? itemGap : 0);
+                            height = (bounds.height > height) ? bounds.height : height;
+
+                            break;
+
+                        case ORIENT_VERT:
+                            height += (bounds.height * ((i < forecasts - 1) ? itemBoundScalar : 1)) + ((i < forecasts - 1) ? itemGap : 0);
+                            width = (bounds.width > width) ? bounds.width : width;
+
+                            break;
+                    }
+
+
 
                     drawList.add(text);
                 }
@@ -160,15 +171,24 @@ public class WeatherForecast extends Transformable {
     @Override
     public void drawTransformed(Graphics2D graphics) {
         int tx = 0;
+        int ty = 0;
 
         for (Text text : drawList) {
             // copy the Graphics2D object to avoid incompatible state changes
             Graphics2D graphics2 = (Graphics2D) graphics.create();
 
-            graphics2.translate(tx, 0);
+            graphics2.translate(tx, ty);
             text.drawTransformed(graphics2);
 
-            tx += (text.getTextBounds().width * itemBoundScalar) + itemGap;
+            switch (orientation) {
+                case ORIENT_HORZ:
+                    tx += (text.getTextBounds().width * itemBoundScalar) + itemGap;
+                    break;
+
+                case ORIENT_VERT:
+                    ty += (text.getTextBounds().height * itemBoundScalar) + itemGap;
+                    break;
+            }
         }
     }
 

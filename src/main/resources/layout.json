@@ -84,10 +84,30 @@
           },
           "items" : {
             "gap": 100,
-            "gapPosition": "trailing",
+            "gapPosition": "leading",
             "orientation": "horizontal"
           }
+        },
+
+        {
+          "type": "weather",
+          "transform": {
+            "origin": [0, 1],
+            "offset": [30, -600],
+            "showBounds": "true"
+          },
+          "text" : {
+            "data": "$temperature",
+            "format": "%1$s",
+            "size": 20
+          },
+          "items" : {
+            "gap": 100,
+            "gapPosition": "trailing",
+            "orientation": "vertical"
+          }
         }
+
       ]
     }
   ]
