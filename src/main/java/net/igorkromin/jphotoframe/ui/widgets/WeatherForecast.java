@@ -19,11 +19,6 @@ public class WeatherForecast extends Transformable {
     private static final int ORIENT_HORZ = 0;
     private static final int ORIENT_VERT = 2;
 
-    private static final String KEY_ITEMS = "items";
-    private static final String KEY_ITEM_GAP = "gap";
-    private static final String KEY_GAP_POSITION = "gapPosition";
-    private static final String KEY_ORIENTATION = "orientation";
-
     private static final String GAP_POS_LEADING = "leading";
     private static final String GAP_POS_TRAILING = "trailing";
 
