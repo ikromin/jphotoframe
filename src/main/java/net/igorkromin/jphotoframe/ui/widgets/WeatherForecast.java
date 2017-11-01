@@ -35,7 +35,7 @@ public class WeatherForecast extends Transformable {
 
     private ModelData data;
 
-    private Rectangle bounds = null;
+    private Rectangle bounds = new Rectangle(0, 0);
     private JSONObject textConfig;
     private List<Text> textWidgets = new ArrayList<>();
     private List<Text> drawList = new ArrayList<>();
@@ -116,14 +116,15 @@ public class WeatherForecast extends Transformable {
                 Rectangle bounds = text.syncModelToBounds(graphics);
 
                 if (bounds != null) {
-                    width += bounds.width + ((i < forecasts - 1) ? itemGap : 0);
+                    width += (bounds.width * ((i < forecasts - 1) ? itemBoundScalar : 1)) + ((i < forecasts - 1) ? itemGap : 0);
                     height = (bounds.height > height) ? bounds.height : height;
 
                     drawList.add(text);
                 }
             }
 
-            return new Rectangle(width, height);
+            bounds.setBounds(0,0, width, height);
+            return bounds;
         }
 
         return null;
@@ -167,7 +168,7 @@ public class WeatherForecast extends Transformable {
             graphics2.translate(tx, 0);
             text.drawTransformed(graphics2);
 
-            tx += text.getTextBounds().width + itemGap;
+            tx += (text.getTextBounds().width * itemBoundScalar) + itemGap;
         }
     }
 
