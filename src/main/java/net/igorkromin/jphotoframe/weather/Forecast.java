@@ -20,15 +20,22 @@
 
 package net.igorkromin.jphotoframe.weather;
 
+import java.util.Date;
+
 /**
  * Data class to record forecast information for a single day.
  */
 public class Forecast {
 
+    private Date date;
     private String day;
     private int low = Integer.MAX_VALUE;
     private int high = Integer.MIN_VALUE;
     private int code = WeatherConditionCodes.NOT_AVAILABLE.code;
+
+    public Date getDate() {
+        return date;
+    }
 
     public String getDay() {
         return day;
@@ -44,6 +51,10 @@ public class Forecast {
 
     public int getCode() {
         return code;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setDay(String day) {

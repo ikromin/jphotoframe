@@ -63,6 +63,21 @@ public class Factory {
     private static final String TYPE_TEXT = "text";
     private static final String TYPE_WEATHER = "weather";
 
+    public static final int DEFAULT_COORD_COMPONENT = 0;
+    public static final double DEFAULT_ROTATION = 0.0;
+    public static final boolean DEFAULT_SHOW_BOUNDS = false;
+    public static final int DEFAULT_OUTLINE_WIDTH = 1;
+    public static final int DEFAULT_FONT_SIZE = 10;
+    public static final String DEFAULT_FONT_NAME = "Verdana";
+    public static final String DEFAULT_FORMAT = "%s";
+    public static final Color DEFAULT_COLOUR = Color.white;
+    public static final Color DEFAULT_OUTLINE_COLOUR = Color.black;
+    public static final int DEFAULT_GAP_SIZE = 150;
+    public static final int DEFAULT_GAP_SCALAR = 0;
+    public static final int DEFAULT_ORIENTATION = 1;
+    public static final boolean DEFAULT_REVERSE = false;
+
+
     /**
      * Creates a list of Widget type objects from a layout file.
      * @param layoutFileName

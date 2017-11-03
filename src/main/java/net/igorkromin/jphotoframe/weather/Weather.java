@@ -87,6 +87,7 @@ public class Weather {
                     // Set the forecast day of week e.g. MON
                     cal.setTime(dt);
                     f.setDay(dayOfWeek.get(cal.get(Calendar.DAY_OF_WEEK)));
+                    f.setDate(dt);
                 }
                 else {
                     f = forecastMap.get(date);

@@ -16,6 +16,11 @@ import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
 public class WeatherForecast extends Transformable {
 
     private static final String DATA_SRC_TEMPERATURE = "$temperature";
+    private static final String DATA_SRC_CONDITION = "$condition";
+    private static final String DATA_SRC_GLYPH = "$glyph";
+    private static final String DATA_SRC_DAY = "$day";
+    private static final String DATA_SRC_DATE = "$date";
+
     private static final int ORIENT_HORZ = 0;
     private static final int ORIENT_VERT = 2;
 
@@ -25,11 +30,6 @@ public class WeatherForecast extends Transformable {
     private static final String ORIENTATION_HORZ = "horizontal";
     private static final String ORIENTATION_VERT = "vertical";
 
-    private static final int DEFAULT_GAP_SIZE = 150;
-    private static final int DEFAULT_GAP_SCALAR = 0;
-    private static final int DEFAULT_ORIENTATION = 1;
-    private static final boolean DEFAULT_REVERSE = false;
-
     private ModelData data;
 
     private Rectangle bounds = new Rectangle(0, 0);
@@ -37,6 +37,8 @@ public class WeatherForecast extends Transformable {
     private List<Text> textWidgets = new ArrayList<>();
     private List<Text> drawList = new ArrayList<>();
 
+    String dataSource = null;
+    String textFormat = DEFAULT_FORMAT;
     private int itemGap = DEFAULT_GAP_SIZE;
     private int itemBoundScalar = DEFAULT_GAP_SCALAR;
     private int orientation = DEFAULT_ORIENTATION;
@@ -51,6 +53,17 @@ public class WeatherForecast extends Transformable {
         JSONObject text =  (json.has(KEY_TEXT)) ? json.getJSONObject(KEY_TEXT) : new JSONObject();
         textConfig = new JSONObject();
         textConfig.put(KEY_TEXT, text);
+
+        // - data source
+        if (text.has(KEY_DATA)) {
+            dataSource = text.getString(KEY_DATA);
+        }
+
+        // - text format
+        if (text.has(KEY_FORMAT)) {
+            textFormat = text.getString(KEY_FORMAT);
+        }
+        text.remove(KEY_FORMAT);
 
         // - items
         if (json.has(KEY_ITEMS)) {
@@ -114,27 +127,25 @@ public class WeatherForecast extends Transformable {
                 Forecast forecast = forecastList.get((reverse) ? forecasts - i - 1 : i);
                 Text text = textWidgets.get(i);
 
-                WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
-
-                text.overwriteDataSource(code.getInfoText());
+                text.overwriteDataSource(getModelData(forecast));
                 Rectangle bounds = text.syncModelToBounds(graphics);
 
                 if (bounds != null) {
                     switch (orientation) {
                         case ORIENT_HORZ:
-                            width += (bounds.width * ((i < forecasts - 1) ? itemBoundScalar : 1)) + ((i < forecasts - 1) ? itemGap : 0);
+                            width += (bounds.width * ((i < forecasts - 1) ? itemBoundScalar : 1)) +
+                                    ((i < forecasts - 1) ? itemGap : 0);
                             height = (bounds.height > height) ? bounds.height : height;
 
                             break;
 
                         case ORIENT_VERT:
-                            height += (bounds.height * ((i < forecasts - 1) ? itemBoundScalar : 1)) + ((i < forecasts - 1) ? itemGap : 0);
+                            height += (bounds.height * ((i < forecasts - 1) ? itemBoundScalar : 1)) +
+                                    ((i < forecasts - 1) ? itemGap : 0);
                             width = (bounds.width > width) ? bounds.width : width;
 
                             break;
                     }
-
-
 
                     drawList.add(text);
                 }
@@ -145,6 +156,30 @@ public class WeatherForecast extends Transformable {
         }
 
         return null;
+    }
+
+    private String getModelData(Forecast forecast) {
+        String newText = null;
+
+        if (DATA_SRC_TEMPERATURE.equals(dataSource)) {
+            newText = String.format(textFormat, forecast.getLow(), forecast.getHigh());
+        }
+        else if (DATA_SRC_DAY.equals(dataSource)) {
+            newText = String.format(textFormat, forecast.getDay());
+        }
+        else if (DATA_SRC_DATE.equals(dataSource)) {
+            newText = String.format(textFormat, forecast.getDate());
+        }
+        else if (DATA_SRC_CONDITION.equals(dataSource)) {
+            WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
+            newText = String.format(textFormat, code.getInfoText());
+        }
+        else if (DATA_SRC_GLYPH.equals(dataSource)) {
+            WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
+            newText = String.format(textFormat, code.toString());
+        }
+
+        return newText;
     }
 
     /**

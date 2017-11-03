@@ -21,10 +21,6 @@ public abstract class Transformable extends Widget {
     private static final int ORIGIN_WIDTH = 8;
     private static final int ORIGIN_DISPLACE = ORIGIN_WIDTH / 2;
 
-    private static final int DEFAULT_COORD_COMPONENT = 0;
-    private static final double DEFAULT_ROTATION = 0.0;
-    private static final boolean DEFAULT_SHOW_BOUNDS = false;
-
     private int originX = DEFAULT_COORD_COMPONENT;
     private int originY = DEFAULT_COORD_COMPONENT;
     private int offsetX = DEFAULT_COORD_COMPONENT;

@@ -53,13 +53,6 @@ public class Text extends Transformable {
     private static final String DATA_SRC_DATE = "$date";
     private static final String DATA_SRC_WEATHER_GEO = "$weather.geo";
 
-    private static final int DEFAULT_OUTLINE_WIDTH = 1;
-    private static final int DEFAULT_FONT_SIZE = 10;
-    private static final String DEFAULT_FONT_NAME = "Verdana";
-    private static final String DEFAULT_FORMAT = "%s";
-    private static final Color DEFAULT_COLOUR = Color.white;
-    private static final Color DEFAULT_OUTLINE_COLOUR = Color.black;
-
     private ModelData data;
     private String text = null;
 
