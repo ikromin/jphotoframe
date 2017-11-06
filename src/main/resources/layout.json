@@ -74,7 +74,7 @@
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [30, -120],
+            "offset": [30, -150],
             "showBounds": "true"
           },
           "text" : {
@@ -92,11 +92,11 @@
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [100, -120],
+            "offset": [100, -150],
             "showBounds": "true"
           },
           "text" : {
-            "data": "$condition",
+            "data": "$condition2",
             "size": 20
           },
           "items" : {
@@ -110,7 +110,7 @@
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [100, -95],
+            "offset": [100, -125],
             "showBounds": "true"
           },
           "text" : {
@@ -129,7 +129,7 @@
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [30, -90],
+            "offset": [30, -120],
             "showBounds": "true"
           },
           "text" : {
@@ -148,7 +148,7 @@
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [30, -60],
+            "offset": [30, -90],
             "showBounds": "true"
           },
           "text" : {

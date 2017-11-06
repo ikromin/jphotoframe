@@ -17,6 +17,7 @@ public class WeatherForecast extends Transformable {
 
     private static final String DATA_SRC_TEMPERATURE = "$temperature";
     private static final String DATA_SRC_CONDITION = "$condition";
+    private static final String DATA_SRC_CONDITION2 = "$condition2";
     private static final String DATA_SRC_GLYPH = "$glyph";
     private static final String DATA_SRC_DAY = "$day";
     private static final String DATA_SRC_DATE = "$date";
@@ -173,6 +174,10 @@ public class WeatherForecast extends Transformable {
         else if (DATA_SRC_CONDITION.equals(dataSource)) {
             WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
             newText = String.format(textFormat, code.getInfoText());
+        }
+        else if (DATA_SRC_CONDITION2.equals(dataSource)) {
+            WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
+            newText = String.format(textFormat, code.getDetailedInfo());
         }
         else if (DATA_SRC_GLYPH.equals(dataSource)) {
             WeatherConditionCodes code = WeatherConditionCodes.fromInt(forecast.getCode());
