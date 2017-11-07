@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,10 +93,16 @@ public class Factory {
             Log.warning("No layout configuration specified");
         }
         else {
+            Path layoutFile = Paths.get(layoutFileName);
+            if (!Files.isReadable(layoutFile)) {
+                Log.warning("Layout file is not readable: " + layoutFileName);
+                return widgets;
+            }
+
             Log.info("Loading layout configuration from file: " + layoutFileName);
 
             try {
-                byte[] bytes = Files.readAllBytes(Paths.get(layoutFileName));
+                byte[] bytes = Files.readAllBytes(layoutFile);
                 JSONObject layout = new JSONObject(new String(bytes));
 
                 if (layout.has("widgets")) {
@@ -109,7 +116,7 @@ public class Factory {
                     }
                 }
                 else {
-                    Log.warning("Widgets not found layout file");
+                    Log.warning("Widgets configuration not found in layout file");
                 }
             }
             catch (IOException e) {
