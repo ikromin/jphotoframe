@@ -49,6 +49,7 @@ public class Weather {
     private String city;
     private String country;
     private List<Forecast> forecasts;
+    private long updateTime;
 
     private Weather() {
         // private constructor for no-connection forecast static
@@ -126,6 +127,8 @@ public class Weather {
                 f.setConditions(condCode);
             }
         }
+
+        updateTime = System.currentTimeMillis();
     }
 
     public List<Forecast> getForecast() {
@@ -138,6 +141,10 @@ public class Weather {
 
     public String getCountry() {
         return country;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
     }
 
     /**

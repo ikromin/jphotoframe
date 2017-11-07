@@ -32,6 +32,7 @@ public class WeatherForecast extends Transformable {
     private static final String ORIENTATION_VERT = "vertical";
 
     private ModelData data;
+    private long lastUpdate = -1L;
 
     private Rectangle bounds = new Rectangle(0, 0);
     private JSONObject textConfig;
@@ -115,6 +116,12 @@ public class WeatherForecast extends Transformable {
 
         Weather weather = data.getWeather();
         if (weather != null && weather.getForecast() != null) {
+
+            // don't re-calculate if the model data hasn't changed
+            if (lastUpdate == weather.getUpdateTime()) {
+                return bounds;
+            }
+
             List<Forecast> forecastList = weather.getForecast();
             int forecasts = forecastList.size();
 
@@ -153,6 +160,8 @@ public class WeatherForecast extends Transformable {
             }
 
             bounds.setBounds(0,0, width, height);
+            lastUpdate = weather.getUpdateTime();
+
             return bounds;
         }
 
