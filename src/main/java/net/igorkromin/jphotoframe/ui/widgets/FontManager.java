@@ -28,7 +28,10 @@ import java.util.HashMap;
  */
 public class FontManager {
 
+    private static final String WEATHER_ICONS_FONT_FILE = "/weathericons-regular-webfont.ttf";
+
     private static HashMap<String, Font> fonts = new HashMap<>();
+    private static Font weatherFont = null;
 
     public static Font getFont(String name, int style, int size) {
 
@@ -44,6 +47,23 @@ public class FontManager {
         }
 
         return font;
+    }
+
+    public static Font getWeatherFont(int size) {
+        if (weatherFont != null) {
+            return  weatherFont;
+        }
+
+        try {
+            weatherFont = Font.createFont(Font.TRUETYPE_FONT,
+                    FontManager.class.getResourceAsStream(WEATHER_ICONS_FONT_FILE))
+                    .deriveFont((float) size);
+
+            return weatherFont;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 }

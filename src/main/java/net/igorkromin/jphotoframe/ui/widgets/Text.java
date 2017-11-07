@@ -78,6 +78,7 @@ public class Text extends Transformable {
         int width = DEFAULT_OUTLINE_WIDTH;
         String fontName = DEFAULT_FONT_NAME;
         int fontSize = DEFAULT_FONT_SIZE;
+        boolean useInternalWeatherFont = false;
 
         // - text
         if (json.has(KEY_TEXT)) {
@@ -123,10 +124,22 @@ public class Text extends Transformable {
             if (text.has(KEY_OUTLINE_WIDTH)) {
                 width = text.getInt(KEY_OUTLINE_WIDTH);
             }
+
+            // - useInternalWeatherFont
+            if (text.has(KEY_USE_INT_WEATHER_FONT)) {
+                useInternalWeatherFont = Boolean.parseBoolean(text.getString(KEY_USE_INT_WEATHER_FONT));
+            }
         }
 
         outlineStroke = new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-        font = FontManager.getFont(fontName, Font.BOLD, fontSize);
+
+        if (useInternalWeatherFont) {
+            font = FontManager.getWeatherFont(fontSize);
+            Log.warning(font.toString());
+        }
+        else {
+            font = FontManager.getFont(fontName, Font.BOLD, fontSize);
+        }
     }
 
     @Override

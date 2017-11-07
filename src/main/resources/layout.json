@@ -8,27 +8,27 @@
           "type": "text",
           "transform": {
             "origin": [1, 0],
-            "offset": [-30, 30],
-            "showBounds": "true"
+            "offset": [-10, 10],
+            "showBounds": "false"
           },
           "text" : {
             "data": "$time",
             "size": 120,
-            "outlineWidth": 3
+            "outlineWidth": 4
           }
         },
         {
           "type": "text",
           "transform": {
             "origin": [0, 0],
-            "offset": [-30, 150],
+            "offset": [-10, 120],
             "rotate": 90,
-            "showBounds": "true"
+            "showBounds": "false"
           },
           "text" : {
             "data": "$date",
             "size": 50,
-            "outlineWidth": 3
+            "outlineWidth": 4
           }
         }
       ]
@@ -41,13 +41,14 @@
           "type": "text",
           "transform": {
             "origin": [1, 1],
-            "offset": [-30, -30],
-            "showBounds": "true"
+            "offset": [-10, -10],
+            "showBounds": "false"
           },
           "text" : {
             "data": "JPhotoFrame 0.4",
             "format": "%s",
-            "size": 20
+            "size": 20,
+            "outlineWidth": 1
           }
         }
       ]
@@ -57,112 +58,81 @@
       "anchor": [0, 1],
       "children": [
         {
-          "type": "text",
-          "transform": {
-            "origin": [0, 1],
-            "offset": [30, -30],
-            "showBounds": "true"
-          },
-          "text" : {
-            "data": "$weather.geo",
-            "format": "%2$s, %1$s",
-            "size": 40
-          }
-        },
-
-        {
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [30, -150],
-            "showBounds": "true"
+            "offset": [75, -20],
+            "showBounds": "false"
           },
           "text" : {
-            "data": "$day",
-            "size": 20
+            "data": "$glyph",
+            "size": 50,
+            "outlineWidth": 2,
+            "useInternalWeatherFont": "true"
           },
           "items" : {
-            "gap": 120,
+            "gap": 140,
+            "gapPosition": "leading",
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "type": "weather",
+          "transform": {
+            "origin": [0, 0],
+            "offset": [10, -45],
+            "rotate": 270,
+            "showBounds": "false"
+          },
+          "text" : {
+            "data": "$condition",
+            "size": 26,
+            "outlineWidth": 1
+          },
+          "items" : {
+            "gap": 140,
             "gapPosition": "leading",
             "orientation": "vertical"
           }
         },
-
         {
           "type": "weather",
           "transform": {
-            "origin": [0, 1],
-            "offset": [100, -150],
-            "showBounds": "true"
-          },
-          "text" : {
-            "data": "$condition2",
-            "size": 20
-          },
-          "items" : {
-            "gap": 120,
-            "gapPosition": "leading",
-            "orientation": "vertical"
-          }
-        },
-
-        {
-          "type": "weather",
-          "transform": {
-            "origin": [0, 1],
-            "offset": [100, -125],
-            "showBounds": "true"
+            "origin": [0, 0],
+            "offset": [40, -45],
+            "rotate": 270,
+            "showBounds": "false"
           },
           "text" : {
             "data": "$temperature",
             "format": "%1$s° ➔ %2$s°",
-            "size": 20
+            "size": 26,
+            "outlineWidth": 1
           },
           "items" : {
-            "gap": 120,
+            "gap": 140,
             "gapPosition": "leading",
             "orientation": "vertical"
           }
         },
-
         {
           "type": "weather",
           "transform": {
             "origin": [0, 1],
-            "offset": [30, -120],
-            "showBounds": "true"
+            "offset": [10, -10],
+            "showBounds": "false"
           },
           "text" : {
-            "data": "$date",
-            "format": "%1$Tb",
-            "size": 20
+            "data": "$day",
+            "size": 28,
+            "outlineWidth": 1
           },
           "items" : {
-            "gap": 120,
+            "gap": 140,
             "gapPosition": "leading",
-            "orientation": "vertical"
+            "orientation": "horizontal"
           }
         },
-
-        {
-          "type": "weather",
-          "transform": {
-            "origin": [0, 1],
-            "offset": [30, -90],
-            "showBounds": "true"
-          },
-          "text" : {
-            "data": "$date",
-            "format": "%1$Td",
-            "size": 20
-          },
-          "items" : {
-            "gap": 120,
-            "gapPosition": "leading",
-            "orientation": "vertical"
-          }
-        }
-
       ]
     }
   ]

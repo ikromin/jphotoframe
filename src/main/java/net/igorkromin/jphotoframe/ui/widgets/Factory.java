@@ -54,6 +54,7 @@ public class Factory {
     public static final String KEY_COLOUR = "colour";
     public static final String KEY_OUTLINE_COLOUR = "outlineColour";
     public static final String KEY_OUTLINE_WIDTH = "outlineWidth";
+    public static final String KEY_USE_INT_WEATHER_FONT = "useInternalWeatherFont";
     public static final String KEY_ITEMS = "items";
     public static final String KEY_ITEM_GAP = "gap";
     public static final String KEY_GAP_POSITION = "gapPosition";
