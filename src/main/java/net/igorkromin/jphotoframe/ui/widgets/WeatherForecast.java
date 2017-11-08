@@ -33,6 +33,23 @@ import java.util.List;
 
 import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
 
+/**
+ * Weather widget bound to a weather model data source. Supports the following data sources (via the text node):
+ *  - $temperature
+ *  - $condition
+ *  - $condition2
+ *  - $glyph
+ *  - $day
+ *  - $date
+ *
+ * Provides the following properties in the 'items' node:
+ *  - gap : size of the gap between forecast items
+ *  - gapPosition : whether the gap is calculated from the 'leading' or 'trailing' end of the bounding box
+ *  - orientation : either 'vertical' or 'horizontal' layout
+ *  - reverse : whether forecast items should be shown in reverse i.e fri - mon instead of mon - fri
+ *  - text : text node properties
+ *  - transform : transformation to apply to this text
+ */
 public class WeatherForecast extends Transformable {
 
     private static final String DATA_SRC_TEMPERATURE = "$temperature";

@@ -34,10 +34,12 @@ import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
 
 /**
  * Text object bound to a model data source. Supports the following data sources:
- *  - date
- *  - time
+ *  - $date
+ *  - $time
+ *  - $weather.geo
+ *  - text
  *
- * Provides the following properties:
+ * Provides the following properties in the 'text' node:
  *  - data : model data source to display
  *  - format : text format string
  *  - font : name of the font to use to render the text
@@ -45,6 +47,7 @@ import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
  *  - colour : colour of the text
  *  - outlineColour : colour of the outline drawn around the text
  *  - outlineWidth : width of the outline, values larger than 1 will typically exceed draw bounds
+ *  - useInternalWeatherFont : whether to use the internal weather font to rendering this widget
  *  - transform : transformation to apply to this text
  */
 public class Text extends Transformable {

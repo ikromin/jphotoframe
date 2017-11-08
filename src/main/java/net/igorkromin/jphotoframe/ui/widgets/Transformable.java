@@ -30,7 +30,7 @@ import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
 /**
  * Widget tha supports transformations. Used as a base for other widgets that can be transformed.
  *
- * Provides the following properties:
+ * Provides the following properties in the 'transform' node:
  *  - origin : two-integer array specifying the transformation origin, similar to Anchor 'anchor'
  *  - offset : two-integer array specifying the offset in pixels relative to the origin
  *  - rotate : degrees rotation around the origin point
