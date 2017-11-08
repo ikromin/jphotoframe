@@ -138,7 +138,6 @@ public class Text extends Transformable {
 
         if (useInternalWeatherFont) {
             font = FontManager.getWeatherFont(fontSize);
-            Log.warning(font.toString());
         }
         else {
             font = FontManager.getFont(fontName, Font.BOLD, fontSize);
