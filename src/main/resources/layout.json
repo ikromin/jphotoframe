@@ -14,7 +14,7 @@
           "text" : {
             "data": "$time",
             "size": 120,
-            "outlineWidth": 4
+            "outlineWidth": 12
           }
         },
         {
@@ -28,7 +28,7 @@
           "text" : {
             "data": "$date",
             "size": 50,
-            "outlineWidth": 4
+            "outlineWidth": 12
           }
         }
       ]
@@ -48,7 +48,7 @@
             "data": "JPhotoFrame 0.4",
             "format": "%s",
             "size": 20,
-            "outlineWidth": 1
+            "outlineWidth": 6
           }
         }
       ]
@@ -67,7 +67,7 @@
           "text" : {
             "data": "$glyph",
             "size": 50,
-            "outlineWidth": 2,
+            "outlineWidth": 8,
             "useInternalWeatherFont": "true"
           },
           "items" : {
@@ -87,7 +87,7 @@
           "text" : {
             "data": "$condition",
             "size": 26,
-            "outlineWidth": 1
+            "outlineWidth": 8
           },
           "items" : {
             "gap": 140,
@@ -107,7 +107,7 @@
             "data": "$temperature",
             "format": "%1$s° ➔ %2$s°",
             "size": 26,
-            "outlineWidth": 1
+            "outlineWidth": 8
           },
           "items" : {
             "gap": 140,
@@ -125,14 +125,14 @@
           "text" : {
             "data": "$day",
             "size": 28,
-            "outlineWidth": 1
+            "outlineWidth": 8
           },
           "items" : {
             "gap": 140,
             "gapPosition": "leading",
             "orientation": "horizontal"
           }
-        },
+        }
       ]
     }
   ]

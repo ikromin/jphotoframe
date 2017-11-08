@@ -198,18 +198,18 @@ public class Text extends Transformable {
             return;
         }
 
-        graphics.setColor(colour);
-
         graphics.translate(-textBounds.x, -textBounds.y);
-        graphics.fill(shape);
 
+        // draw outline
         Stroke originalStroke = graphics.getStroke();
-
         graphics.setStroke(outlineStroke);
         graphics.setColor(outlineColour);
         graphics.draw(shape);
-
         graphics.setStroke(originalStroke);
+
+        // draw text
+        graphics.setColor(colour);
+        graphics.fill(shape);
     }
 
     public void overwriteDataSource(String dataSource) {
