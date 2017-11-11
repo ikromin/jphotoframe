@@ -246,7 +246,7 @@ To run, launch the jar file like so:
 
 Alternatively copy the *jphotoframe.jar* file to the same directory as the *run.sh* (after building using ant) and execute the *run.sh* script instead.
 
-Make sure that there is a *lib* directory with the *slf4j-api-1.7.2.jar* and *yahoo-weather-java-api-1.2.0.jar* files
+Make sure that there is a *lib* directory with the *json-20170516.jar*, *owm-japis-2.5.0.5.jar* and *mediautil-1.0-withfixes.jar* files
 inside it. The directory structure should look like this:
 
 ```
@@ -259,6 +259,8 @@ inside it. The directory structure should look like this:
 
 The jar files from the lib directory are included in the jphotoframe.jar file manifest and should be picked up
 automatically.
+
+You can add the **-verbose** command line parameter to increase logging level.
 
 ## Weather Forecasts
 
