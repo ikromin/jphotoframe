@@ -29,6 +29,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
+
 /**
  * Bounds anchoring widget. Sets the draw translation to one of the bounding sides along the X and Y axes with respect
  * to the entire drawing area as specified by the Rectangle object.
@@ -38,9 +40,6 @@ import java.util.List;
  *  - children : list of child widgets
  */
 public class Anchor extends Widget {
-
-    private static final String KEY_ANCHOR = "anchor";
-    private static final String KEY_CHILDREN = "children";
 
     private int anchorX = 0;
     private int anchorY = 0;

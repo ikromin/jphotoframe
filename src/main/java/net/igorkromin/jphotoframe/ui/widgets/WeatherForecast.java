@@ -48,7 +48,7 @@ import static net.igorkromin.jphotoframe.ui.widgets.Factory.*;
  *  - orientation : either 'vertical' or 'horizontal' layout
  *  - reverse : whether forecast items should be shown in reverse i.e fri - mon instead of mon - fri
  *  - text : text node properties
- *  - transform : transformation to apply to this text
+ *  - transform : transformation to apply
  */
 public class WeatherForecast extends Transformable {
 
@@ -105,8 +105,8 @@ public class WeatherForecast extends Transformable {
         text.remove(KEY_FORMAT);
 
         // - items
-        if (json.has(KEY_ITEMS)) {
-            JSONObject items = json.getJSONObject(KEY_ITEMS);
+        if (json.has(KEY_WEATHER)) {
+            JSONObject items = json.getJSONObject(KEY_WEATHER);
 
             // - gap
             if (items.has(KEY_ITEM_GAP)) {

@@ -70,7 +70,7 @@
             "outlineWidth": 8,
             "useInternalWeatherFont": "true"
           },
-          "items" : {
+          "weather" : {
             "gap": 140,
             "gapPosition": "leading",
             "orientation": "horizontal"
@@ -89,7 +89,7 @@
             "size": 26,
             "outlineWidth": 8
           },
-          "items" : {
+          "weather" : {
             "gap": 140,
             "gapPosition": "leading",
             "orientation": "vertical"
@@ -109,7 +109,7 @@
             "size": 26,
             "outlineWidth": 8
           },
-          "items" : {
+          "weather" : {
             "gap": 140,
             "gapPosition": "leading",
             "orientation": "vertical"
@@ -127,7 +127,7 @@
             "size": 28,
             "outlineWidth": 8
           },
-          "items" : {
+          "weather" : {
             "gap": 140,
             "gapPosition": "leading",
             "orientation": "horizontal"

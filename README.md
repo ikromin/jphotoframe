@@ -20,6 +20,7 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * System.out usage moved to the Log class paving a way to better logging
 * True separation of the model/view/controller objects
 * Thread sleep times are aligned to timeout schedules instead of sleeping the same time every time i.e. if time update is 1000ms and it took 200ms to draw the screen, the thread will sleep only 800ms
+* Layout engine is easier to use and customise
 
 ## Screenshots
 
@@ -42,8 +43,6 @@ cacheDirectory=/photos/cache
 imageTimeout=300000
 dateFormat=MMM d yyyy
 timeFormat=H:mm
-backgroundSourcePercent=0.01
-backgroundOpacity=0.2
 weatherCity=Brisbane,AU
 owmApiKey=xxxxxxxxxxxxxxxxxxxxxxx
 ```
@@ -58,8 +57,8 @@ These are the available configuration options. All apart frmo the directory sett
 
 |Configuration Option    |Description
 |------------------------|------------------------------------------------------------------------------------------
-|backgroundOpacity       |Background opacity.
-|backgroundSourcePercent |Percentage of the photo to use to generate the background.
+|backgroundOpacity       |Filler background opacity.
+|backgroundSourcePercent |Percentage of the photo to use to generate the filler background.
 
 #### Integer Values
 
@@ -77,6 +76,7 @@ These are the available configuration options. All apart frmo the directory sett
 |cacheDirectory          |Path to store the cached files, should not be the same location as the imageDirectory.
 |dateFormat              |Date format string as per the SimpleDateFormat Java class.
 |imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored.
+|layout                  |File to use for widget layout, default is layout.json
 |owmApiKey               |API Key used to get weather data, from http://openweathermap.org/appid
 |timeFormat              |Time format string as per teh SimpleDateFormat Java class.
 |weatherCity             |The city to get weather forecast for. Format is City,Country.
@@ -84,7 +84,159 @@ These are the available configuration options. All apart frmo the directory sett
 
 ## Widgets and Layout
 
-TODO - see *layout.json* for now
+Widgets are laid out as per the JSON layout file (default is *layout.json*). The file contains a single JSON object with a 'widgets' property, which is an array of widgets. Any number of widgets can be added to the 'widgets' array.
+
+Example -
+
+```
+{
+  "widgets": []
+}
+```
+  
+Available widgets:
+
+* **anchor** - anchors other widgets to a certain part of the screen
+* **text** - displays text either from variables bound to the data model or as free form strings
+* **weather** - displays forecast data bound to a specific part of the weather data model
+
+### Anchor Widget
+
+Properties:
+
+- **anchor** : two-integer array specifying which side to anchor along an axis (x,y). 0 is the min-side, 1 is the max-side e.g. [0,0] will anchor to the top left side of the screen, [1,1] will anchor to the bottom right
+- **children** : list of child widgets
+
+Example -
+
+```
+{
+    "type": "anchor",
+    "anchor": [1, 0],
+    "children: []
+}
+```
+
+### Text Widget
+
+Properties:
+
+- **data** : model data source to display
+- **format** : text format string as per the [Java Formatter javadoc](https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html)
+- **font** : name of the font to use to render the text
+- **size** : font size
+- **colour** : colour of the text
+- **outlineColour** : colour of the outline drawn around the text
+- **outlineWidth** : width of the outline, values larger than 1 will typically exceed draw bounds
+- **useInternalWeatherFont** : whether to use the internal weather font to rendering this widget
+- **transform** : transformation to apply to this text, see below for more details
+
+Allowed values for the **data** attribute:
+
+- **$time** : binds to the model time value
+- **$date** : binds to the model date value
+- **$weather.geo** : binds to the weather model geographic area - contains two values (country and city)
+
+In addition any freeform text string is allowed to be specified in the **data** attribute.
+
+
+Example 1 -
+
+```
+{
+    "type": "text",
+    "transform": {
+        "origin": [1, 0],
+        "offset": [-10, 10],
+        "showBounds": "false"
+    },
+    "text" : {
+        "data": "$time",
+        "size": 120,
+        "outlineWidth": 12
+    }
+}
+```
+
+Example 2 -
+
+```
+{
+    "type": "text",
+    "text": {
+        "data": "$weather.geo",
+        "format": "%2$s, %1$s",
+        "size": 26,
+        "outlineWidth": 8
+    }
+}
+```
+
+### Weather Widget
+
+Properties:
+
+- **gap** : size of the gap between forecast items
+- **gapPosition** : whether the gap is calculated from the 'leading' or 'trailing' end of the bounding box
+- **orientation** : either 'vertical' or 'horizontal' layout
+- **reverse** : whether forecast items should be shown in reverse i.e fri - mon instead of mon - fri
+- **text** : text node properties
+- **transform** : transformation to apply
+
+Allowed values for the **data** attribute on the **text** property:
+
+- **$temperature** - binds to the weather data forecast temperature value
+- **$condition** - binds to the weather data forecast condition value
+- **$condition2** - binds to the weather data forecast detailed condition value
+- **$glyph** - binds to the weather data forecast condition code value, should be used along with the **useInternalWeatherFont** value set to **true**
+- **$day** - binds to the weather data forecast condition day of week value
+- **$date** - binds to the weather data forecast condition date object, can be formatted as a standard java *Date* object
+
+Example -
+
+```
+{
+    "type": "weather",
+    "transform": {
+        "origin": [0, 1],
+        "offset": [75, -20],
+        "showBounds": "false"
+    },
+    "text" : {
+        "data": "$glyph",
+        "size": 50,
+        "outlineWidth": 8,
+        "useInternalWeatherFont": "true"
+    },
+    "weather" : {
+        "gap": 140,
+        "gapPosition": "leading",
+        "orientation": "horizontal"
+    }
+}
+```
+
+### Widget Transformation
+
+A number of widgets suport the **transform** property which allows the widget to be translated or rotated on screen.
+
+Properties:
+
+- **origin** : two-integer array specifying the transformation origin (x,y), similar to Anchor 'anchor'
+- **offset** : two-integer array specifying the offset in pixels relative to the origin (x, y)
+- **rotate** : degrees rotation around the origin point
+- **showBounds** : whether to show the drawing boundary box or not
+
+Example -
+
+```
+"transform": {
+    "origin": [0, 0],
+    "offset": [10, -45],
+    "rotate": 270,
+    "showBounds": "false"
+}
+```
 
 ## Running
 
