@@ -5,22 +5,13 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 ## Features
 
 * Lightweight and easily configurable
-* Generates cached (resampled) images automatically
+* Several options for source image re-scaling and background fill
 * Current date/time display with custom date/time formats
-* Fills in the background on vertical photos using the photo as the source
 * Weather forecast using OpenWeatherMap
 * Pausable operation i.e. during photo frame offline hours
 * Image rotation correction utility
 * Configurable widget layout for date, time, weather, etc
 
-## Issues Fixed
-
-* Bug #1 OutOfMemoryError when loading image stops images from cycling
-* OWM weather information not shown due to 2.1 API removal
-* System.out usage moved to the Log class paving a way to better logging
-* True separation of the model/view/controller objects
-* Thread sleep times are aligned to timeout schedules instead of sleeping the same time every time i.e. if time update is 1000ms and it took 200ms to draw the screen, the thread will sleep only 800ms
-* Layout engine is easier to use and customise
 
 ## Screenshots
 
@@ -53,6 +44,13 @@ You can specify a custom configuration file to load by using a command line argu
 
 These are the available configuration options. All apart frmo the directory settings are optional and have default values that will be used if nothing is provided for them.
 
+#### Boolean Values
+
+|Configuration Option    |Description
+|------------------------|------------------------------------------------------------------------------------------
+|disableCaching          |Whether loaded images (plus background) are cached to disk for reuse
+|showWeather             |Whether weather forecast fetch is enabled
+
 #### Decimal/Floating Point Values
 
 |Configuration Option    |Description
@@ -73,9 +71,11 @@ These are the available configuration options. All apart frmo the directory sett
 
 |Configuration Option    |Description
 |------------------------|------------------------------------------------------------------------------------------
-|cacheDirectory          |Path to store the cached files, should not be the same location as the imageDirectory.
+|backgroundFiller        |Background filler type, valid values are *StretchScale* or *Black*
+|cacheDirectory          |Path to store the cached files, should not be the same location as the imageDirectory 
 |dateFormat              |Date format string as per the SimpleDateFormat Java class.
-|imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored.
+|imageDirectory          |Path to the directory where photos will be fetched from. Child directories will be ignored
+|imageScaler             |Image scaler type, valid values are *CoverAspect* or *ContainAspect*
 |layout                  |File to use for widget layout, default is layout.json
 |owmApiKey               |API Key used to get weather data, from http://openweathermap.org/appid
 |timeFormat              |Time format string as per teh SimpleDateFormat Java class.
@@ -323,6 +323,15 @@ Sometimes JPEG files have rotation information saved into them. JPhotoFrame uses
 A utility is provided to pre-process all of your photos and re-orinent them. This is done with the help of the mediautil library (http://mediachest.sourceforge.net/mediautil/).
 
 To use this utility, run the *fixrotation.sh* script or pass the *-fixrotation* parameter when running JPhotoFrame manually. This utility expect a command line argument specifying the photo directory name.
+
+## Issues Fixed
+
+* Bug #1 OutOfMemoryError when loading image stops images from cycling
+* OWM weather information not shown due to 2.1 API removal
+* System.out usage moved to the Log class paving a way to better logging
+* True separation of the model/view/controller objects
+* Thread sleep times are aligned to timeout schedules instead of sleeping the same time every time i.e. if time update is 1000ms and it took 200ms to draw the screen, the thread will sleep only 800ms
+* Layout engine is easier to use and customise
 
 ## License
 

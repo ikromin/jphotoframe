@@ -22,23 +22,22 @@ package net.igorkromin.jphotoframe.ui;
 
 import net.igorkromin.jphotoframe.ConfigOptions;
 import net.igorkromin.jphotoframe.ImageDirectory;
-import net.igorkromin.jphotoframe.ImageUtil;
+import net.igorkromin.jphotoframe.img.BackgroundFiller;
+import net.igorkromin.jphotoframe.img.Factory;
+import net.igorkromin.jphotoframe.img.ImageScaler;
+import net.igorkromin.jphotoframe.img.ImageUtil;
 import net.igorkromin.jphotoframe.Log;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class PhotoUpdateThread extends DataUpdateThread {
 
     private ImageDirectory imageDirectory;
     private BufferedImage buffer;
-    private int bufferWidth;
-    private int bufferHeight;
-    private float bufferAspect;
+    private BackgroundFiller filler;
+    private ImageScaler scaler;
+    private boolean doNotCache = false;
 
     /**
      * Rectangle is used to sets the image drawing dimensions. All loaded images will be made to fit into this rectangle.
@@ -48,19 +47,29 @@ public class PhotoUpdateThread extends DataUpdateThread {
         super(controller, config, data, sleepTime);
         this.buffer = buffer;
 
-        bufferWidth = buffer.getWidth();
-        bufferHeight = buffer.getHeight();
-        bufferAspect = (float) bufferWidth / bufferHeight;
-
-        Log.verbose("Image buffer dimensions=" + bufferWidth + "x" + bufferHeight + " aspect=" + bufferAspect);
-
-        try {
-            imageDirectory = new ImageDirectory(config.getImageDirectory(), config.getCacheDirectory(), controller);
-            imageDirectory.startWatching();
+        if (config.isDisableCaching()) {
+            Log.info("Image caching is disabled");
+            doNotCache = true;
         }
-        catch (Exception e) {
-            Log.error("Could not start watching photo directory", e);
+
+        filler = Factory.getFiller(config);
+        scaler = Factory.getScaler(config);
+
+        if (filler == null || scaler == null) {
+            Log.warning("Image scaler or background filler could not be created");
             doNotRun();
+        }
+        else {
+            filler.initialise(buffer, config);
+            scaler.initialise(buffer, config);
+
+            try {
+                imageDirectory = new ImageDirectory(config.getImageDirectory(), config.getCacheDirectory(), controller);
+                imageDirectory.startWatching();
+            } catch (Exception e) {
+                Log.error("Could not start watching photo directory", e);
+                doNotRun();
+            }
         }
     }
 
@@ -71,8 +80,7 @@ public class PhotoUpdateThread extends DataUpdateThread {
         File c = imageDirectory.getCachedImageFile(f);
 
         // display cached file if it exists
-        // TODO: allow caching to be disabled in configuration
-        if (imageDirectory.fileExists(c)) {
+        if (!doNotCache && imageDirectory.fileExists(c)) {
             Log.verbose("Using cached image: " + c.getAbsolutePath());
 
             // cached images are not rescaled, just set to the data model directly
@@ -87,67 +95,18 @@ public class PhotoUpdateThread extends DataUpdateThread {
             BufferedImage image = silentLoad(f);
 
             if (image != null) {
-                // determine the size and aspect ratio of the loaded image
-                int imageWidth = image.getWidth();
-                int imageHeight = image.getHeight();
-                float imageAspect = (float) imageWidth / imageHeight;
+                filler.fillBackground(image);
+                scaler.drawScaledImage(image);
 
-                Log.verbose("Image dimensions=" + imageWidth + "x" + imageHeight + " aspect=" + imageAspect);
-
-                // adjust the size to the current buffer based on aspect ratio
-                float scalar;
-                if (imageAspect < 1.f) { // portrait
-                    scalar = (float) bufferHeight / imageHeight;
-                }
-                else { // landscape
-                    scalar = (float) bufferWidth / imageWidth;
-                }
-
-                Log.verbose("Image dimension scalar=" + scalar);
-                drawToBuffer(image, scalar);
+                getData().setCurrentImage(buffer);
+                getController().requestUpdate();
 
                 // write cached image
-                if (c != null) {
+                if (!doNotCache && c != null) {
                     ImageUtil.writeImage(c, buffer);
                 }
             }
         }
-    }
-
-    /**
-     * Draws an image to the buffer using scaled image dimensions and updates the view of any necessary updates.
-     * @param image
-     */
-    private void drawToBuffer(BufferedImage image, float scalar) {
-        if (image == null) {
-            return;
-        }
-
-        Graphics2D g = buffer.createGraphics();
-
-        BufferedImage background = ImageUtil.createScaledTranslucentImage(image, getConfig());
-
-        // transform op to stretch the background image to the buffer dimensions
-        AffineTransform txB2 = new AffineTransform();
-        txB2.scale((double) bufferWidth / background.getWidth(), (double) bufferHeight / background.getHeight());
-        AffineTransformOp opB2 = new AffineTransformOp(txB2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-
-        g.drawImage(background, opB2, 0, 0);
-
-        // transform op to fit the image to the buffer
-        AffineTransform tx = new AffineTransform();
-        tx.scale(scalar, scalar);
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BICUBIC);
-
-        // get centered coordinates based on the scaled image size
-        int x = (bufferWidth - (int) (image.getWidth() * scalar)) / 2;
-        int y = (bufferHeight - (int) (image.getHeight() * scalar)) / 2;
-
-        g.drawImage(image, op, x, y);
-        g.dispose();
-
-        getData().setCurrentImage(buffer);
-        getController().requestUpdate();
     }
 
     private BufferedImage silentLoad(File file) {

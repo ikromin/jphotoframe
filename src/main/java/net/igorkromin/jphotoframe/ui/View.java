@@ -21,7 +21,7 @@
 package net.igorkromin.jphotoframe.ui;
 
 import net.igorkromin.jphotoframe.ConfigOptions;
-import net.igorkromin.jphotoframe.ImageUtil;
+import net.igorkromin.jphotoframe.img.ImageUtil;
 import net.igorkromin.jphotoframe.ui.widgets.Factory;
 import net.igorkromin.jphotoframe.ui.widgets.Widget;
 

@@ -48,8 +48,14 @@ public class Controller extends EventController {
         dataThreads = new ArrayList<>(3);
 
         dataThreads.add(new TimeUpdateThread(this, config, data, 1000));
-        dataThreads.add(new WeatherUpdateThread(this, config, data, config.getWeatherUpdateTime()));
         dataThreads.add(new PhotoUpdateThread(this, config, data, config.getImageTimeout(), view.getImageBuffer()));
+
+        if (config.isShowWeather()) {
+            dataThreads.add(new WeatherUpdateThread(this, config, data, config.getWeatherUpdateTime()));
+        }
+        else {
+            Log.info("Weather fetch is disabled");
+        }
 
         view.loadWidgets();
     }

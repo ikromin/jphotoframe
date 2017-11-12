@@ -22,7 +22,6 @@ package net.igorkromin.jphotoframe.ui;
 
 import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
-import net.igorkromin.jphotoframe.ConfigDefaults;
 import net.igorkromin.jphotoframe.ConfigOptions;
 import net.igorkromin.jphotoframe.Log;
 import net.igorkromin.jphotoframe.weather.Weather;
@@ -40,7 +39,7 @@ public class WeatherUpdateThread extends DataUpdateThread {
         ConfigOptions config = getConfig();
         ModelData data = getData();
 
-        OpenWeatherMap.Units units = (config.getWeatherUnits().equals(ConfigDefaults.DEFAULT_WEATHER_UNITS) == true)
+        OpenWeatherMap.Units units = (config.getWeatherUnits().equals(ConfigOptions.DEFAULT_WEATHER_UNITS) == true)
                 ?  OpenWeatherMap.Units.METRIC
                 : OpenWeatherMap.Units.IMPERIAL;
         OpenWeatherMap owm = new OpenWeatherMap(units, config.getWeatherApiKey());

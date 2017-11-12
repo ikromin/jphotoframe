@@ -20,17 +20,38 @@
 
 package net.igorkromin.jphotoframe;
 
+import net.igorkromin.jphotoframe.img.Factory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static net.igorkromin.jphotoframe.ConfigDefaults.*;
 
 /**
  * Creates the runtime configuration model either from file or based on default values in 
  */
 public class ConfigOptions {
+
+    public static final String DEFAULT_DEVICE_NUM = "0";
+    public static final String DEFAULT_IMG_TIME = "30000";
+    public static final String DEFAULT_WEATHER_UPDATE_TIME = "600000";
+    public static final String DEFAULT_FORMAT_TIME = "H:mm";
+    public static final String DEFAULT_FORMAT_DATE = "MMM d yyyy";
+    public static final String DEFAULT_BG_PERCENT = "0.05";
+    public static final String DEFAULT_BG_OPACITY = "0.15";
+    public static final String DEFAULT_SHOW_WEATHER = "false";
+    public static final String DEFAULT_WEATHER_CITY = "Brisbane,AU";
+    public static final String DEFAULT_WEATHER_FORECAST_DAYS = "5";
+    public static final String DEFAULT_WEATHER_UNITS = "metric";
+    public static final String DEFAULT_FULL_SCREEN_WINDOW = "true";
+    public static final String DEFAULT_WEATHER_API_KEY = "NOT_A_VALID_KEY";
+    public static final String DEFAULT_IMG_DIRECTORY = "NOT_A_VALID_DIRECTORY";
+    public static final String DEFAULT_CACHE_DIRECTORY = "NOT_A_VALID_DIRECTORY";
+    public static final String DEFAULT_LAYOUT_FILE = "layout.json";
+    public static final String DEFAULT_IMG_SCALER = Factory.SCALER_COVER_ASPECT;
+    public static final String DEFAULT_BG_FILLER = Factory.FILLER_BLACK;
+    public static final String DEFAULT_DISABLE_CACHING = "false";
 
     private static final String PROP_DEVICE_NUM = "screenNumber";
     private static final String PROP_IMG_TIME = "imageTimeout";
@@ -48,13 +69,18 @@ public class ConfigOptions {
     private static final String PROP_WEATHER_API_KEY = "owmApiKey";
     private static final String PROP_WEATHER_UNITS = "weatherUnits";
     private static final String PROP_LAYOUT_FILE = "layout";
+    private static final String PROP_IMG_SCALER = "imageScaler";
+    private static final String PROP_BG_FILLER = "backgroundFiller";
+    private static final String PROP_DISABLE_CACHING = "disableCaching";
 
-    private boolean showWeather, fullScreenWindow;
+    private boolean showWeather, fullScreenWindow, disableCaching;
     private int gfxDeviceNum, imageTimeout;
     private int weatherForecastDays, weatherUpdateTime;
     private float bgPercent, bgOpacity;
     private String weatherCity, imageDirectory, cacheDirectory, dateFormat;
     private String timeFormat, weatherApiKey, weatherUnits, layoutFile;
+    private String imageScaler;
+    private String backgroundFiller;
 
 
     public ConfigOptions(String configFileName)
@@ -74,6 +100,7 @@ public class ConfigOptions {
 
             showWeather = Boolean.parseBoolean(getValue(props, PROP_SHOW_WEATHER, DEFAULT_SHOW_WEATHER));
             fullScreenWindow = Boolean.parseBoolean(getValue(props, PROP_FULL_SCREEN_WINDOW, DEFAULT_FULL_SCREEN_WINDOW));
+            disableCaching = Boolean.parseBoolean(getValue(props, PROP_DISABLE_CACHING, DEFAULT_DISABLE_CACHING));
 
             gfxDeviceNum = Integer.parseInt(getValue(props, PROP_DEVICE_NUM, DEFAULT_DEVICE_NUM));
             imageTimeout = Integer.parseInt(getValue(props, PROP_IMG_TIME, DEFAULT_IMG_TIME));
@@ -91,6 +118,8 @@ public class ConfigOptions {
             weatherApiKey = getValue(props, PROP_WEATHER_API_KEY, DEFAULT_WEATHER_API_KEY);
             weatherUnits = getValue(props, PROP_WEATHER_UNITS, DEFAULT_WEATHER_UNITS);
             layoutFile = getValue(props, PROP_LAYOUT_FILE, DEFAULT_LAYOUT_FILE);
+            imageScaler = getValue(props, PROP_IMG_SCALER, DEFAULT_IMG_SCALER);
+            backgroundFiller = getValue(props, PROP_BG_FILLER, DEFAULT_BG_FILLER);
 
             int dwut = Integer.parseInt(DEFAULT_WEATHER_UPDATE_TIME);
             if (weatherUpdateTime < dwut) {
@@ -193,6 +222,22 @@ public class ConfigOptions {
 
     public String getLayoutFile() {
         return layoutFile;
+    }
+
+    public String getImgScaler() {
+        return imageScaler;
+    }
+
+    public String getBackgroundFiller() {
+        return backgroundFiller;
+    }
+
+    public boolean isDisableCaching() {
+        return disableCaching;
+    }
+
+    public boolean isShowWeather() {
+        return showWeather;
     }
 
 }
