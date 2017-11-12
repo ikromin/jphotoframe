@@ -30,8 +30,8 @@ import java.util.Collections;
 import java.util.Vector;
 
 import static java.nio.file.StandardWatchEventKinds.*;
-import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_CACHE_DIRECTORY;
-import static net.igorkromin.jphotoframe.ConfigDefaults.DEFAULT_IMG_DIRECTORY;
+import static net.igorkromin.jphotoframe.ConfigOptions.DEFAULT_CACHE_DIRECTORY;
+import static net.igorkromin.jphotoframe.ConfigOptions.DEFAULT_IMG_DIRECTORY;
 
 /**
  * Monitor for the image directory. Requires a listener to be provided to handle pause/resume events.
