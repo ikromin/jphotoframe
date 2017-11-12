@@ -39,6 +39,7 @@ import java.awt.image.BufferedImage;
 public class CoverAspectScaler implements ImageScaler {
 
     private BufferedImage buffer;
+    private AffineTransform tx = new AffineTransform();
     private int bufferWidth;
     private int bufferHeight;
     private float bufferAspect;
@@ -73,30 +74,18 @@ public class CoverAspectScaler implements ImageScaler {
         }
 
         Log.verbose("Image dimension scalar=" + scalar);
-        drawToBuffer(srcImage, scalar);
-    }
-
-    /**
-     * Draws an image to the buffer using scaled image dimensions and updates the view of any necessary updates.
-     * @param image
-     */
-    private void drawToBuffer(BufferedImage image, float scalar) {
-        if (image == null) {
-            return;
-        }
 
         Graphics2D g = buffer.createGraphics();
 
+        // get centered coordinates based on the scaled image size
+        int x = (bufferWidth - (int) (srcImage.getWidth() * scalar)) / 2;
+        int y = (bufferHeight - (int) (srcImage.getHeight() * scalar)) / 2;
+
         // transform op to fit the image to the buffer
-        AffineTransform tx = new AffineTransform();
-        tx.scale(scalar, scalar);
+        tx.setToScale(scalar, scalar);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BICUBIC);
 
-        // get centered coordinates based on the scaled image size
-        int x = (bufferWidth - (int) (image.getWidth() * scalar)) / 2;
-        int y = (bufferHeight - (int) (image.getHeight() * scalar)) / 2;
-
-        g.drawImage(image, op, x, y);
+        g.drawImage(srcImage, op, x, y);
         g.dispose();
     }
 

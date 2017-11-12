@@ -49,7 +49,7 @@ public class ConfigOptions {
     public static final String DEFAULT_IMG_DIRECTORY = "NOT_A_VALID_DIRECTORY";
     public static final String DEFAULT_CACHE_DIRECTORY = "NOT_A_VALID_DIRECTORY";
     public static final String DEFAULT_LAYOUT_FILE = "layout.json";
-    public static final String DEFAULT_IMG_SCALER = Factory.SCALER_COVER_ASPECT;
+    public static final String DEFAULT_IMG_SCALER = Factory.SCALER_CONTAIN_ASPECT;
     public static final String DEFAULT_BG_FILLER = Factory.FILLER_BLACK;
     public static final String DEFAULT_DISABLE_CACHING = "false";
 

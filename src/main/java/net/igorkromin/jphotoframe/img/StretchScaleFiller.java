@@ -39,6 +39,8 @@ import java.awt.image.BufferedImage;
 public class StretchScaleFiller implements BackgroundFiller {
 
     private BufferedImage buffer;
+    AffineTransform txFill = new AffineTransform();
+    AffineTransformOp backgroundOp;
     private int bufferWidth;
     private int bufferHeight;
     private float bgScalar;
@@ -53,6 +55,10 @@ public class StretchScaleFiller implements BackgroundFiller {
 
         bgScalar = config.getBackgroundPercent();
         bgOpacity = config.getBackgroundOpacity();
+
+        AffineTransform txB = new AffineTransform();
+        txB.scale(bgScalar, bgScalar);
+        backgroundOp = new AffineTransformOp(txB, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
     }
 
     @Override
@@ -60,9 +66,8 @@ public class StretchScaleFiller implements BackgroundFiller {
         BufferedImage background = createScaledTranslucentImage(srcImage);
 
         // transform op to stretch the background image to the buffer dimensions
-        AffineTransform txB2 = new AffineTransform();
-        txB2.scale((double) bufferWidth / background.getWidth(), (double) bufferHeight / background.getHeight());
-        AffineTransformOp opB2 = new AffineTransformOp(txB2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        txFill.setToScale((double) bufferWidth / background.getWidth(), (double) bufferHeight / background.getHeight());
+        AffineTransformOp opB2 = new AffineTransformOp(txFill, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
         Graphics2D g = buffer.createGraphics();
         g.drawImage(background, opB2, 0, 0);
@@ -80,10 +85,6 @@ public class StretchScaleFiller implements BackgroundFiller {
                 (int) (srcImage.getWidth() * bgScalar), (int) (srcImage.getHeight() * bgScalar), srcImage.getType());
         Graphics2D gb = background.createGraphics();
 
-        AffineTransform txB = new AffineTransform();
-        txB.scale(bgScalar, bgScalar);
-        AffineTransformOp opB = new AffineTransformOp(txB, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-
         // erase the buffer first
         gb.setColor(Color.black);
         gb.fillRect(0, 0, background.getWidth(), background.getHeight());
@@ -92,7 +93,7 @@ public class StretchScaleFiller implements BackgroundFiller {
         Composite bgComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgOpacity);
 
         gb.setComposite(bgComposite);
-        gb.drawImage(srcImage, opB, 0, 0);
+        gb.drawImage(srcImage, backgroundOp, 0, 0);
         gb.dispose();
 
         return background;
