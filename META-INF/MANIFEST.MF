@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: net.igorkromin.PhotoFrame
-Class-Path: lib/slf4j-api-1.7.2.jar lib/yahoo-weather-java-api-1.2.0.jar

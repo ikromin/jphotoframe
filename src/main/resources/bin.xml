@@ -1,0 +1,48 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>package</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<!-- Compiled JAR -->
+	<files>
+		<file>
+			<source>${project.basedir}/target/${artifactId}-${project.version}.${packaging}</source>
+			<destName>jphotoframe.jar</destName>
+			<outputDirectory>.</outputDirectory>
+		</file>
+	</files>
+	<fileSets>
+		<!-- Resources: Shell scripts, config -->
+		<fileSet>
+			<directory>${project.basedir}/src/main/resources</directory>
+			<includes>
+				<include>*.sh</include>
+				<include>onoff_times.txt</include>
+				<include>*.properties</include>
+				<include>layout.json</include>
+				<include>layout_simple.json</include>
+			</includes>
+			<outputDirectory>.</outputDirectory>
+		</fileSet>
+		<!-- System Dependencies -->
+		<fileSet>
+			<directory>${project.basedir}/lib</directory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+			<outputDirectory>lib</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<!-- Maven Dependencies -->
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+		</dependencySet>
+	</dependencySets>
+</assembly>
