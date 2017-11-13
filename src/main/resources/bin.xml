@@ -24,6 +24,7 @@
 				<include>onoff_times.txt</include>
 				<include>*.properties</include>
 				<include>layout.json</include>
+				<include>layout_simple.json</include>
 			</includes>
 			<outputDirectory>.</outputDirectory>
 		</fileSet>

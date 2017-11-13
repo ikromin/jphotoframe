@@ -20,6 +20,7 @@
 package net.igorkromin.jphotoframe.img;
 
 import net.igorkromin.jphotoframe.ConfigOptions;
+import net.igorkromin.jphotoframe.Log;
 
 /**
  * Image processor Factory. Creates image scaler and background filler instances.
@@ -42,6 +43,8 @@ public class Factory {
         ImageScaler scaler = null;
         String configScaler = config.getImgScaler();
 
+        Log.verbose("Scaler requested: " + configScaler);
+
         if (SCALER_COVER_ASPECT.equals(configScaler)) {
             scaler = new CoverAspectScaler();
         }
@@ -60,6 +63,8 @@ public class Factory {
     public static BackgroundFiller getFiller(ConfigOptions config) {
         BackgroundFiller filler = null;
         String configFiller = config.getBackgroundFiller();
+
+        Log.verbose("Filler requested: " + configFiller);
 
         if (FILLER_BLACK.equals(configFiller)) {
             filler = new BlackFiller();

@@ -12,10 +12,15 @@ JPhotoFrame is a simple Java application for displaying a collection of photos i
 * Image rotation correction utility
 * Configurable widget layout for date, time, weather, etc
 
-
 ## Screenshots
 
-TODO
+With weather forecast -
+
+![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.4_with_weather.jpg)
+
+Without weather -
+
+![](https://github.com/ikromin/jphotoframe/blob/master/screenshots/v0.4_no_weather.jpg)
 
 ## Building
 

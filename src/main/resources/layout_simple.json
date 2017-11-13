@@ -1,0 +1,57 @@
+{
+  "widgets": [
+    {
+      "type": "anchor",
+      "anchor": [0, 1],
+      "children": [
+        {
+          "type": "text",
+          "transform": {
+            "origin": [0, 1],
+            "offset": [10, -10],
+            "showBounds": "false"
+          },
+          "text" : {
+            "data": "$time",
+            "size": 120,
+            "outlineWidth": 12
+          }
+        },
+        {
+          "type": "text",
+          "transform": {
+            "origin": [0, 0],
+            "offset": [10, -120],
+            "rotate": 270,
+            "showBounds": "false"
+          },
+          "text" : {
+            "data": "$date",
+            "size": 50,
+            "outlineWidth": 12
+          }
+        }
+      ]
+    },
+    {
+      "type": "anchor",
+      "anchor": [1, 1],
+      "children": [
+        {
+          "type": "text",
+          "transform": {
+            "origin": [1, 1],
+            "offset": [-10, -10],
+            "showBounds": "false"
+          },
+          "text" : {
+            "data": "JPhotoFrame 0.4",
+            "format": "%s",
+            "size": 20,
+            "outlineWidth": 6
+          }
+        }
+      ]
+    }
+  ]
+}
