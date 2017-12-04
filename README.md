@@ -105,6 +105,8 @@ Available widgets:
 * **text** - displays text either from variables bound to the data model or as free form strings
 * **weather** - displays forecast data bound to a specific part of the weather data model
 
+To see a detailed explanation on how to use the layout engine, see this article - https://www.igorkromin.net/index.php/2017/12/04/jphotoframe-new-layout-engine-explained-with-examples/
+
 ### Anchor Widget
 
 Properties:
